@@ -1,1 +1,5 @@
 Poor Man's Tracker
+
+GPS:
+- Contains an ESP32 project for the ESPIDF development toolkit to be flashed onto an ESP32 microcontroller.
+  This code was used to read incoming NMEA data from our uBLOX m8 GPS receiver. This project simply prints out the data as text.
