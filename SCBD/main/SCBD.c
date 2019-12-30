@@ -37,6 +37,11 @@
 
 static const char *TAG = "SCBD";
 
+// Function Prototypes
+static void setNextConnNetworkIndex();
+static void tryConnectToOpenNetwork();
+static void wifi_scan(void);
+
 //static const char *REQUEST = "GET " WEB_URL " HTTP/1.0\r\n"
 //    "Host: "WEB_SERVER"\r\n"
 //    "Connection: keep-alive\r\n"
@@ -52,7 +57,6 @@ ip4_addr_t gw;
 ip4_addr_t msk;
 bool bConnected = false;
 bool bDNSFound = false;
-bool rescan = false;
 
 //  SET WIFI CONFS
 wifi_config_t wifi_config = {
@@ -75,9 +79,15 @@ wifi_config_t wifi_config = {
 uint16_t number = DEFAULT_SCAN_LIST_SIZE;
 wifi_ap_record_t ap_info[DEFAULT_SCAN_LIST_SIZE];
 uint16_t ap_count = 0;
-bool isOpen [4] = {false,false,false,false};
+
+// Used to know which scanned networks are OPEN
+bool isOpenNetwork [DEFAULT_SCAN_LIST_SIZE] = {false,false,false,false};
+// FLAG set if there is at least one open network
+bool noOpenNetworks = true;
+
 // Start with position 0 from records
 uint8_t connAp = 0;
+
 static void print_auth_mode(int authmode)
 {
     switch (authmode) {
@@ -169,6 +179,7 @@ static esp_err_t event_handler(void *ctx, system_event_t *event)
             ip = event->event_info.got_ip.ip_info.ip;
             gw = event->event_info.got_ip.ip_info.gw;
             msk = event->event_info.got_ip.ip_info.netmask;
+            
             bConnected = true;
             
             ESP_LOGI(TAG, "Got IP: %s\n", ip4addr_ntoa( &ip ));
@@ -181,23 +192,17 @@ static esp_err_t event_handler(void *ctx, system_event_t *event)
             // the application should not call esp_wifi_connect() to reconnect. It’s application’s responsibility
             // to distinguish whether the event is caused by esp_wifi_disconnect() or other reasons.
             ESP_LOGI(TAG, "SYSTEM_EVENT_STA_DISCONNECTED");
-            bDNSFound = false;
+
+            // DISCONNECTED so will mark connAp position to false to move on to next OPEN if ANY
+            // MIGHT NEED TO FIND A BETTER WAY TO HANDLE UNEPECTED DISCONNECTION
+            if(bConnected) isOpenNetwork[connAp] = false;
+
+            // bDNSFound = false;
             bConnected = false;
             
-            // Increment connAp for next round if fails
-            if(connAp < ap_count) 
-                connAp++;
+            // try connect to Open Network of [connApp] position
+            tryConnectToOpenNetwork(); 
 
-            // TRY CONNECTING TO connAp NETWORK SSID FROM SCAN
-            memcpy(wifi_config.sta.ssid, ap_info[connAp].ssid, 32);
-            ESP_LOGI("DISC", "### Connecting to SSID \t\t%s ###", ap_info[connAp].ssid);
-            
-            
-            // Set AP Configs
-            ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config));
-
-            // START CONNECTING
-            ESP_ERROR_CHECK(esp_wifi_connect());            
             break;
         default:
             break;
@@ -205,11 +210,64 @@ static esp_err_t event_handler(void *ctx, system_event_t *event)
     return ESP_OK;
 }
 
+static void tryConnectToOpenNetwork()
+{
+    // Set connAp index to open network
+    setNextConnNetworkIndex();
+    ESP_LOGI("CONN", "connAp = %d",connAp);
+    // TRY CONNECTING TO FIRST OPEN NETWORK SSID FROM SCAN
+    memcpy(wifi_config.sta.ssid, ap_info[connAp].ssid, 32);
+    ESP_LOGI("CONN", "Connecting to SSID [%s]", ap_info[connAp].ssid);
+    // Increment connAp for next round if fails
+    // if(connAp < ap_count) 
+    //     connAp++;
+    // Set AP Configs
+    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config));
+
+    // START CONNECTING
+    ESP_ERROR_CHECK(esp_wifi_connect());
+}
+
+static void setNextConnNetworkIndex()
+{
+    if(noOpenNetworks==true)
+    {
+        // rescan
+        ESP_LOGI("SCAN", "NO OPEN NETWORKS. RESCANNING...");
+        wifi_scan();
+    }
+    else
+    {
+        // There is at least one OPEN network from scan
+        if(connAp < DEFAULT_SCAN_LIST_SIZE)
+            while ((connAp < ap_count) && !isOpenNetwork[connAp])
+            {
+                if(isOpenNetwork[connAp]==false)
+                    connAp++;
+            }
+        else
+            // Tryed all networks, new scan
+             wifi_scan();
+    }
+}
+
 /* Initialize Wi-Fi as sta and set scan method */
 static void wifi_scan(void)
 {
+    // ******* INIT *********************
+    // Used to know which scanned networks are OPEN
+    // RESET ARRAY
+    for (int k = 0; k < DEFAULT_SCAN_LIST_SIZE; k++)
+    {
+        isOpenNetwork [k] = false;
+    }
+    // FLAG set if there is at least one open network
+    noOpenNetworks = true;
     // clear connAp
     connAp = 0;
+    // clear ap counter
+    ap_count = 0;
+    // ******* END INIT *********************
 
     // inits struct for AP search information
     memset(ap_info, 0, sizeof(ap_info));
@@ -265,33 +323,37 @@ static void wifi_scan(void)
     // OUTPUT SCANNED NETWORKS
     ESP_LOGI(TAG, "Total APs scanned = %u", ap_count);
     for (int i = 0; (i < DEFAULT_SCAN_LIST_SIZE) && (i < ap_count); i++) {
-        // PRINT ONLY OPEN APs
-        //if(ap_info[i].authmode == WIFI_AUTH_OPEN) {
-            ESP_LOGI(TAG, "SSID \t\t%s", ap_info[i].ssid);
-            ESP_LOGI(TAG, "RSSI \t\t%d", ap_info[i].rssi);
-            print_auth_mode(ap_info[i].authmode);
-            if (ap_info[i].authmode != WIFI_AUTH_WEP) {
-                print_cipher_type(ap_info[i].pairwise_cipher, ap_info[i].group_cipher);
-            }
-            ESP_LOGI(TAG, "Channel \t\t%d\n", ap_info[i].primary);
+
+        ESP_LOGI(TAG, "SSID \t\t%s", ap_info[i].ssid);
+        ESP_LOGI(TAG, "RSSI \t\t%d", ap_info[i].rssi);
+
+        // Set isOpen flag boolean array
+        if(ap_info[i].authmode == WIFI_AUTH_OPEN) 
+        {
+            ESP_LOGI(TAG, "OPEN BABY!!! \t\t");
+            // there is at least one network I can connect
+            noOpenNetworks = false;
+            // Set i-position to true, OPEN
+            isOpenNetwork[i] = true;
+        }
+
+        
+            // PRINT SECURITY INFO
+            //print_auth_mode(ap_info[i].authmode);
+            //if (ap_info[i].authmode != WIFI_AUTH_WEP) {
+            //    print_cipher_type(ap_info[i].pairwise_cipher, ap_info[i].group_cipher);
+            //}
+        ESP_LOGI(TAG, "Channel \t\t%d\n", ap_info[i].primary);
         //}
     }
-    
-    // MUST DO!!! REMEMBER WHICH INDEXES APs are OPEN and try conecting to those
-    // instead of going through all of them.
 
-    // TRY CONNECTING TO FIRST NETWORK SSID FROM SCAN
-    memcpy(wifi_config.sta.ssid, ap_info[connAp].ssid, 32);
-    ESP_LOGI("CONN", "Connecting to SSID \t\t%s", ap_info[connAp].ssid);
-    // Increment connAp for next round if fails
-    // if(connAp < ap_count) 
-    //     connAp++;
-    // Set AP Configs
-    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config));
+    for (int k = 0; k < DEFAULT_SCAN_LIST_SIZE; k++)
+    {
+        ESP_LOGI(TAG, "%d \n",isOpenNetwork [k]);
+    }
 
-    // START CONNECTING
-    ESP_ERROR_CHECK(esp_wifi_connect());
-
+    // connect to Open Network of [connApp] position
+    tryConnectToOpenNetwork();
 }
 
 void app_main()
@@ -306,6 +368,10 @@ void app_main()
     }
     ESP_ERROR_CHECK( ret );
 
-    // SET UP WIFI
-    if (!bConnected) wifi_scan();
+    // SET UP WIFI and SCAN
+    wifi_scan();
+
+    // POLL untill SYSTEM_EVENT_STA_GOT_IP
+    while(!bConnected);
+    ESP_LOGI(TAG, "CONNECTED!\n");
 }
