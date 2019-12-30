@@ -7,6 +7,8 @@ All Channel Scan : scan ends after all the channel are checked, it will store DE
 // It scans all of the channels. 
 // If the channel field of wifi_scan_config_t is set to 0,
 // it is an all-channel scan.
+
+// SCAN CONFIG STRUCT
 wifi_scan_config_t wifi_scan_config = {
     //.sta = {
         .ssid = 0,
