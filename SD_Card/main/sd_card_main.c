@@ -79,9 +79,9 @@ void SD_Card_UNIT_TEST()
     }
 
     /* Write to File */
-    int sampleLength = 100;
+    uint64_t sampleLength = 100;
 
-    for (int i = 0; i < sampleLength; i++)
+    for (uint64_t i = 0; i < sampleLength; i++)
     {
         // Parameters for Tracking
         static float latitude, longitude = 50;

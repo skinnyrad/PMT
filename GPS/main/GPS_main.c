@@ -5,6 +5,10 @@
    Unless required by applicable law or agreed to in writing, this
    software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
    CONDITIONS OF ANY KIND, either express or implied.
+
+   PINOUT
+        TX: 22 (connect to RX on slave) 
+        RX: 21 (connect to TX on slave)
 */
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
