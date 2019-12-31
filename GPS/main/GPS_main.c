@@ -19,9 +19,17 @@
 
 #include "driver/uart.h"
 
+/* Struct for holding GPS Tracking Data */
+struct GPS_Data {
+    float latitude, longitude;
+    uint16_t year;
+    uint8_t month, day, hour, minute, second;
+};
+
 void GPS_init(const int uart_num, int uart_rx_buffer_size, int uart_tx_buffer_size);
 void get_GPS_data(uint8_t* data, int* bytesRead, bool* newPacket, const int uart_num, int uart_rx_buffer_size); //reset WDT
-int stringSearch(char* buffer, int bufferSize, char* string, int stringSize); 
+int stringSearch(uint8_t* buffer, int bufferSize, const char* string, int stringSize); 
+void print_data_sample(struct GPS_Data data);   // Print GPS Data to terminal 
 
 void app_main()
 {
@@ -30,22 +38,68 @@ void app_main()
     int uart_rx_buffer_size = 2048;
     int uart_tx_buffer_size = 2048;
     uint8_t data[uart_rx_buffer_size];
+    uint8_t temp_buffer[15];   
     bool newPacket = false;
     int bytesRead = 0;
+    struct GPS_Data GPS_Data;
+    
     
     GPS_init(uart_num, uart_rx_buffer_size, uart_tx_buffer_size);
     
-    printf("Begin Listening for packets...");
-    while (true) {
+    printf("Begin Listening for packets...\n");
+    while (true) 
+    {
         get_GPS_data(data, &bytesRead, &newPacket, uart_num, uart_rx_buffer_size);
         if (newPacket) {        // New Data Packet
             newPacket = false;
-            //print the buffer contents
-            for(int i = 0; i < bytesRead; i++) {
-                // printf("%c",(unsigned int)data[i]);
+
+            int stringIndex = stringSearch(data, bytesRead, "GNGGA", 5);    // Search for GNGAA in buffer
+            if (stringIndex != -1) 
+            {
+                // printf("GNGAA found at: %d \n", stringIndex);
+
+                /* Parse Data */
+
+                // Reset GPS Data struct
+                 GPS_Data.latitude = 0; GPS_Data.longitude = 0;
+                 GPS_Data.year = 0; GPS_Data.month = 0; GPS_Data.day = 0;
+                 GPS_Data.hour = 0; GPS_Data.minute = 0; GPS_Data.second = 0;  
+
+                // Parse UTC time 
+                int i = stringIndex + 5 + 1; // stringIndex + length + comma
+                int j = 0;                   // counter
+                while (data[i] != ',')       // Start at location 5 + 1(comma)
+                {
+                    temp_buffer[i] = data[i];       // Store UTC data as characters to temp buffer
                 
+                    // UTC Time: hhmmss.sss
+                    if (j < 2)   // hh: hour
+                    {
+                        if (j == 0)
+                            GPS_Data.hour += (temp_buffer[i] - '0') << 1;   // convert from char to int and shift 1 left
+                        else
+                            GPS_Data.hour += temp_buffer[i] - '0';         // convert from char to int 
+                    }   
+
+                    else if (j < 4)   // mm: minute
+                    {
+                        if (j == 2)
+                            GPS_Data.minute += (temp_buffer[i] - '0') << 1;   // convert from char to int and shift 1 left
+                        else
+                            GPS_Data.minute += temp_buffer[i] - '0';         // convert from char to int    
+                    }
+
+                    else if (j < 6)   // ss: second
+                    {
+                        if (j == 4)
+                            GPS_Data.second += (temp_buffer[i] - '0') << 1;   // convert from char to int and shift 1 left
+                        else
+                            GPS_Data.second += temp_buffer[i] - '0';         // convert from char to int 
+                    }
+                    i++; j++;
+                }  
+                print_data_sample(GPS_Data);   // Print GPS Data to terminal            
             }
-            // Parse and Write to SD card
         }  
     }
 
@@ -55,7 +109,7 @@ void app_main()
 }
 
 /* Searches for starting index of a string within a buffer */
-int stringSearch(char* buffer, int bufferSize, char* string, int stringSize)
+int stringSearch(uint8_t* buffer, int bufferSize, const char* string, int stringSize)
 {
     int stringIndex;
     for (int i = 0, j = 0; i < bufferSize; i++) {
@@ -73,6 +127,16 @@ int stringSearch(char* buffer, int bufferSize, char* string, int stringSize)
     return -1;                      // String not found, return -1
 }
 
+/* Print GPS Data to terminal */
+void print_data_sample(struct GPS_Data data)
+{
+	printf("%3.6f \t %3.6f \t%.4u:%.2d:%.2d  %.2d:%.2d:%.2d \n",
+		data.latitude, data.longitude,
+		data.year, data.month, data.day,
+		data.hour, data.minute, data.second
+	);
+}
+
 void get_GPS_data(uint8_t* data, int* bytesRead, bool* newPacket, const int uart_num, int uart_rx_buffer_size) //reset WDT
     {
         esp_task_wdt_reset();
@@ -86,7 +150,7 @@ void get_GPS_data(uint8_t* data, int* bytesRead, bool* newPacket, const int uart
         //it is still sending
         if(newLength != prevLength){
             //delay for .1 second
-            printf("\nReceiving... %d", newLength);
+            // printf("\nReceiving... %d", newLength);
             vTaskDelay(200 / portTICK_PERIOD_MS);
             *newPacket = true;
         }
@@ -95,7 +159,7 @@ void get_GPS_data(uint8_t* data, int* bytesRead, bool* newPacket, const int uart
         if(*newPacket){
             //get the buffer contents
             *bytesRead = uart_read_bytes(uart_num, data, newLength, 100);
-            printf("\nUART%d received %d bytes:\n", uart_num, *bytesRead);
+            // printf("\nUART%d received %d bytes:\n", uart_num, *bytesRead);
         }
     }
 
