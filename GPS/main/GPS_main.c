@@ -21,6 +21,7 @@
 
 void GPS_init(const int uart_num, int uart_rx_buffer_size, int uart_tx_buffer_size);
 void get_GPS_data(uint8_t* data, int* bytesRead, bool* newPacket, const int uart_num, int uart_rx_buffer_size); //reset WDT
+int stringSearch(char* buffer, int bufferSize, char* string, int stringSize); 
 
 void app_main()
 {
@@ -41,7 +42,8 @@ void app_main()
             newPacket = false;
             //print the buffer contents
             for(int i = 0; i < bytesRead; i++) {
-                printf("%c",(unsigned int)data[i]);
+                // printf("%c",(unsigned int)data[i]);
+                
             }
             // Parse and Write to SD card
         }  
@@ -52,11 +54,24 @@ void app_main()
     esp_restart();
 }
 
+/* Searches for starting index of a string within a buffer */
+int stringSearch(char* buffer, int bufferSize, char* string, int stringSize)
+{
+    int stringIndex;
+    for (int i = 0, j = 0; i < bufferSize; i++) {
+        if (string[j] == buffer[i]) {
+            if (j == 0)				// First character correct
+                stringIndex = i;	// Mark starting location of string
+            j++;    				// Increment j for every correct character in sequence
 
-/**************************************************************************************/
-/**************************************************************************************/
-
-
+            if (j == stringSize-1)	// If number of correct characters in sequence = length
+                return stringIndex; // String found, return index location
+        }
+        else
+            j = 0;					// If character in sequence is incorrect, reset sequence counter j
+    }
+    return -1;                      // String not found, return -1
+}
 
 void get_GPS_data(uint8_t* data, int* bytesRead, bool* newPacket, const int uart_num, int uart_rx_buffer_size) //reset WDT
     {

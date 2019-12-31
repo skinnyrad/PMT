@@ -43,8 +43,26 @@ void app_main(void)
 {
     SD_Card_init();                  // Initialize SD Card
 
-    SD_Card_UNIT_TEST();             // Run Unit Test on SD Card with Mock Data
+    struct GPS_Data GPS_Data;
+    bool newPacket = false;
 
+    /* Open binary file for writing */
+    const char myFileName[] = "/sdcard/testfile.bin";
+    FILE* f = fopen(myFileName, "wb");
+
+    ESP_LOGI(TAG, "Opening file");
+
+    if (f == NULL) {
+        ESP_LOGE(TAG, "Failed to open file for writing");
+        return;
+    }
+
+    /* Write data sample with every new packet from GPS */
+    while (1) {
+        if (newPacket) {
+            write_data_sample(f, GPS_Data);    // Write GPS Data Sample to Log File
+        }
+    }
     /* All done, unmount partition and disable SDMMC or SPI peripheral */
     esp_vfs_fat_sdmmc_unmount();     // Deinitialize SD Card
     ESP_LOGI(TAG, "Card unmounted");
