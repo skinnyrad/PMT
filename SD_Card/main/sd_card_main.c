@@ -4,6 +4,13 @@
    Unless required by applicable law or agreed to in writing, this
    software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
    CONDITIONS OF ANY KIND, either express or implied.
+
+PINS Connections
+    MISO    PIN 2
+    MOSI    PIN 15
+    CLK     PIN 14
+    CS      PIN 13
+
 */
 
 #include <stdio.h>
@@ -18,7 +25,6 @@
 #include "sdmmc_cmd.h"
 
 static const char *TAG = "example";
-#define SD_READ_BUFFER_SIZE 64      // Read buffer size for reading each line of SD card
 
 /* Struct for holding GPS Tracking Data */
 struct GPS_Data {
@@ -32,33 +38,6 @@ void SD_Card_init();                                    // Initialize SD Card
 void SD_Card_UNIT_TEST();                               // Unit Test for SD Card using Mock Data 
 void write_data_log_header(FILE* f);                    // Writes GPS Data Header to Log File 
 void write_data_sample(FILE* f, struct GPS_Data data);  // Write GPS Data Sample to File 
-void readLine(FILE* f, char* line);                     // Read Line from File
-
-// This Test opens a text file. 
-// To open a binary file instead, uncomment the following line:
- #define OPEN_BINARY_FILE
-
-// This example can use SDMMC and SPI peripherals to communicate with SD card.
-// By default, SDMMC peripheral is used.
-// To enable SPI mode, uncomment the following line:
-
-//#define USE_SPI_MODE
-
-// When testing SD and SPI modes, keep in mind that once the card has been
-// initialized in SPI mode, it can not be reinitialized in SD mode without
-// toggling power to the card.
-#ifdef USE_SPI_MODE
-// Pin mapping when using SPI mode.
-// With this mapping, SD card can be used both in SPI and 1-line SD mode.
-// Note that a pull-up on CS line is required in SD mode.
-#define PIN_NUM_MISO 2
-#define PIN_NUM_MOSI 15
-#define PIN_NUM_CLK  14
-#define PIN_NUM_CS   13
-#endif //USE_SPI_MODE
-
-/*############################################################################################################*/
-/*############################################################################################################*/
 
 void app_main(void)
 {
@@ -71,9 +50,6 @@ void app_main(void)
     ESP_LOGI(TAG, "Card unmounted");
 }
 
-/*############################################################################################################*/
-/*############################################################################################################*/
-
 /* Writes GPS Data Header to Log File */
 void write_data_log_header(FILE* f)
 {
@@ -83,29 +59,8 @@ void write_data_log_header(FILE* f)
 /* Write GPS Data Sample to File */
 void write_data_sample(FILE* f, struct GPS_Data data)
 {
-    #ifdef OPEN_BINARY_FILE
-        // Binary File
-        fwrite(&data, sizeof(struct GPS_Data), 1, f);
-    #else
-        // Text File
-        fprintf(f, "%3.6f \t %3.6f \t%.4u:%.2d:%.2d  %.2d:%.2d:%.2d \n", 
-            data.latitude, data.longitude, 
-            data.year, data.month, data.day,
-            data.hour, data.minute, data.second
-           );
-    #endif
+    fwrite(&data, sizeof(struct GPS_Data), 1, f);
 }
-
-/* Read Line from File */
-    void readLine(FILE* f, char* line)
-    {
-        fgets(line, SD_READ_BUFFER_SIZE, f);
-        // strip newline
-        char* pos = strchr(line, '\n');
-        if (pos) {
-            *pos = '\0';
-        }
-    }
 
 /* Unit Test for SD Card using Mock Data */
 void SD_Card_UNIT_TEST()
@@ -113,14 +68,8 @@ void SD_Card_UNIT_TEST()
     struct GPS_Data GPS_Data;
 
  /* Open File for Writing */
-
-    #ifdef OPEN_BINARY_FILE
-        const char myFileName[] = "/sdcard/testfile.bin";
-        FILE* f = fopen(myFileName, "wb");
-    #else
-        const char myFileName[] = "/sdcard/testfile.txt";
-        FILE* f = fopen(myFileName, "w");
-    #endif
+    const char myFileName[] = "/sdcard/testfile.bin";
+    FILE* f = fopen(myFileName, "wb");
 
     ESP_LOGI(TAG, "Opening file");
 
@@ -131,10 +80,6 @@ void SD_Card_UNIT_TEST()
 
     /* Write to File */
     int sampleLength = 100;
-
-    #ifndef OPEN_BINARY_FILE
-        write_data_log_header(f);             // Write GPS Data Header to Log File 
-    #endif
 
     for (int i = 0; i < sampleLength; i++)
     {
@@ -166,34 +111,6 @@ void SD_Card_UNIT_TEST()
     
     fclose(f);
     ESP_LOGI(TAG, "File written");
-
-    /* Open file for reading */
-    ESP_LOGI(TAG, "Opening file");
-    f = fopen(myFileName, "rb");
-    if (f == NULL) {
-        ESP_LOGE(TAG, "Failed to open file for reading");
-        return;
-    }
-
-    #ifdef OPEN_BINARY_FILE 
-        while(fread(&GPS_Data, sizeof(struct GPS_Data), 1, f) == 1 )
-        {
-            printf("%3.6f \t %3.6f \t%.4u:%.2d:%.2d  %.2d:%.2d:%.2d \n", 
-            GPS_Data.latitude, GPS_Data.longitude, 
-            GPS_Data.year, GPS_Data.month, GPS_Data.day,
-            GPS_Data.hour, GPS_Data.minute, GPS_Data.second
-           );
-        }
-    #else
-        /* Read File Line by Line */
-        for (int i = 0; i < sampleLength; i++)
-        {
-            char line[SD_READ_BUFFER_SIZE];
-            readLine(f, line);
-            ESP_LOGI(TAG, "Read from file: '%s'", line);
-        }
-    #endif
-    fclose(f);
 }
 
 /* Initialize SD Card using SDMMC or SPI Peripheral */
@@ -204,7 +121,6 @@ void SD_Card_init()
      // Enable I/O Interrupts to accept SDIO Interrupts
         sdmmc_host_io_int_enable(SDMMC_HOST_SLOT_1);
 
-     #ifndef USE_SPI_MODE
         ESP_LOGI(TAG, "Using SDMMC peripheral");
         sdmmc_host_t host = SDMMC_HOST_DEFAULT();
 
@@ -223,19 +139,6 @@ void SD_Card_init()
         gpio_set_pull_mode(4, GPIO_PULLUP_ONLY);    // D1, needed in 4-line mode only
         gpio_set_pull_mode(12, GPIO_PULLUP_ONLY);   // D2, needed in 4-line mode only
         gpio_set_pull_mode(13, GPIO_PULLUP_ONLY);   // D3, needed in 4- and 1-line modes     (CS)
-
-    #else
-        ESP_LOGI(TAG, "Using SPI peripheral");
-
-        sdmmc_host_t host = SDSPI_HOST_DEFAULT();
-        sdspi_slot_config_t slot_config = SDSPI_SLOT_CONFIG_DEFAULT();
-        slot_config.gpio_miso = PIN_NUM_MISO;
-        slot_config.gpio_mosi = PIN_NUM_MOSI;
-        slot_config.gpio_sck  = PIN_NUM_CLK;
-        slot_config.gpio_cs   = PIN_NUM_CS;
-        // This initializes the slot without card detect (CD) and write protect (WP) signals.
-        // Modify slot_config.gpio_cd and slot_config.gpio_wp if your board has these signals.
-    #endif //USE_SPI_MODE
 
         // Options for mounting the filesystem.
         // If format_if_mount_failed is set to true, SD card will be partitioned and
