@@ -35,13 +35,14 @@ int main()
 		return 1;
 	}
 
-	/* Read from File */
+	/* Read from binary file and write to text file */
 	struct GPS_Data GPS_Data;
 
+	write_data_log_header(outfile);	 // Print Column Header
 	while (fread(&GPS_Data, sizeof(struct GPS_Data), 1, infile) == 1)
 		write_data_sample(outfile, GPS_Data);  // Write GPS Data Sample to File 
-
-											   /* Close files */
+	
+	/* Close files */
 	fclose(infile);
 	fclose(outfile);
 
