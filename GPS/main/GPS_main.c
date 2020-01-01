@@ -22,8 +22,7 @@
 /* Struct for holding GPS Tracking Data */
 struct GPS_Data {
     float latitude, longitude;
-    uint16_t year;
-    uint8_t month, day, hour, minute, second;
+    uint8_t year, month, day, hour, minute, second;
 };
 
 /* Function Prototypes */
@@ -34,6 +33,7 @@ void print_data_sample(struct GPS_Data data);   // Print GPS Data to terminal
 void parse_UTC_time(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, int bufferSize);  // Parse Universal time from GPS: hh:mm:ss
 void parse_latitude(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, int bufferSize);  // Parse Latitude: ddmm.mmmm 
 void parse_longitude(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, int bufferSize); // Parse Longitude: dddmm.mmmm
+void parse_date(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, int bufferSize);      // Parse Date: ddmmyy
 
 void app_main()
 {
@@ -55,12 +55,16 @@ void app_main()
         get_GPS_data(data, &bytesRead, &newPacket, uart_num, uart_rx_buffer_size);
         if (newPacket) {        // New Data Packet
             newPacket = false;
-
-            int stringIndex = stringSearch(data, bytesRead, "GNGGA", 5);    // Search for GNGAA in buffer
+        
+        /*
+            for (int i = 0, j = 0; i < bytesRead; i++) 
+            {
+                printf("%c", data[i]);
+            }
+        */
+            int stringIndex = stringSearch(data, bytesRead, "GNRMC", 5);    // Search for GNRMC in buffer
             if (stringIndex != -1) 
             {
-                // printf("GNGAA found at: %d \n", stringIndex);
-
                 /* Parse Data */
 
                 // Reset GPS Data struct
@@ -72,12 +76,26 @@ void app_main()
 
                 parse_UTC_time(&nextIndex, &GPS_Data, data, bytesRead);  // Parse UTC Time
                 nextIndex++;                                             // skip comma
+                while (data[nextIndex] != ',')    nextIndex++;           // Skip unwanted data
+                nextIndex++;                                             // skip comma
+
                 parse_latitude(&nextIndex, &GPS_Data, data, bytesRead);  // Parse Latitude: ddmm.mmmm 
+                nextIndex++;                                             // skip comma         
+                while (data[nextIndex] != ',')    nextIndex++;           // Skip unwanted data
+                nextIndex++;                                             // skip comma
+
+                parse_longitude(&nextIndex, &GPS_Data, data, bytesRead); // Parse Longitude: dddmm.mmmm
+                
                 nextIndex++;                                             // skip comma
                 while (data[nextIndex] != ',')    nextIndex++;           // Skip unwanted data
                 nextIndex++;                                             // skip comma
-                parse_longitude(&nextIndex, &GPS_Data, data, bytesRead); // Parse Longitude: dddmm.mmmm 
+                while (data[nextIndex] != ',')    nextIndex++;           // Skip unwanted data
+                nextIndex++;                                             // skip comma
+                while (data[nextIndex] != ',')    nextIndex++;           // Skip unwanted data
+                nextIndex++;                                             // skip comma 
 
+                parse_date(&nextIndex, &GPS_Data, data, bytesRead);      // Parse Date: ddmmyy       
+                
                 print_data_sample(GPS_Data);   // Print GPS Data to terminal            
             }
         }  
@@ -141,6 +159,29 @@ void parse_latitude(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, in
     *nextIndex = i;  // return current location of character pointer in buffer
 }
 
+/* Parse Date: ddmmyy*/
+void parse_date(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, int bufferSize)
+{
+    int i = *nextIndex;
+    int j = 0;     
+    while (data[i] != ',')       // Start at location 5 + 1(comma)
+    {
+        // Date: ddmmyy
+        switch (j) 
+        {
+            case 0: GPS_Data->day += (data[i] - '0') << 1;     break;   
+            case 1: GPS_Data->day += data[i] - '0';            break;
+            case 2: GPS_Data->month += (data[i] - '0') << 1;   break;
+            case 3: GPS_Data->month += data[i] - '0';          break;
+            case 4: GPS_Data->year += (data[i] - '0') << 1;   break;
+            case 5: GPS_Data->year += data[i] - '0';          break;
+        }
+        i++; j++;
+    }  
+
+    *nextIndex = i;  // return current location of character pointer in buffer
+}
+
 /* Parse Universal time from GPS: hh:mm:ss */
 void parse_UTC_time(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, int bufferSize)
 {
@@ -148,29 +189,15 @@ void parse_UTC_time(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, in
     int j = 0;     
     while (data[i] != ',')       // Start at location 5 + 1(comma)
     {
-        // UTC Time: hhmmss.sss
-        if (j < 2)   // hh: hour
+        // UTC Time: hhmmss.sss 
+        switch (j) 
         {
-            if (j == 0)
-                GPS_Data->hour += (data[i] - '0') << 1;   // convert from char to int and shift 1 left
-            else
-                GPS_Data->hour += data[i] - '0';         // convert from char to int 
-        }   
-
-        else if (j < 4)   // mm: minute
-        {
-            if (j == 2)
-                GPS_Data->minute += (data[i] - '0') << 1;   // convert from char to int and shift 1 left
-            else
-                GPS_Data->minute += data[i] - '0';         // convert from char to int    
-        }
-
-        else if (j < 6)   // ss: second
-        {
-            if (j == 4)
-                GPS_Data->second += (data[i] - '0') << 1;   // convert from char to int and shift 1 left
-            else
-                GPS_Data->second += data[i] - '0';         // convert from char to int 
+            case 0: GPS_Data->hour += (data[i] - '0') << 1;     break;   
+            case 1: GPS_Data->hour += data[i] - '0';            break;
+            case 2: GPS_Data->minute += (data[i] - '0') << 1;   break;
+            case 3: GPS_Data->minute += data[i] - '0';          break;
+            case 4: GPS_Data->second += (data[i] - '0') << 1;   break;
+            case 5: GPS_Data->second += data[i] - '0';          break;
         }
         i++; j++;
     }  
@@ -183,7 +210,8 @@ void parse_UTC_time(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, in
 int stringSearch(uint8_t* buffer, int bufferSize, const char* string, int stringSize)
 {
     int stringIndex;
-    for (int i = 0, j = 0; i < bufferSize; i++) {
+    for (int i = 0, j = 0; i < bufferSize; i++) 
+    {
         if (string[j] == buffer[i]) {
             if (j == 0)				// First character correct
                 stringIndex = i;	// Mark starting location of string
@@ -201,9 +229,9 @@ int stringSearch(uint8_t* buffer, int bufferSize, const char* string, int string
 /* Print GPS Data to terminal */
 void print_data_sample(struct GPS_Data data)
 {
-	printf("%3.6f \t %3.6f \t%.4u:%.2d:%.2d  %.2d:%.2d:%.2d \n",
+	printf("%3.6f \t %3.6f \t%.2d:%.2d:%.2d  %.2d:%.2d:%.2d \n",
 		data.latitude, data.longitude,
-		data.year, data.month, data.day,
+		data.day, data.month, data.year,
 		data.hour, data.minute, data.second
 	);
 }
