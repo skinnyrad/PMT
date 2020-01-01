@@ -26,10 +26,12 @@ struct GPS_Data {
     uint8_t month, day, hour, minute, second;
 };
 
+/* Function Prototypes */
 void GPS_init(const int uart_num, int uart_rx_buffer_size, int uart_tx_buffer_size);
 void get_GPS_data(uint8_t* data, int* bytesRead, bool* newPacket, const int uart_num, int uart_rx_buffer_size); //reset WDT
 int stringSearch(uint8_t* buffer, int bufferSize, const char* string, int stringSize); 
 void print_data_sample(struct GPS_Data data);   // Print GPS Data to terminal 
+void parse_UTC_time(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, int bufferSize);  // Parse Universal time from GPS: hh:mm:ss
 
 void app_main()
 {
@@ -38,7 +40,6 @@ void app_main()
     int uart_rx_buffer_size = 2048;
     int uart_tx_buffer_size = 2048;
     uint8_t data[uart_rx_buffer_size];
-    uint8_t temp_buffer[15];   
     bool newPacket = false;
     int bytesRead = 0;
     struct GPS_Data GPS_Data;
@@ -65,39 +66,10 @@ void app_main()
                  GPS_Data.year = 0; GPS_Data.month = 0; GPS_Data.day = 0;
                  GPS_Data.hour = 0; GPS_Data.minute = 0; GPS_Data.second = 0;  
 
-                // Parse UTC time 
-                int i = stringIndex + 5 + 1; // stringIndex + length + comma
-                int j = 0;                   // counter
-                while (data[i] != ',')       // Start at location 5 + 1(comma)
-                {
-                    temp_buffer[i] = data[i];       // Store UTC data as characters to temp buffer
-                
-                    // UTC Time: hhmmss.sss
-                    if (j < 2)   // hh: hour
-                    {
-                        if (j == 0)
-                            GPS_Data.hour += (temp_buffer[i] - '0') << 1;   // convert from char to int and shift 1 left
-                        else
-                            GPS_Data.hour += temp_buffer[i] - '0';         // convert from char to int 
-                    }   
+                int nextIndex = stringIndex + 5 + 1; // stringIndex + length + comma      
 
-                    else if (j < 4)   // mm: minute
-                    {
-                        if (j == 2)
-                            GPS_Data.minute += (temp_buffer[i] - '0') << 1;   // convert from char to int and shift 1 left
-                        else
-                            GPS_Data.minute += temp_buffer[i] - '0';         // convert from char to int    
-                    }
+                parse_UTC_time(&nextIndex, &GPS_Data, data, bytesRead); // Parse UTC Time
 
-                    else if (j < 6)   // ss: second
-                    {
-                        if (j == 4)
-                            GPS_Data.second += (temp_buffer[i] - '0') << 1;   // convert from char to int and shift 1 left
-                        else
-                            GPS_Data.second += temp_buffer[i] - '0';         // convert from char to int 
-                    }
-                    i++; j++;
-                }  
                 print_data_sample(GPS_Data);   // Print GPS Data to terminal            
             }
         }  
@@ -107,6 +79,44 @@ void app_main()
     fflush(stdout);
     esp_restart();
 }
+
+/* Parse Universal time from GPS: hh:mm:ss */
+void parse_UTC_time(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, int bufferSize)
+{
+    int i = *nextIndex;
+    int j = 0;     
+    while (data[i] != ',')       // Start at location 5 + 1(comma)
+    {
+        // UTC Time: hhmmss.sss
+        if (j < 2)   // hh: hour
+        {
+            if (j == 0)
+                GPS_Data->hour += (data[i] - '0') << 1;   // convert from char to int and shift 1 left
+            else
+                GPS_Data->hour += data[i] - '0';         // convert from char to int 
+        }   
+
+        else if (j < 4)   // mm: minute
+        {
+            if (j == 2)
+                GPS_Data->minute += (data[i] - '0') << 1;   // convert from char to int and shift 1 left
+            else
+                GPS_Data->minute += data[i] - '0';         // convert from char to int    
+        }
+
+        else if (j < 6)   // ss: second
+        {
+            if (j == 4)
+                GPS_Data->second += (data[i] - '0') << 1;   // convert from char to int and shift 1 left
+            else
+                GPS_Data->second += data[i] - '0';         // convert from char to int 
+        }
+        i++; j++;
+    }  
+
+    *nextIndex = i;  // return current location of character pointer in buffer
+}
+
 
 /* Searches for starting index of a string within a buffer */
 int stringSearch(uint8_t* buffer, int bufferSize, const char* string, int stringSize)
