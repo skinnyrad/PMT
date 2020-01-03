@@ -16,6 +16,7 @@
 #include "esp_system.h"
 #include "esp_spi_flash.h"
 #include "esp_task_wdt.h"
+#include "string.h"
 
 #include "driver/uart.h"
 
@@ -28,14 +29,15 @@ struct GPS_Data {
 /* Function Prototypes */
 void GPS_init(const int uart_num, int uart_rx_buffer_size, int uart_tx_buffer_size);
 void get_GPS_data(uint8_t* data, int* bytesRead, bool* newPacket, const int uart_num, int uart_rx_buffer_size); //reset WDT
-int stringSearch(uint8_t* buffer, int bufferSize, const char* string, int stringSize); 
+bool prepare_GNRMC_data(uint8_t* data, int bytesRead, uint8_t* GNRMC_data, int* GNRMC_data_length);             // Reads data packets until GNRMC data sample fully read
+int stringSearch(uint8_t* buffer, int bufferSize, const char* string, int stringSize, int startReadingIndex);   // Searches a buffer for "String"
 void print_data_sample(struct GPS_Data data);   // Print GPS Data to terminal 
 void parse_UTC_time(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, int bufferSize);  // Parse Universal time from GPS: hh:mm:ss
 void parse_latitude(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, int bufferSize);  // Parse Latitude: ddmm.mmmm 
 void parse_longitude(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, int bufferSize); // Parse Longitude: dddmm.mmmm
 void parse_date(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, int bufferSize);      // Parse Date: ddmmyy
 
-void parse_all_data(struct GPS_Data *GPS_Data, uint8_t* data, int bytesRead);                   // Parse All GPS Data 
+void parse_all_data(struct GPS_Data *GPS_Data, uint8_t* data, int dataLength);                  // Parse All GPS Data 
 
 void app_main()
 {
@@ -44,121 +46,137 @@ void app_main()
     int uart_rx_buffer_size = 2048;
     int uart_tx_buffer_size = 2048;
     uint8_t data[uart_rx_buffer_size];
+    uint8_t GNRMC_data[100];
+    int GNRMC_data_length = 0;  
     bool newPacket = false;
     int bytesRead = 0;
     struct GPS_Data GPS_Data;
-    int stringIndex;
-    
     
     GPS_init(uart_num, uart_rx_buffer_size, uart_tx_buffer_size);
     
     printf("Begin Listening for packets...\n");
     while (true) 
     {
-        get_GPS_data(data, &bytesRead, &newPacket, uart_num, uart_rx_buffer_size);
+        get_GPS_data(data, &bytesRead, &newPacket, uart_num, uart_rx_buffer_size); // Read raw data from GPS
         if (newPacket) 
-        {        
-            // New Data Packet
-            newPacket = false;  
-                            /* Parse Data */
-            /*
-                for(int i = 0; i < bytesRead; i++)
-                {
-                    printf("%c", data[i]);
-                }
-            */
-            // printf("\n***************************************************\n");
-            stringIndex = stringSearch(data, bytesRead, "GNRMC", 5);    // Search for GNRMC in buffer
-
-            // printf("@@ StringIndex = %d @@\n", stringIndex);
-            if (stringIndex != -1) 
+        {    
+            newPacket = false; // Packet received, reset flag
+            
+            /* Reads data packets until GNRMC data sample fully read. The GPS sends incomplete packets. 
+               So, the entire line of GNRMC data must be received before processing  */
+            bool dataReady = prepare_GNRMC_data(data, bytesRead, GNRMC_data, &GNRMC_data_length);             
+           
+            if (dataReady)
             {
-                // Reset GPS Data struct
-                GPS_Data.latitude = 0; GPS_Data.longitude = 0;
-                GPS_Data.year = 0; GPS_Data.month = 0; GPS_Data.day = 0;
-                GPS_Data.hour = 0; GPS_Data.minute = 0; GPS_Data.second = 0;  
-
-                int nextIndex = stringIndex + 5 + 1; // stringIndex + length + comma      
-
-                parse_UTC_time(&nextIndex, &GPS_Data, data, bytesRead);      // Parse UTC Time
-
-                if (data[nextIndex] == 'A')                                  // If GPS Data Valid, keep data. 'V' = Invalid Data
-                {
-                    nextIndex = nextIndex + 2;                               // Skip "Valid Data character" and comma
-
-                    parse_latitude(&nextIndex, &GPS_Data, data, bytesRead);  // Parse Latitude: ddmm.mmmm 
-                    if (data[nextIndex] == 'S')
-                        GPS_Data.latitude *= -1;                             // Make latitude negative if on South Pole
-                                                                             // skip comma
-                    nextIndex = nextIndex + 2;                               // Skip N/S and comma    
-
-                    parse_longitude(&nextIndex, &GPS_Data, data, bytesRead); // Parse Longitude: dddmm.mmmm
-                    if (data[nextIndex] == 'W')
-                        GPS_Data.longitude *= -1;                            // Make longitude negative if on West of Prime Meridian
-                                                                             // skip comma
-                    nextIndex = nextIndex + 2;                               // Skip E/W and comma   
-
-                    while (data[nextIndex] != ',')    nextIndex++;           // Skip unwanted data
-                    nextIndex++;                                             // skip comma
-                    while (data[nextIndex] != ',')    nextIndex++;           // Skip unwanted data
-                    nextIndex++;                                             // skip comma 
-
-                    parse_date(&nextIndex, &GPS_Data, data, bytesRead);      // Parse Date: ddmmyy
-
-                    // parse_all_data(&GPS_Data, data, bytesRead);  // Parse All GPS Data 
-                     print_data_sample(GPS_Data);                 // Print GPS Data to terminal    
-        
-                }    
-                // printf("\n***************************************************\n");
-            }  
+                parse_all_data(&GPS_Data, GNRMC_data, GNRMC_data_length);     // Parse All GPS Data
+                print_data_sample(GPS_Data);                                  // Print GPS Data to terminal    
+                GNRMC_data_length = 0;                                        // Reset GNRMC data length                   
+            }
         }  
     }
-
     printf("Restarting now.\n");
     fflush(stdout);
     esp_restart();
 }
 
-/* Parse All GPS Data */
-void parse_all_data(struct GPS_Data *GPS_Data, uint8_t* data, int bytesRead)
+/* Concatenates Multiple GPS data packets to make a complete GNRMC data sample */
+bool prepare_GNRMC_data(uint8_t* data, int bytesRead, uint8_t* GNRMC_data, int* GNRMC_data_length)
 {
-    int stringIndex = stringSearch(data, bytesRead, "GNRMC", 5);    // Search for GNRMC in buffer
-    if (stringIndex != -1) 
+    static bool startFound, stopFound = false;   // Flags for checking if the "GNRMC" line has been found within the GPS data
+    static int stringIndexStart, stringIndexStop = 0;
+    if (!startFound)
     {
-        /* Parse Data */
-
-        // Reset GPS Data struct
-        GPS_Data->latitude = 0; GPS_Data->longitude = 0;
-        GPS_Data->year = 0; GPS_Data->month = 0; GPS_Data->day = 0;
-        GPS_Data->hour = 0; GPS_Data->minute = 0; GPS_Data->second = 0;  
-
-        int nextIndex = stringIndex + 5 + 1; // stringIndex + length + comma      
-
-        parse_UTC_time(&nextIndex, GPS_Data, data, bytesRead);  // Parse UTC Time
-      
-        if (data[nextIndex] == 'A')                                  // If GPS Data Valid, keep data. 'V' = Invalid Data
-        {
-            while (data[nextIndex] != ',')    nextIndex++;           // Skip unwanted data
-            nextIndex++;                                             // skip comma
-
-            parse_latitude(&nextIndex, GPS_Data, data, bytesRead);  // Parse Latitude: ddmm.mmmm 
-            nextIndex++;                                             // skip comma         
-            while (data[nextIndex] != ',')    nextIndex++;           // Skip unwanted data
-            nextIndex++;                                             // skip comma
-
-            parse_longitude(&nextIndex, GPS_Data, data, bytesRead); // Parse Longitude: dddmm.mmmm
-            
-            nextIndex++;                                             // skip comma
-            while (data[nextIndex] != ',')    nextIndex++;           // Skip unwanted data
-            nextIndex++;                                             // skip comma
-            while (data[nextIndex] != ',')    nextIndex++;           // Skip unwanted data
-            nextIndex++;                                             // skip comma
-            while (data[nextIndex] != ',')    nextIndex++;           // Skip unwanted data
-            nextIndex++;                                             // skip comma 
-
-            parse_date(&nextIndex, GPS_Data, data, bytesRead);      // Parse Date: ddmmyy     
+        stringIndexStart = stringSearch(data, bytesRead, "GNRMC", 5, 0);    // Search for GNRMC in buffer
+        if (stringIndexStart != -1)     // Found start of GNRMC data
+        {   
+            startFound = true;          
+            stringIndexStop = stringSearch(data, bytesRead, "\n", 1, stringIndexStart); // Search for '\n' in buffer
+            if (stringIndexStop != -1)  // Found all GNRMC data in 1 packet
+            {
+                stopFound  = true;      
+                *GNRMC_data_length = 0;
+                for (int i = stringIndexStart; i <= stringIndexStop; i++, *GNRMC_data_length = *GNRMC_data_length+1)   
+                {
+                    GNRMC_data[*GNRMC_data_length] = data[i];
+                }
+            }
+            else   // Found start, but did not find end of GNRMC data
+            {
+                *GNRMC_data_length = 0;
+                for (int i = stringIndexStart; i < bytesRead; i++, *GNRMC_data_length = *GNRMC_data_length+1)  
+                {
+                    GNRMC_data[*GNRMC_data_length] = data[i];        // Copy start of GNRMC data
+                }
+            }
         }
     }
+    else            // Start of GNRMC data has already been found in a previous data packet
+    {       
+        stringIndexStop = stringSearch(data, bytesRead, "\n", 1, stringIndexStart); // Search for '\n' in buffer
+
+        if (stringIndexStop != -1)  // Found last piece of data
+        {
+            stopFound  = true;     
+            for (int i = stringIndexStart; i <= stringIndexStop; i++, *GNRMC_data_length = *GNRMC_data_length+1)   
+            {
+                GNRMC_data[*GNRMC_data_length] = data[i];
+            }
+        }
+        else   // Found start, but did not find end of GNRMC data
+        {
+            // GNRMC_data_length keeps from previous value and accumulates
+            for (int i = stringIndexStart; i < bytesRead; i++, *GNRMC_data_length = *GNRMC_data_length+1)  
+            {
+                GNRMC_data[*GNRMC_data_length] = data[i];        // Copy start of GNRMC data
+            }
+        }
+    }
+
+    if (startFound && stopFound)
+    {                  
+        startFound = false;                                           // Reset startFound
+        stopFound = false;                                            // Reset stopFound  
+        return true;            // Data packet ready for processing
+    }
+    else
+        return false;           // Data packet not yet complete
+}
+
+/* Parse All GPS Data */
+void parse_all_data(struct GPS_Data *GPS_Data, uint8_t* data, int dataLength)
+{         
+    // Reset GPS Data struct
+    GPS_Data->latitude = 0; GPS_Data->longitude = 0;
+    GPS_Data->year = 0; GPS_Data->month = 0; GPS_Data->day = 0;
+    GPS_Data->hour = 0; GPS_Data->minute = 0; GPS_Data->second = 0;  
+
+    int nextIndex = 5 + 1; // GNRMC + comma      
+
+    parse_UTC_time(&nextIndex, GPS_Data, data, dataLength);      // Parse UTC Time
+
+    if (data[nextIndex] == 'A')                                  // If GPS Data Valid, keep data. 'V' = Invalid Data
+    {
+        nextIndex = nextIndex + 2;                               // Skip "Valid Data character" and comma
+
+        parse_latitude(&nextIndex, GPS_Data, data, dataLength);  // Parse Latitude: ddmm.mmmm 
+        if (data[nextIndex] == 'S')
+            GPS_Data->latitude *= -1;                             // Make latitude negative if on South Pole
+                                                                    // skip comma
+        nextIndex = nextIndex + 2;                               // Skip N/S and comma    
+
+        parse_longitude(&nextIndex, GPS_Data, data, dataLength); // Parse Longitude: dddmm.mmmm
+        if (data[nextIndex] == 'W')
+            GPS_Data->longitude *= -1;                            // Make longitude negative if on West of Prime Meridian
+                                                                    // skip comma
+        nextIndex = nextIndex + 2;                               // Skip E/W and comma   
+
+        while (data[nextIndex] != ',')    nextIndex++;           // Skip unwanted data
+        nextIndex++;                                             // skip comma
+        while (data[nextIndex] != ',')    nextIndex++;           // Skip unwanted data
+        nextIndex++;                                             // skip comma 
+
+        parse_date(&nextIndex, GPS_Data, data, dataLength);      // Parse Date: ddmmyy
+    }    
 }
 /* Parse Longitude: dddmm.mmmm  */
 void parse_longitude(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, int bufferSize)
@@ -260,18 +278,21 @@ void parse_UTC_time(int* nextIndex, struct GPS_Data *GPS_Data, uint8_t* data, in
 
 
 /* Searches for starting index of a string within a buffer */
-int stringSearch(uint8_t* buffer, int bufferSize, const char* string, int stringSize)
+int stringSearch(uint8_t* buffer, int bufferSize, const char* string, int stringSize, int startReadingIndex)
+
 {
     int stringIndex;
-    for (int i = 0, j = 0; i < bufferSize; i++) 
+    for (int i = startReadingIndex, j = 0; i < bufferSize; i++) 
     {
         if (string[j] == buffer[i]) {
             if (j == 0)				// First character correct
                 stringIndex = i;	// Mark starting location of string
             j++;    				// Increment j for every correct character in sequence
 
-            if (j == stringSize-1)	// If number of correct characters in sequence = length
+            if (j == stringSize)	// If number of correct characters in sequence = length
+            {   
                 return stringIndex; // String found, return index location
+            }
         }
         else
             j = 0;					// If character in sequence is incorrect, reset sequence counter j
@@ -284,7 +305,7 @@ void print_data_sample(struct GPS_Data data)
 {
 	printf("%2.6f \t %3.6f \t%.2d:%.2d:%.2d  %.2d:%.2d:%.2d \n",
 		data.latitude, data.longitude,
-		data.day, data.month, data.year,
+		data.month, data.day, data.year,
 		data.hour, data.minute, data.second
 	);
 }
@@ -308,10 +329,10 @@ void get_GPS_data(uint8_t* data, int* bytesRead, bool* newPacket, const int uart
         }
 
         //otherwise it must have stopped sending
-        if(*newPacket){
+        if(*newPacket)
+        {
             //get the buffer contents
             *bytesRead = uart_read_bytes(uart_num, data, newLength, 100);
-            // printf("\nUART%d received %d bytes:\n", uart_num, *bytesRead);
         }
     }
 
