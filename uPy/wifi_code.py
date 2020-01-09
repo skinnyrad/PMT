@@ -20,27 +20,18 @@ url = "http://example.com"
 # Create a station object to store our connection
 station = network.WLAN(network.STA_IF)
 
+# activate station
 station.active(True)
 while True :
-    # Scan for the available wireless networks.
-    print ("#### All Networks ####\n")
+    #print ("#### All Networks ####\n")
     nets = station.scan()
-    
-    print (*nets, sep = "\n")
-    print ("#### ------------ ####\n")
-    # print (*sortedOpenNets, sep = "\n")
+
     # get only open nets
-    
     openNets = [n for n in nets if n[4] == 0]
     print ("#### openNets ####\n")
     print (*openNets, sep = "\n")
     # sort based on RSSI
     print ("#### -------- ####\n")
-    # print ("#### Sorted openNets ####\n")
-    # sortedOpenNets = sorted(openNets,key=lambda l:l[3])
-    # print (*sortedOpenNets, sep = "\n")
-    # print ("#### --------------- ####\n")
-    # Continually try to connect to WiFi access point
     for onet in openNets):
         # Try to connect to WiFi access point
         apSSID = onet.ssid
