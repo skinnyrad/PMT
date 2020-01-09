@@ -1,5 +1,6 @@
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+import json
+import requests
+from requests.exceptions import HTTPError 
 from typing import Any, Dict, List
 
 def auth_gapi(json_keyfile: str, scope: List[str]):
@@ -60,19 +61,19 @@ def constructXml(inner_xml: str) -> str:
     return outer_xml
 
 def main():
-    json_keyfile = "KMLPoc-e08b6d5cdfa8.json"
-    sheetsName = "KMLData"
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    gapi = auth_gapi(json_keyfile, scope)
+    try:
+        data = requests.get('https://pmtlogger.000webhostapp.com/api/getKML.php')
 
-    wks = gapi.open(sheetsName).sheet1
-    gpsData = wks.get_all_records()
+        data.raise_for_status()
+    except HTTPError as e:
+        print(f'HTTP error occurred: {http_err}')
+    else:
+        gpsData = json.loads(data.text[1:])
+        inner_xml = "".join(constructPins(point) for point in gpsData) + constructPath(gpsData)
+        xml = constructXml(inner_xml)
 
-    inner_xml = "".join(constructPins(point) for point in gpsData) + constructPath(gpsData)
-    xml = constructXml(inner_xml)
-
-    with open("GPSData.kml", "w") as outfile:
-        outfile.write(xml)
+        with open("GPSData.kml", "w") as outfile:
+            outfile.write(xml)
 
 if __name__ == "__main__":
     main()
