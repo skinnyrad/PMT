@@ -1,3 +1,15 @@
+# ---------------------------------------
+#  _____  __  __ _______        __   ___  
+# |  __ \|  \/  |__   __|      /_ | / _ \ 
+# | |__) | \  / |  | |    __   _| || | | |
+# |  ___/| |\/| |  | |    \ \ / / || | | |
+# | |    | |  | |  | |     \ V /| || |_| |
+# |_|    |_|  |_|  |_|      \_/ |_(_)___/ 
+# ----------------------------------------
+#  Version 1.0
+#  microPython Firmware esp32spiram-idf3-20191220-v1.12
+#  Filename : main.py
+
 import sys
 import network
 # import utime
@@ -24,6 +36,7 @@ station = network.WLAN(network.STA_IF)
 station.active(True)
 while True :
     #print ("#### All Networks ####\n")
+    # tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
     nets = station.scan()
 
     # get only open nets
@@ -45,30 +58,4 @@ while True :
 
 # Returns list of tuples with the information about WiFi access points:
 # (ssid, bssid, channel, RSSI, authmode, hidden)
-# while True:
-#     scannedAPs = station.scan()
-#     for i in range(len(scannedAPs)): 
-#         print(scannedAPs[i]) 
-# Continually try to connect to WiFi access point
-# while not station.isconnected():
 
-#     # Try to connect to WiFi access point
-#     # print("Connecting...")
-#     station.connect(wifi_ssid, wifi_password)
-
-# # Continually print out HTML from web page as long as we have a connection
-# while station.isconnected():
-
-#     # Display connection details
-#     print("Connected!")
-#     print("My IP Address:", station.ifconfig()[0])
-
-#     # Perform HTTP GET request on a non-SSL web
-#     response = urequests.get(url)
-
-#     # Display the contents of the page
-#     print(response.text)
-
-
-# If we lose connection, repeat this main.py and retry for a connection
-# print("Connection lost. Trying again.")
