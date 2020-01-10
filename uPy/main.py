@@ -39,7 +39,7 @@ station.active(True)
 successful_post = False
 
 # https request information
-url = "https://pmtlogger.000webhostapp.com/api/writeCSV.php"
+url = "https://pmtlogger.000webhostapp.com/api/postCSV.php"
 
 ## "id","Longitude","Latitude","Date","Time"
 dataCSV = [
