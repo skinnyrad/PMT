@@ -63,6 +63,7 @@ void app_main(void)
             write_data_sample(f, GPS_Data);    // Write GPS Data Sample to Log File
         }
     }
+    
     /* All done, unmount partition and disable SDMMC or SPI peripheral */
     esp_vfs_fat_sdmmc_unmount();     // Deinitialize SD Card
     ESP_LOGI(TAG, "Card unmounted");
@@ -187,4 +188,4 @@ void SD_Card_init()
 
         // Card has been initialized, print its properties
         sdmmc_card_print_info(stdout, card);
-}
+    }
