@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+    <name>GPSData</name>
+    <Style id="s_ylw-pushpin">
+        <IconStyle>
+            <scale>1.1</scale>
+            <Icon>
+                <href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+            </Icon>
+            <hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+        </IconStyle>
+    </Style>
+    <StyleMap id="m_ylw-pushpin">
+        <Pair>
+            <key>normal</key>
+            <styleUrl>#s_ylw-pushpin</styleUrl>
+        </Pair>
+        <Pair>
+            <key>highlight</key>
+            <styleUrl>#s_ylw-pushpin_hl</styleUrl>
+        </Pair>
+    </StyleMap>
+    <Style id="s_ylw-pushpin_hl">
+        <IconStyle>
+            <scale>1.3</scale>
+            <Icon>
+                <href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+            </Icon>
+            <hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+        </IconStyle>
+    </Style><Placemark><name>1</name><gx:TimeStamp><when>2019-10-14T14:30:00Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64123,34.72259,0</coordinates></Point></Placemark><Placemark><name>2</name><gx:TimeStamp><when>2019-10-15T14:30:10Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64112,34.72322,0</coordinates></Point></Placemark><Placemark><name>3</name><gx:TimeStamp><when>2019-10-16T14:30:20Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64203,34.7235,0</coordinates></Point></Placemark><Placemark><name>4</name><gx:TimeStamp><when>2019-10-17T14:30:30Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64211,34.72425,0</coordinates></Point></Placemark><Placemark><name>5</name><gx:TimeStamp><when>2019-10-18T14:30:40Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64194,34.72454,0</coordinates></Point></Placemark><Placemark><name>6</name><gx:TimeStamp><when>2019-10-19T14:30:50Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64219,34.72481,0</coordinates></Point></Placemark><Placemark><name>7</name><gx:TimeStamp><when>2019-10-20T14:31:00Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.6426,34.72461,0</coordinates></Point></Placemark><Placemark><name>8</name><gx:TimeStamp><when>2019-10-21T14:31:10Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.6428,34.72421,0</coordinates></Point></Placemark><Placemark><name>9</name><gx:TimeStamp><when>2019-10-22T14:31:20Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64318,34.724,0</coordinates></Point></Placemark><Placemark><name>10</name><gx:TimeStamp><when>2019-10-23T14:31:30Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64363,34.72393,0</coordinates></Point></Placemark><Placemark><name>11</name><gx:TimeStamp><when>2019-10-24T14:31:40Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64398,34.7241,0</coordinates></Point></Placemark><Placemark><name>12</name><gx:TimeStamp><when>2019-10-25T14:31:50Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64397,34.72452,0</coordinates></Point></Placemark><Placemark><name>13</name><gx:TimeStamp><when>2019-10-26T14:32:00Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64394,34.725,0</coordinates></Point></Placemark><Placemark><name>14</name><gx:TimeStamp><when>2019-10-27T14:32:10Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64392,34.72536,0</coordinates></Point></Placemark><Placemark><name>15</name><gx:TimeStamp><when>2019-10-28T14:32:20Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64387,34.72576,0</coordinates></Point></Placemark><Placemark><name>16</name><gx:TimeStamp><when>2019-10-29T14:32:30Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64358,34.72601,0</coordinates></Point></Placemark><Placemark><name>17</name><gx:TimeStamp><when>2019-10-30T14:32:40Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64256,34.7263,0</coordinates></Point></Placemark><Placemark><name>18</name><gx:TimeStamp><when>2019-10-31T14:32:50Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64186,34.72674,0</coordinates></Point></Placemark><Placemark><name>19</name><gx:TimeStamp><when>2019-11-01T14:33:00Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64096,34.72733,0</coordinates></Point></Placemark><Placemark><name>20</name><gx:TimeStamp><when>2019-11-02T14:33:10Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.64001,34.72761,0</coordinates></Point></Placemark><Placemark><name>21</name><gx:TimeStamp><when>2019-11-03T14:33:20Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.63858,34.72767,0</coordinates></Point></Placemark><Placemark><name>22</name><gx:TimeStamp><when>2019-11-04T14:33:30Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.63801,34.72698,0</coordinates></Point></Placemark><Placemark><name>23</name><gx:TimeStamp><when>2019-11-05T14:33:40Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.63822,34.72649,0</coordinates></Point></Placemark><Placemark><name>24</name><gx:TimeStamp><when>2019-11-06T14:33:50Z</when></gx:TimeStamp><styleUrl>#m_ylw-pushpin</styleUrl><Point><coordinates>-86.63893,34.72611,0</coordinates></Point></Placemark><Placemark><name>Path</name><styleUrl>#m_ylw-pushpin</styleUrl><LineString><tessellate>1</tessellate><coordinates>-86.64123,34.72259,0-86.64112,34.72322,0-86.64203,34.7235,0-86.64211,34.72425,0-86.64194,34.72454,0-86.64219,34.72481,0-86.6426,34.72461,0-86.6428,34.72421,0-86.64318,34.724,0-86.64363,34.72393,0-86.64398,34.7241,0-86.64397,34.72452,0-86.64394,34.725,0-86.64392,34.72536,0-86.64387,34.72576,0-86.64358,34.72601,0-86.64256,34.7263,0-86.64186,34.72674,0-86.64096,34.72733,0-86.64001,34.72761,0-86.63858,34.72767,0-86.63801,34.72698,0-86.63822,34.72649,0-86.63893,34.72611,0</coordinates></LineString></Placemark>
+</Document>
+</kml>
