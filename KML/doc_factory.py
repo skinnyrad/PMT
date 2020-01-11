@@ -68,7 +68,9 @@ def main():
     except HTTPError as e:
         print(f'HTTP error occurred: {http_err}')
     else:
-        gpsData = json.loads(data.text[1:])
+        print(data.text)
+        gpsData = json.loads(data.text)
+        print(gpsData)
         inner_xml = "".join(constructPins(point) for point in gpsData) + constructPath(gpsData)
         xml = constructXml(inner_xml)
 
