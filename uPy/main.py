@@ -65,6 +65,7 @@ while True:
 
     while station.isconnected():
         GPSdata = gps.get_RMCdata()
-        data = ','.join(list(v for v in GPSdata.values()))
-        successful_post = post_data(data)
+        if not (GPSdata == {}):
+            data = ','.join(list(v for v in GPSdata.values()))
+            successful_post = post_data(data)
         sleep(5)
