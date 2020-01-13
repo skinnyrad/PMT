@@ -8,16 +8,18 @@ function csvToJson($csvString) {
     $csvArray = str_getcsv($csvString);
     $json = array();
     $i=0;
+    $id=1;
     while($i < count($csvArray))
     {
-        $pnt = $i/5;
-        $json[$pnt]['id'] = $csvArray[$i];
+        $pnt = ceil($i/5);
+        $json[$pnt]['id'] = $id;
         $json[$pnt]['Longitude'] = $csvArray[$i+1];
         $json[$pnt]['Latitude'] = $csvArray[$i+2];
         $json[$pnt]['Date'] = $csvArray[$i+3];
-        $json[$pnt]['Time'] = $csvArray[$i+4];
+        $json[$pnt]['Time'] = $csvArray[$i];
         
-        $i = $i+  5;
+        $i+=5;
+        $id++;
     }
     return json_encode($json);
 }
@@ -61,7 +63,7 @@ if ($handle)
         fwrite($handle, ',', 1);
 
         // add the new json string
-        fwrite($handle, csvToJson($rawBody));
+        fwrite($handle, ltrim(csvToJson($rawBody),'['));
     }
     else
     {
