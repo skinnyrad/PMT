@@ -1,3 +1,15 @@
+# ---------------------------------------
+#  _____  __  __ _______        __   ___  
+# |  __ \|  \/  |__   __|      /_ | / _ \ 
+# | |__) | \  / |  | |    __   _| || | | |
+# |  ___/| |\/| |  | |    \ \ / / || | | |
+# | |    | |  | |  | |     \ V /| || |_| |
+# |_|    |_|  |_|  |_|      \_/ |_(_)___/ 
+# ----------------------------------------
+#  Version 1.0
+#  microPython Firmware esp32spiram-idf3-20191220-v1.12
+#  Filename : gps.py
+
 def GNSS_parse(data):
     return data
 
@@ -15,85 +27,76 @@ def GNSS_TIMER_ISR():
 from machine import UART
 from utime import sleep
 
+class GPS():
+    def __init__(self, mac=1, _baudrate=9600, _tx=22, _rx=21, _txbuf=1024, _rxbuf=1024):
+        # create a new UART controller
+        self.uart = UART(mac, _baudrate, tx=_tx, rx=_rx, txbuf=_txbuf, rxbuf=_rxbuf)
 
-# create a new UART controller
-uart1 = UART(1,9600, tx=22, rx=21, txbuf=1024, rxbuf=1024)
+        # Used for finding new packets
+        self.oldRXLength = 0
+        self.currentRXLength = 0
 
-# Used for finding new packets
-oldRXLength = 0
-currentRXLength = 0
+        #make a dictionary for RMC data
+        self.RMCdata = {}
+        self.RMCfound = False
 
-#make a dictionary for RMC data
-RMCdata = {}
-RMCfound = False
+    def format_RMCdata(self, data):
+        # Time
+        self.RMCdata['time'] = data[1][0:2] + ':' + data[1][2:4] + ':' + data[1][4:6]
 
-while(True):
-    oldRXLength = currentRXLength
-    currentRXLength = uart1.any()
+        # Latitude
+        hhmm_mmmm = data[3]
+        self.RMCdata['latitude'] = float(hhmm_mmmm[0:2])
+        fraction = '.' + hhmm_mmmm[2:4] + hhmm_mmmm[5:9]
+        self.RMCdata['latitude'] = self.RMCdata['latitude'] + float(fraction)*100/60
+        # N = +     S = -
+        if(data[4] == 'S'):
+            self.RMCdata['latitude'] = self.RMCdata['latitude'] * -1
+        self.RMCdata['latitude'] = str(self.RMCdata['latitude'])
 
-    # Don't print nothing
-    if(currentRXLength == 0):
-        pass
+        #Longitude
+        hhmm_mmmm = data[5][1:]
+        self.RMCdata['longitude'] = float(hhmm_mmmm[0:2])
+        fraction = '.' + hhmm_mmmm[2:4] + hhmm_mmmm[5:9]
+        self.RMCdata['longitude'] = self.RMCdata['longitude'] + float(fraction)*100/60
+        # E = +     W = -
+        if(data[6] == 'W'):
+            self.RMCdata['longitude'] = self.RMCdata['longitude'] * -1
+        self.RMCdata['longitude'] = str(self.RMCdata['longitude'])
 
-    # Packet still sending
-    if(oldRXLength != currentRXLength):
-        sleep(0.2)
-        pass
+        # TODO: Let's revisit this...
+        # #Speed and Course
+        # self.RMCdata['speed'] = float(data[7])
+        # self.RMCdata['course'] = float(data[8])
 
-    else:
-        data = uart1.read(currentRXLength)
-        lines = str(data).split('\\r\\n')
-        #for line in lines:
-        #    print(line)
+        #Date
+        self.RMCdata['date'] = str(2000 + int(data[9][4:6])) + '-' + data[9][2:4] + '-' + data[9][0:2]
 
+    def parse_RMCdata(self, rawData):
         # search each line for RMC data set
-        for line in lines:
-            if(line[3:6] == 'RMC'):
-                RMCfound = True
-                print(line)
-                break #we found RMC data
-        
-        if RMCfound:
-            RMCfound = False
-            fields = line.split(',')
-
-            #fill out RMC dataclass
-            RMCdata['status'] = fields[2]
-            #if data is invalid, throw it away
-            if(RMCdata['status'] == 'V'):
-                pass
+            for d in rawData:
+                if(d[3:6] == 'RMC'):
+                    self.RMCfound = True
+                    break #we found RMC data
             
-            # Time
-            time = fields[1]
-            RMCdata['hour'] = time[0:2]
-            RMCdata['minute'] = time[2:4]
-            RMCdata['second'] = time[4:6]
+            if self.RMCfound:
+                self.RMCfound = False
+                data = d.split(',')
 
-            # Latitude
-            hhmm_mmmm = fields[3]
-            RMCdata['latitude'] = float(hhmm_mmmm[0:2])
-            fraction = '.' + hhmm_mmmm[2:4] + hhmm_mmmm[5:9]
-            RMCdata['latitude'] = RMCdata['latitude'] + float(fraction)*100/60
-            # N = +     S = -
-            if(fields[4] == 'S'):
-                RMCdata['latitude'] = RMCdata['latitude'] * -1
+                if not (data[2] == 'V'):
+                    self.format_RMCdata(data)
 
-            #Longitude
-            hhmm_mmmm = fields[5][1:]
-            RMCdata['longitude'] = float(hhmm_mmmm[0:2])
-            fraction = '.' + hhmm_mmmm[2:4] + hhmm_mmmm[5:9]
-            RMCdata['longitude'] = RMCdata['longitude'] + float(fraction)*100/60
-            # E = +     W = -
-            if(fields[6] == 'W'):
-                RMCdata['longitude'] = RMCdata['longitude'] * -1
+    def get_RMCdata(self):
+        self.oldRXLength = self.currentRXLength
+        self.currentRXLength = self.uart.any()
 
-            #Speed and Course
-            RMCdata['speed'] = float(fields[7])
-            RMCdata['course'] = float(fields[8])
+        # Don't print nothing
+        if(self.currentRXLength == 0):
+            self.RMCdata = {}
+            return self.RMCdata
 
-            #Date
-            RMCdata['day'] = fields[9][0:2]
-            RMCdata['month'] = fields[9][2:4]
-            RMCdata['year'] = fields[9][4:6]
-
-            print(RMCdata)
+        else:
+            data = self.uart.read(self.currentRXLength)
+            rawData = str(data).split('\\r\\n')
+            self.parse_RMCdata(rawData)
+            return self.RMCdata
