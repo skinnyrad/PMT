@@ -39,6 +39,9 @@ class GPS():
         #make a dictionary for RMC data
         self.RMCdata = {}
         self.RMCfound = False
+    
+    def __del__(self):
+        self.uart.deinit()
 
     def format_RMCdata(self, data):
         # Time
