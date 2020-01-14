@@ -78,6 +78,7 @@ class GPS():
     def parse_RMCdata(self, rawData):
         # search each line for RMC data set
             for d in rawData:
+                print(d)
                 if (d[3:6] == 'RMC') and (d[-4:] == '\\r\\n'):
                     self.RMCfound = True
                     break #we found RMC data
@@ -103,6 +104,6 @@ class GPS():
 
         else:
             data = self.uart.read(self.currentRXLength)
-            rawData = str(data).split('\\r\\n')
+            rawData = list(d.replace('\r\n', '\\r\\n') for d in str(data).replace('\\r\\n', '\r\n').splitlines(True))
             self.parse_RMCdata(rawData)
             return self.RMCdata
