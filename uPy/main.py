@@ -13,6 +13,7 @@
 from gps import GPS
 from network import WLAN, STA_IF
 from post import *
+from sd import SDWriter
 from utime import sleep
 from wifi_connect import *
 
@@ -36,8 +37,11 @@ station.active(True)
 # set post success flag
 successful_post = False
 
+#instantiate SDWriter class
+sd_writer = SDWriter()
+
 # instantiate GPS class
-gps = GPS()
+gps = GPS(sd_writer)
 
 while True:
     while not station.isconnected():
@@ -46,9 +50,6 @@ while True:
 
         # get only open nets
         openNets = [n for n in nets if n[4] == 0]
-
-        for onet in openNets:
-            print(onet)
 
         for onet in openNets:
             if onet[0] not in ap_blacklist:

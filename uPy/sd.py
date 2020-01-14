@@ -17,18 +17,18 @@
 #    CS      PIN 13
 
 from machine import SDCard
-from uos import mount, unmount
+from uos import mount, umount
 
 class SDWriter():
     def __init__(self, _sd_path="/sdcard", _filepath="data.txt"):
         self.sd_path = _sd_path
         self.filepath = self.sd_path + _filepath
-        mount(SDCard(slot=3), self.sd_path)
+        mount(SDCard(slot=3), _sd_path)
         self.file_ptr = open(self.filepath, "w")
 
     def __del__(self):
         self.file_ptr.close()
-        unmount(self.sd_path)
+        umount(self.sd_path)
 
     def write(self, data):
         self.file_ptr.write(data)
