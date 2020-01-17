@@ -2,16 +2,21 @@
 //  ---------------CSV structure---------------
 //  "id","Longitude","Latitude","Date","Time"
 
+require 'config/config.php';
+
 // php function to convert csv to json format
 function csvToJson($csvString) {
     //read csv headers
     $csvArray = str_getcsv($csvString);
+    //return json_encode($csvArray);
+    
     $json = array();
     $i=0;
-    $id=1;
+    static $id=1;
     while($i < count($csvArray))
     {
         $pnt = ceil($i/5);
+        //$pnt = 0;
         $json[$pnt]['id'] = $id;
         $json[$pnt]['Longitude'] = $csvArray[$i+1];
         $json[$pnt]['Latitude'] = $csvArray[$i+2];
@@ -22,6 +27,7 @@ function csvToJson($csvString) {
         $id++;
     }
     return json_encode($json);
+    
 }
 
 // required headers
@@ -31,8 +37,6 @@ header("Access-Control-Allow-Methods: POST");
 //header("Access-Control-Allow-Credentials: true");
 header('Content-Type: application/json');
 //header('Content-Type: application/octet-stream');
-
-require 'config/config.php';
 
 $data = array(); // Initialize default data array
 
@@ -62,7 +66,8 @@ if ($handle)
         // add the trailing comma
         fwrite($handle, ',', 1);
 
-        // add the new json string
+        // add the new json string, trim [
+        // not best implementation, can be improved
         fwrite($handle, ltrim(csvToJson($rawBody),'['));
     }
     else
