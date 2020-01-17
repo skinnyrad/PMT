@@ -13,9 +13,10 @@
 from gps import GPS
 from network import WLAN, STA_IF
 from post import *
-from sd import SDWriter
 from utime import sleep
 from wifi_connect import *
+from machine import SDCard
+from uos import mount
 
 ap_blacklist = [b'xfinitywifi']
 
@@ -37,11 +38,18 @@ station.active(True)
 # set post success flag
 successful_post = False
 
-#instantiate SDWriter class
-sd_writer = SDWriter()
+# mount SD card
+mount(SDCard(slot=3), "/sdcard")
+filepath = "/sdcard/data.txt"
+
+# PINS Connections
+#    MISO    PIN 2
+#    MOSI    PIN 15
+#    CLK     PIN 14
+#    CS      PIN 13
 
 # instantiate GPS class
-gps = GPS(sd_writer)
+gps = GPS()
 
 while True:
     while not station.isconnected():
@@ -68,5 +76,8 @@ while True:
         GPSdata = gps.get_RMCdata()
         if not (GPSdata == {}):
             data = ','.join(list(v for v in GPSdata.values()))
+            data = data + "\n"
+            with open(filepath, "a+") as file_ptr:
+                file_ptr.write(data)
             successful_post = post_data(data)
         sleep(5)
