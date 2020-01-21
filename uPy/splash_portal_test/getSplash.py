@@ -12,12 +12,14 @@
 
 import network
 import machine
-import urequests
+#import urequests
 import usocket
 import ujson
 import utime
 import ubinascii
 import ssl
+
+import reqst
 
 target_host = "www.google.com"
 target_port = 80
@@ -40,16 +42,41 @@ sock.settimeout(0.5)
 # address resolving
 sockaddr = usocket.getaddrinfo(target_host, target_port)
 
+path = '/'
 # send some data 
-request = "GET / HTTP/1.1\r\nHost:%s\r\n\r\n" % target_host
+startRequest = "GET %s HTTP/1.1\r\nHost:%s\r\n\r\n" % (path ,target_host)
 try:
     sock.connect(sockaddr[0][-1])
     utime.sleep(1)
-    sock.send(request.encode()) 
+    sock.send(startRequest.encode()) 
     # receive some data 
     response = sock.recv(4096)  
     http_response = repr(response)
-    http_response_len = len(http_response)
+
+    httpHeaders = http_response.split('\\r\\n')
+    url = ""
+    # find redirect url
+    for h in httpHeaders:
+        if h[0:8] == "Location":
+            #Location url found
+            url = h.split('//')
+            break
+    if url:
+        urlArray = url.split('/',3)
+        host = urlArray[0]
+        sockaddr = usocket.getaddrinfo(host, 80)
+        sock.connect(sockaddr[0][-1])
+        utime.sleep(1)
+        sock.send(startRequest.encode()) 
+        # receive some data 
+        response = sock.recv(4096)  
+        http_response = repr(response)
+
+        target_host = urlArray[2]
+        path = urlArray[3]
+        req = "GET /%s HTTP/1.1\r\nHost:%s\r\n\r\n" % (path ,target_host)
+    
+    
     print(str(http_response[0:14]))
 except OSError as e:
     print(e)
