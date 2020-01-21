@@ -1,5 +1,0 @@
-# Ignore build folder
-build
-
-# Ignore sdkconfig file
-sdkconfig
