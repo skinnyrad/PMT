@@ -25,7 +25,6 @@ def GNSS_TIMER_ISR():
 
 
 from machine import UART
-from sd import SDWriter
 from utime import sleep
 
 class GPS():
