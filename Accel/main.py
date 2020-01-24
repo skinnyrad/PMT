@@ -1,4 +1,7 @@
 # Accelerometer Code
+# PINOUT:
+#           SCL -> pin 21
+#           SDA -> pin 22
 
 from machine import Pin, I2C
 
@@ -28,7 +31,8 @@ while True:
     memaddr = 0x29
     data = i2c.readfrom_mem(slave_addr,memaddr,reg_size_bytes) # read 4 bytes from slave device with address 0x3a
     data = int.from_bytes(data, 'big', True) # Convert byte data to signed int
-    if data > 127:
+    # Convert from unsigned to signed byte
+    if data > 127:      
         data = (256-data) * (-1)
     
     print(data)
