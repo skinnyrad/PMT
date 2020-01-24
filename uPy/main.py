@@ -15,6 +15,8 @@ from network import WLAN, STA_IF
 # from post import *
 from utime import sleep
 from wifi_connect import *
+from machine import SDCard
+from uos import mount
 
 ap_blacklist = [b'xfinitywifi']
 
@@ -36,6 +38,16 @@ station.active(True)
 # set post success flag
 successful_post = False
 
+# mount SD card
+mount(SDCard(slot=3), "/sdcard")
+filepath = "/sdcard/data.txt"
+
+# PINS Connections
+#    MISO    PIN 2
+#    MOSI    PIN 15
+#    CLK     PIN 14
+#    CS      PIN 13
+
 # instantiate GPS class
 gps = GPS()
 
@@ -46,9 +58,6 @@ while True:
 
         # get only open nets
         openNets = [n for n in nets if n[4] == 0]
-
-        for onet in openNets:
-            print(onet)
 
         for onet in openNets:
             if onet[0] not in ap_blacklist:
@@ -67,5 +76,8 @@ while True:
         GPSdata = gps.get_RMCdata()
         if not (GPSdata == {}):
             data = ','.join(list(v for v in GPSdata.values()))
+            data = data + "\n"
+            with open(filepath, "a+") as file_ptr:
+                file_ptr.write(data)
             successful_post = post_data(data)
         sleep(5)

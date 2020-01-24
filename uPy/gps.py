@@ -31,7 +31,7 @@ class GPS():
     def __init__(self, mac=1, _baudrate=9600, _tx=22, _rx=21, _txbuf=1024, _rxbuf=1024):
         # create a new UART controller
         self.uart = UART(mac, _baudrate, tx=_tx, rx=_rx, txbuf=_txbuf, rxbuf=_rxbuf)
-
+        
         # Used for finding new packets
         self.oldRXLength = 0
         self.currentRXLength = 0
