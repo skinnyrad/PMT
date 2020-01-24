@@ -12,7 +12,7 @@
 
 from gps import GPS
 from network import WLAN, STA_IF
-from post import *
+# from post import *
 from utime import sleep
 from wifi_connect import *
 
