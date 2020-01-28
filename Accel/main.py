@@ -1,7 +1,7 @@
 # Accelerometer Code
 # PINOUT:
-#           SCL -> pin 21
-#           SDA -> pin 22
+#           SCL -> pin 10
+#           SDA -> pin 9
 
 from machine import Pin, I2C
 import math
@@ -11,6 +11,9 @@ Accel_data = {
     "Z": -127,
     "MAGNITUDE": 127
 }
+
+SCL_PIN = 10
+SDA_PIN = 9
 
 def main():
     i2c = init_i2c_accel()     # initialize i2c communication for Accelerometer
@@ -55,14 +58,14 @@ def get_accel_status(i2c, slave_addr):
 
 # Initialize I2C for Accelerometer
 def init_i2c_accel():
-    i2c = I2C(1, scl=Pin(21), sda=Pin(22), freq=400000)  # construct a hardware I2C bus
+    i2c = I2C(1, scl=Pin(SCL_PIN), sda=Pin(SDA_PIN), freq=400000)  # construct a hardware I2C bus
     return i2c
 
 # Print Accelerometer Data
 def print_accel_data(data):
-    offset = 15 # Offset value for detecting movement. Higher offset = less sensitive to movement, lower offset = more sensitive to movement
+    offset = 5 # Offset value for detecting movement. Higher offset = less sensitive to movement, lower offset = more sensitive to movement
 
-    if data["MAGNITUDE"] < 63-offset or data["MAGNITUDE"] > 63+offset: 
+    if data["MAGNITUDE"] < 62-offset or data["MAGNITUDE"] > 62+offset: 
         movement_flag = "MOVEMENT"
     else:
         movement_flag = ""
