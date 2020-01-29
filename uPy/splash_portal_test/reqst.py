@@ -1,10 +1,13 @@
 # uRequest extension
 # + Socket timeout
 # + HTTP Redirection
-# David Tougaw
+# + Tag Parsing
+# David Tougaw & Ben Compton
 
 
 import usocket
+# garbage collector
+import gc
 
 class Response:
 
@@ -114,31 +117,22 @@ def redirect(method, url, data=None, json=None, headers={}, stream=None, timeout
         raise
 
     if parseSplashPage:
+        # read all bytes from socket
+        r = s.read()
         # parse socket bytes
-        founds = []
-        _TAG = b'<a'
-        _temp = b''
-        start = False
-        try:
-        # go through every byte
-            while True:
-                b = s.read(1)
-                if b == b'>':
-                    _temp += b
-                    founds.append(_temp)
-                    _temp = b''
-                    start = False
-                    # startTag found
-                elif len(_TAG) == len(_temp) and (_temp == _TAG):
-                    start = True
-                elif len(_temp) > len(_TAG) and not start:
-                    _temp = b''
-                elif start:
-                    _temp += b
-        except OSError:
-            s.close()
+        a = []
+        while r.find(b'<a') != -1:
+            beg = r.find(b'<a')
+            end = r.find(b'</a>')+4
+            a.append(r[beg:end])
+            r = r[end+1:]
+        
+        #free memory   
+        del r
+        gc.collect()
 
-        return founds
+        b = [a[i][3:a[i].find(b'>')] for i in range(len(a))]
+        return b
     else:
         resp = Response(s)
         resp.status_code = status
