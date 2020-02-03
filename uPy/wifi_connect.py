@@ -13,11 +13,14 @@
 from network import WLAN
 from usocket import getaddrinfo
 
+import reqst
+
 def station_connected(station: WLAN):
     print("Connected...Testing Access...")
-    resolved = getaddrinfo("www.google.com", 80)
-    if resolved == []:
+    [r, logger_errs] = reqst.get("http://www.example.com")
+    if r.status_code != 200:
         print("No Internet Access")
         station.disconnect()
     else:
         print("Internet Accessible")
+        return [r, logger_errs]
