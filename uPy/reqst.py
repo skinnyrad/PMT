@@ -35,13 +35,15 @@ class Response:
     @property
     def text(self):
         return str(self.content, self.encoding)
-
+    
     def json(self):
         import ujson
         return ujson.loads(self.content)
 
 def redirect(method, url, data=None, json=None, headers={}, stream=None, timeout=0.5, parseSplashPage=True):
-    
+
+    global redirected
+    redirected = False
     try:
         proto, dummy, host, path = url.split("/", 3)
     except ValueError:
@@ -116,31 +118,34 @@ def redirect(method, url, data=None, json=None, headers={}, stream=None, timeout
         s.close()
         raise
 
-    if parseSplashPage:
-        # read all bytes from socket
-        r = s.read()
-        # parse socket bytes
-        a = []
-        while r.find(b'<a') != -1:
-            beg = r.find(b'<a')
-            end = r.find(b'</a>')+4
-            a.append(r[beg:end])
-            r = r[end+1:]
+    # if parseSplashPage:
+    #     # read all bytes from socket
+    #     r = s.read()
+    #     # parse socket bytes
+    #     a = []
+    #     while r.find(b'<a') != -1:
+    #         beg = r.find(b'<a')
+    #         end = r.find(b'</a>')+4
+    #         a.append(r[beg:end])
+    #         r = r[end+1:]
         
-        #free memory   
-        del r
-        gc.collect()
+    #     #free memory   
+    #     del r
+    #     gc.collect()
 
-        b = [a[i][3:a[i].find(b'>')] for i in range(len(a))]
-        return b
-    else:
-        resp = Response(s)
-        resp.status_code = status
-        resp.reason = reason
-        return resp
+    #     b = [a[i][3:a[i].find(b'>')] for i in range(len(a))]
+    #     return b
+    # else:
+    resp = Response(s)
+    resp.status_code = status
+    resp.reason = reason
+    resp.was_redirected = redirected
+
+    return resp
 
 def request(method, url, data=None, json=None, headers={}, stream=None, timeout=0.5):
-    
+    logger_errs = []
+
     try:
         proto, dummy, host, path = url.split("/", 3)
     except ValueError:
@@ -208,15 +213,19 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
                 location = str(l[10:])[2:-5]
                 #print ("\n\n\n"+location+"\n\n\n")
                 # need to get the method from the redirection
+                redirected = True
                 return redirect('GET',location)
-    except OSError:
+    except OSError as err:
+        logger_errs.append(err.args[0])
+        print(err.args[0])
         s.close()
         raise
 
     resp = Response(s)
     resp.status_code = status
     resp.reason = reason
-    return resp
+    resp.was_redirected = redirected
+    return [resp, logger_errs]
 
 
 def head(url, **kw):
@@ -236,27 +245,3 @@ def patch(url, **kw):
 
 def delete(url, **kw):
     return request("DELETE", url, **kw)
-
-# parser byte by byte
-def parse(r):
-    founds = []
-    _TAG = "<a"
-    _temp = ""
-    start = False
-    # go through every byte
-    for i in range(len(r)):
-        if r[i:i+1] == ">":
-            _temp += r[i:i+1]
-            founds.append(_temp)
-            _temp = ""
-            start = False
-            # startTag found
-        elif len(_TAG) == len(_temp) and (_temp == _TAG):
-            start = True
-        elif len(_temp) > len(_TAG) and not start:
-            _temp = ""
-        elif start:
-            _temp += r[i:i+1]
-
-    return founds
-
