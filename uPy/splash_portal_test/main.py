@@ -12,7 +12,7 @@
 
 import network
 import machine
-#import urequests
+import urequests
 import usocket
 import ujson
 import utime
@@ -20,6 +20,16 @@ import ubinascii
 import ssl
 
 import reqst
+
+# Returns the number of seconds, as an integer, since the Epoch,
+# assuming that underlying RTC is set and maintained as described above.
+# If an RTC is not set, this function returns number of seconds since a
+# port-specific reference point in time (for embedded boards without a
+# battery-backed RTC, usually since power up or reset). If you want to develop
+# portable MicroPython application, you should not rely on this function to 
+# provide higher than second precision.
+# -------------------------
+# Microsecond ticks elapsed
 
 
 
@@ -29,6 +39,8 @@ target_port = 80
 # Create a station object to store our connection
 station = network.WLAN(network.STA_IF)
 
+
+
 # activate station
 station.active(True)
 station.scan()
@@ -36,9 +48,10 @@ station.connect("Dunkin' Donuts Guest","")
 while not station.isconnected():
     utime.sleep(1)
 
+start = utime.ticks_us()
 r = str(reqst.get(url))
-
-# get link and try connection
+print(str(r))
+#get link and try connection
 for a in r.split('"'):
     try:
         proto, dummy, host, path = a.split("/", 3)
@@ -51,14 +64,16 @@ for a in r.split('"'):
             continue
     if proto == "http:" or proto == "https:":
         print("URL Found: "+proto+"//"+host+"/"+path)
-        req = reqst.get(proto+"//"+host+"/"+path)
+        req = urequests.get(proto+"//"+host+"/"+path)
         print("A LINKS \n")
-        print(req)
+        print(req.status_code)
         if req.status_code == 200:
-            req = reqst.get("https://pmtlogger.000webhostapp.com/api/testConnection.php")
+            req = urequests.get("https://pmtlogger.000webhostapp.com/api/testConnection.php")
             print("Content: \t"+req.content+"\n")
             print("Successful GET!!!! ***** Fireworks *****")
-            
+            break
+et = utime.ticks_diff(utime.ticks_us(), start)
+print("ET (us): "+str(et))
         #     break
     # else:
     #     raise ValueError("Unsupported protocol: " + proto)
