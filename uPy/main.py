@@ -12,11 +12,12 @@
 
 from gps import GPS
 from network import WLAN, STA_IF
-# from post import *
-from utime import sleep
+from post import *
+import utime
 from wifi_connect import *
 from machine import SDCard
 from uos import mount
+from os import remove
 
 ap_blacklist = [b'xfinitywifi']
 
@@ -40,7 +41,8 @@ successful_post = False
 
 # mount SD card
 mount(SDCard(slot=3), "/sdcard")
-filepath = "/sdcard/data.txt"
+archive = "/sdcard/data.csv"
+unsent = "/sdcard/buffer.csv"
 
 # PINS Connections
 #    MISO    PIN 2
@@ -50,9 +52,29 @@ filepath = "/sdcard/data.txt"
 
 # instantiate GPS class
 gps = GPS()
+data = ""
 
 while True:
-    while not station.isconnected():
+    GPSdata = gps.get_RMCdata()
+    if not (GPSdata == {}):
+        data = ','.join(list(v for v in GPSdata.values()))
+        data = data + '\n'
+        with open(archive, "a+") as file_ptr:
+            file_ptr.write(data)
+        with open(unsent, "a+") as file_ptr:
+            file_ptr.write(data)
+        print(data)
+    else:
+        print("No GPS data.")
+        data = ""
+
+    if station.isconnected():
+        if data != "":
+            with open(unsent, "r") as file_ptr:
+                post_data(file_ptr.read())
+            remove(unsent)
+
+    else:
         # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
         nets = station.scan()
 
@@ -66,18 +88,10 @@ while True:
                 print ("Connecting to "+str(onet[0],"utf-8")+" ...\n")
                 station.connect(onet[0])
                 while not station.isconnected():
-                    sleep(0.5)
+                    utime.sleep(0.5)
                 if station.isconnected():
-                    succesful_post = station_connected(station)
+                    station_connected(station)
+                    sleep(1)
                 else:
-                    print("Unable to Connect") 
-
-    while station.isconnected():
-        GPSdata = gps.get_RMCdata()
-        if not (GPSdata == {}):
-            data = ','.join(list(v for v in GPSdata.values()))
-            data = data + "\n"
-            with open(filepath, "a+") as file_ptr:
-                file_ptr.write(data)
-            successful_post = post_data(data)
-        sleep(5)
+                    print("Unable to Connect")
+    sleep(5)

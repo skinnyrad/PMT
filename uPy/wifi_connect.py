@@ -13,11 +13,14 @@
 from network import WLAN
 from usocket import getaddrinfo
 
+import reqst
+
 def station_connected(station: WLAN):
     print("Connected...Testing Access...")
-    resolved = getaddrinfo("www.google.com", 80)
+    resolved = getaddrinfo("pmtlogger.000webhostapp.com", 80)
     if resolved == []:
         print("No Internet Access")
         station.disconnect()
     else:
         print("Internet Accessible")
+        return [r, logger_errs]
