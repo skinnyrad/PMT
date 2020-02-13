@@ -10,6 +10,10 @@
 #  microPython Firmware esp32spiram-idf3-20191220-v1.12
 #  Filename : gps.py
 
+# Pins
+# GPS TX => Pin 21 (Master RX)
+# GPS RX => Pin 22 (Master TX)
+
 def GNSS_parse(data):
     return data
 

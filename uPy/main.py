@@ -44,11 +44,19 @@ mount(SDCard(slot=3), "/sdcard")
 archive = "/sdcard/data.csv"
 unsent = "/sdcard/buffer.csv"
 
-# PINS Connections
+# SD Card PINOUT:
 #    MISO    PIN 2
 #    MOSI    PIN 15
 #    CLK     PIN 14
 #    CS      PIN 13
+
+# GPS PINOUT:
+#   GPS TX => Pin 21 (Master RX)
+#   GPS RX => Pin 22 (Master TX)
+
+# Accelerometer PINOUT:
+#   SCL -> pin 10
+#   SDA -> pin 9
 
 # instantiate GPS class
 gps = GPS()
