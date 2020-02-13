@@ -66,7 +66,7 @@ while True:
     GPSdata = gps.get_RMCdata()
     if not (GPSdata == {}):
         data = ','.join(list(v for v in GPSdata.values()))
-        data = data + '\n'
+        data = data + ','
         with open(archive, "a+") as file_ptr:
             file_ptr.write(data)
         with open(unsent, "a+") as file_ptr:
