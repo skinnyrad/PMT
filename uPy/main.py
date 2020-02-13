@@ -13,7 +13,7 @@
 from gps import GPS
 from network import WLAN, STA_IF
 from post import *
-import utime
+from utime import sleep
 from wifi_connect import *
 from machine import SDCard
 from uos import mount
@@ -96,7 +96,7 @@ while True:
                 print ("Connecting to "+str(onet[0],"utf-8")+" ...\n")
                 station.connect(onet[0])
                 while not station.isconnected():
-                    utime.sleep(0.5)
+                    sleep(0.5)
                 if station.isconnected():
                     station_connected(station)
                     sleep(1)
