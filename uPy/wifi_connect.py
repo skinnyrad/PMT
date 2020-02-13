@@ -17,8 +17,8 @@ import reqst
 
 def station_connected(station: WLAN):
     print("Connected...Testing Access...")
-    [r, logger_errs] = reqst.get("http://www.example.com")
-    if r.status_code != 200:
+    resolved = getaddrinfo("pmtlogger.000webhostapp.com", 80)
+    if resolved == []:
         print("No Internet Access")
         station.disconnect()
     else:

@@ -77,20 +77,20 @@ class GPS():
 
     def parse_RMCdata(self, rawData):
         # search each line for RMC data set
-            for d in rawData:
-                if (d[3:6] == 'RMC') and (d[-4:] == '\\r\\n'):
-                    self.RMCfound = True
-                    break #we found RMC data
-            
-            if self.RMCfound:
-                self.RMCfound = False
-                data = d.split(',')
+        for d in rawData:
+            if (d[3:6] == 'RMC') and (d[-4:] == '\\r\\n'):
+                self.RMCfound = True
+                break #we found RMC data
+        
+        if self.RMCfound:
+            self.RMCfound = False
+            data = d.split(',')
 
-                if not (data[2] == 'V'):
-                    self.format_RMCdata(data)
-            
-            else:
-                self.RMCdata = {}
+            if not (data[2] == 'V'):
+                self.format_RMCdata(data)
+        
+        else:
+            self.RMCdata = {}
 
     def get_RMCdata(self):
         self.oldRXLength = self.currentRXLength
@@ -104,5 +104,9 @@ class GPS():
         else:
             data = self.uart.read(self.currentRXLength)
             rawData = list(d.replace('\r\n', '\\r\\n') for d in str(data).replace('\\r\\n', '\r\n').splitlines(True))
-            self.parse_RMCdata(rawData)
+            try:
+                self.parse_RMCdata(rawData)
+            except Exception as e:
+                self.RMCdata = {}
+                print("Warning: " + str(e))
             return self.RMCdata

@@ -137,6 +137,7 @@ def redirect(method, url, data=None, json=None, headers={}, stream=None, timeout
     #     return b
     # else:
     resp = Response(s)
+    s.close()
     resp.status_code = status
     resp.reason = reason
     resp.was_redirected = redirected
