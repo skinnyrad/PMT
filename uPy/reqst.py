@@ -145,8 +145,6 @@ def redirect(method, url, data=None, json=None, headers={}, stream=None, timeout
     return resp
 
 def request(method, url, data=None, json=None, headers={}, stream=None, timeout=0.5):
-    logger_errs = []
-
     try:
         proto, dummy, host, path = url.split("/", 3)
     except ValueError:
@@ -217,8 +215,6 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
                 redirected = True
                 return redirect('GET',location)
     except OSError as err:
-        logger_errs.append(err.args[0])
-        print(err.args[0])
         s.close()
         raise
 
@@ -226,7 +222,7 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
     resp.status_code = status
     resp.reason = reason
     resp.was_redirected = redirected
-    return [resp, logger_errs]
+    return resp
 
 
 def head(url, **kw):
