@@ -4,19 +4,28 @@
 #           SDA -> pin 9
 
 from machine import Pin, I2C
+import machine
+import uos
 import math
-Accel_data = {
-    "X": -127,
-    "Y": -127,
-    "Z": -127,
-    "MAGNITUDE": 127
-}
+import time
+import esp32
 
 SCL_PIN = 10
 SDA_PIN = 9
+motion = False
+i2c = 0
+slave_addr = 0
 
 def main():
+    global i2c, slave_addr, motion
+
     i2c = init_i2c_accel()     # initialize i2c communication for Accelerometer
+    pin_INT1 = Pin(14, mode = Pin.IN) # Create an input pin on pin #18 for reading Interrupt
+    esp32.wake_on_ext0(pin = pin_INT1, level = esp32.WAKEUP_ANY_HIGH)
+    # pin_INT1.irq(trigger=Pin.IRQ_RISING, handler=handle_accel_interrupt) # Attach an interrupt to the pin by calling the irq() method
+
+    if machine.reset_cause() == machine.DEEPSLEEP_RESET:
+        print('Woke from deep sleep')
 
     # scan for slave devices
     devices = i2c.scan()             
@@ -29,86 +38,59 @@ def main():
 
     slave_addr = devices[0] # Select first device found as slave address to communicate with
 
-    status = get_accel_status(i2c, slave_addr)
+    status = get_accel_status()
     print(status)   # 0x00 = No data available, 0xff: data available
 
-    accel_enable(i2c, slave_addr)   # Enable data transmission from accelerometer
-
+    accel_config()   # Configure Accelerometer settings
+    INT1_status = get_accel_INT1_status()    # Reset interrupt by reading
+    count = 0
     while True:
-        Accel_data = get_all_axis_data(i2c, slave_addr) # Read Axis Data
-        print_accel_data(Accel_data)                    # Print Data
+        print("Entering Deep Sleep...")
+        machine.deepsleep()
+        print("Motion detected! % d" % (count))
+        INT1_status = get_accel_INT1_status()
+        motion = False
+        count = count + 1
+        time.sleep_ms(10000)
 
-# Calculate magnitude = sqrt(x^2 + y^2 + z^2)
-def calculate_magnitude(data):
-    magnitude = math.sqrt(pow(data['X'], 2) + pow(data['Y'], 2) + pow(data['Z'], 2))
-    return magnitude
+#def handle_accel_interrupt(pin):
+#    global motion, i2c, slave_addr
+#    motion = True
+#    INT1_status = get_accel_INT1_status()
+
+def stop():
+    uos.remove('main.py')
 
 # Enable data transmission from accelerometer
-def accel_enable(i2c, slave_addr):
-    memaddr = 0x20
-    data_write = b'\x27'                             # enable 10 Hz data transmission
-    i2c.writeto_mem(slave_addr, memaddr, data_write) 
+def accel_config():       
+    global i2c, slave_addr
+    i2c.writeto_mem(slave_addr, 0x20, b'\x27')  # enable 10 Hz data transmission
+    i2c.writeto_mem(slave_addr, 0x21, b'\x01')  # High Pass filter for INT1
+    i2c.writeto_mem(slave_addr, 0x22, b'\x40')  # IA1 enable
+    i2c.writeto_mem(slave_addr, 0x23, b'\x10')  # Scale of 4g
+    i2c.writeto_mem(slave_addr, 0x24, b'\x08')  # INT1 pin latched until register read
+    i2c.writeto_mem(slave_addr, 0x30, b'\x2a')  # OR, X,Y,Z higher than threshold. 
+    i2c.writeto_mem(slave_addr, 0x32, b'\x02')  # 64 mg threshold, 0x01 can be close to noise so interrupt would be triggered by noise
+    i2c.writeto_mem(slave_addr, 0x33, b'\x05')  # 0.5s to activate interrupt
 
 # Get status from accelerometer
-def get_accel_status(i2c, slave_addr):    
+def get_accel_status():
+    global i2c, slave_addr    
     memaddr = 0x07             
     reg_size_bytes = 1
     status = i2c.readfrom_mem(slave_addr,memaddr,reg_size_bytes) 
     return status
-
+# Get status from accelerometer
+def get_accel_INT1_status(): 
+    global i2c, slave_addr   
+    memaddr = 0x31             
+    reg_size_bytes = 1
+    status = i2c.readfrom_mem(slave_addr,memaddr,reg_size_bytes) 
+    return status
 # Initialize I2C for Accelerometer
 def init_i2c_accel():
-    i2c = I2C(1, scl=Pin(SCL_PIN), sda=Pin(SDA_PIN), freq=400000)  # construct a hardware I2C bus
+    global i2c
+    i2c = I2C(1, scl=Pin(SCL_PIN), sda=Pin(SDA_PIN), freq=100000)  # construct a hardware I2C bus
     return i2c
-
-# Print Accelerometer Data
-def print_accel_data(data):
-    offset = 5 # Offset value for detecting movement. Higher offset = less sensitive to movement, lower offset = more sensitive to movement
-
-    if data["MAGNITUDE"] < 62-offset or data["MAGNITUDE"] > 62+offset: 
-        movement_flag = "MOVEMENT"
-    else:
-        movement_flag = ""
-    
-    print("X: % 4d \tY: % 4d \tZ: % 4d \tMAG: % 4d \t%s " %(data["X"], data["Y"], data["Z"], data["MAGNITUDE"], movement_flag))
-
-# get all axis data from accelerometer
-def get_all_axis_data(i2c, slave_addr):
-    Accel_data["X"] = get_x_axis_data(i2c, slave_addr)
-    Accel_data["Y"] = get_y_axis_data(i2c, slave_addr)
-    Accel_data["Z"] = get_z_axis_data(i2c, slave_addr)
-    Accel_data["MAGNITUDE"] = calculate_magnitude(Accel_data)
-    return Accel_data
-    
-# get x-axis data from accelerometer
-def get_x_axis_data(i2c, slave_addr):
-    memaddr = 0x29
-    reg_size_bytes = 1
-    data_x = i2c.readfrom_mem(slave_addr,memaddr,reg_size_bytes) # read 1 byte from X-Axis Acceleration Data
-    data_x = byte_to_signed_int(data_x)                          # Convert from byte to signed int
-    return data_x
-
-# get y-axis data from accelerometer
-def get_y_axis_data(i2c, slave_addr):
-    memaddr = 0x2B
-    reg_size_bytes = 1
-    data_y = i2c.readfrom_mem(slave_addr,memaddr,reg_size_bytes) # read 1 byte from Y-Axis Acceleration Data
-    data_y = byte_to_signed_int(data_y)                          # Convert from byte to signed int
-    return data_y
-
-# get z-axis data from accelerometer
-def get_z_axis_data(i2c, slave_addr):
-    memaddr = 0x2D
-    reg_size_bytes = 1
-    data_z = i2c.readfrom_mem(slave_addr,memaddr,reg_size_bytes) # read 1 byte from Z-Axis Acceleration Data
-    data_z = byte_to_signed_int(data_z)                          # Convert from byte to signed int
-    return data_z
-
-# Convert from byte to signed int
-def byte_to_signed_int(byte):
-    byte = int.from_bytes(byte, 'big', True) # Convert byte data to unsigned int
-    if byte > 127:                             # Convert unsigned int (8 bits) to signed int
-        byte = (256-byte) * (-1)
-    return byte
 
 main()
