@@ -11,13 +11,15 @@
 #  Filename : main.py
 
 from gps import GPS
+from machine import SDCard
 from network import WLAN, STA_IF
+from os import remove
 from post import *
 from utime import sleep
-from wifi_connect import *
-from machine import SDCard
 from uos import mount
-from os import remove
+from wifi_connect import *
+
+import logging
 
 ap_blacklist = [b'xfinitywifi']
 
@@ -36,13 +38,15 @@ station = WLAN(STA_IF)
 # activate station
 station.active(True)
 
-# set post success flag
-successful_post = False
-
 # mount SD card
 mount(SDCard(slot=3), "/sdcard")
 archive = "/sdcard/data.csv"
 unsent = "/sdcard/buffer.csv"
+
+logging.basicConfig(filename="pmt.log", level=logging.DEBUG,
+                    format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
+defaultLogger = logging.getLogger("Default_Logger")
+wifiLogger = logging.getLogger("WiFi_Connection_Logger")
 
 # SD Card PINOUT:
 #    MISO    PIN 2
@@ -63,7 +67,7 @@ gps = GPS()
 data = ""
 
 while True:
-    GPSdata = gps.get_RMCdata()
+    GPSdata = gps.get_RMCdata(defaultLogger)
     if not (GPSdata == {}):
         data = ','.join(list(v for v in GPSdata.values()))
         data = data + ','
@@ -71,9 +75,9 @@ while True:
             file_ptr.write(data)
         with open(unsent, "a+") as file_ptr:
             file_ptr.write(data)
-        print(data)
+        defaultLogger.info(data)
     else:
-        print("No GPS data.")
+        defaultLogger.info("No GPS data.")
         data = ""
 
     if station.isconnected():
@@ -93,13 +97,13 @@ while True:
             if onet[0] not in ap_blacklist:
                 # Try to connect to WiFi access point
                 apSSID = onet[0]
-                print ("Connecting to "+str(onet[0],"utf-8")+" ...\n")
+                wifiLogger.info("Connecting to "+str(onet[0],"utf-8")+" ...\n")
                 station.connect(onet[0])
                 while not station.isconnected():
                     sleep(0.5)
                 if station.isconnected():
-                    station_connected(station)
+                    station_connected(station, wifiLogger)
                     sleep(1)
                 else:
-                    print("Unable to Connect")
+                    wifiLogger.warning("Unable to Connect")
     sleep(5)
