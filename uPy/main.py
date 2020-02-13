@@ -17,6 +17,7 @@ import utime
 from wifi_connect import *
 from machine import SDCard
 from uos import mount
+from os import remove
 
 ap_blacklist = [b'xfinitywifi']
 
@@ -40,8 +41,9 @@ successful_post = False
 
 # mount SD card
 mount(SDCard(slot=3), "/sdcard")
-filepath = "/sdcard/data.txt"
-filepath_logger = "/sdcard/log.txt"
+archive = "/sdcard/data.csv"
+unsent = "/sdcard/buffer.csv"
+
 # PINS Connections
 #    MISO    PIN 2
 #    MOSI    PIN 15
@@ -49,12 +51,30 @@ filepath_logger = "/sdcard/log.txt"
 #    CS      PIN 13
 
 # instantiate GPS class
-#gps = GPS()
-
-
+gps = GPS()
+data = ""
 
 while True:
-    while not station.isconnected():
+    GPSdata = gps.get_RMCdata()
+    if not (GPSdata == {}):
+        data = ','.join(list(v for v in GPSdata.values()))
+        data = data + '\n'
+        with open(archive, "a+") as file_ptr:
+            file_ptr.write(data)
+        with open(unsent, "a+") as file_ptr:
+            file_ptr.write(data)
+        print(data)
+    else:
+        print("No GPS data.")
+        data = ""
+
+    if station.isconnected():
+        if data != "":
+            with open(unsent, "r") as file_ptr:
+                post_data(file_ptr.read())
+            remove(unsent)
+
+    else:
         # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
         nets = station.scan()
 
@@ -70,37 +90,8 @@ while True:
                 while not station.isconnected():
                     utime.sleep(0.5)
                 if station.isconnected():
-                    # store ssid for logger
-                    global ssid_conn 
-                    ssid_conn = str(onet[0],"utf-8")
-                    # test connection
-                    global req, start, et
-                    start = utime.ticks_us()
-                    [req, logger_errs] = station_connected(station)
-                    et = utime.ticks_diff(utime.ticks_us(), start)
+                    station_connected(station)
+                    sleep(1)
                 else:
-                    print("Unable to Connect") 
-
-    while station.isconnected():
-        # GPSdata = gps.get_RMCdata()
-        # if not (GPSdata == {}):
-        #     data = ','.join(list(v for v in GPSdata.values()))
-        #     data = data + "\n"
-        #     with open(filepath, "a+") as file_ptr:
-        #         file_ptr.write(data)
-        #     successful_post = post_data(data)
-        if req.was_redirected == True:
-            with open(ssid_conn, "a+") as file_ptr:
-                file_ptr.write(req.content)
-                file_ptr.close()
-                # not redirected but got internet connection
-        if req.status_code == 200:
-            with open(filepath_logger, "a+") as file_ptr:
-                file_ptr.write(ssid_conn+" | " + "Successful Connection"+" | " +et+"\n")
-                file_ptr.close()
-        # something went wrong
-        else:
-             with open(filepath_logger, "a+") as file_ptr:
-                file_ptr.write(ssid_conn+" | " + "BAD!!\n")
-                file_ptr.close()
-        utime.sleep(5)
+                    print("Unable to Connect")
+    sleep(5)
