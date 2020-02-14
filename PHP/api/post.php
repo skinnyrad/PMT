@@ -1,4 +1,35 @@
 <?php
+//  ---------------CSV structure---------------
+//  "id","Longitude","Latitude","Date","Time"
+
+require 'config/config.php';
+
+// php function to convert csv to json format
+function csvToJson($csvString) {
+    //read csv headers
+    $csvArray = str_getcsv($csvString);
+    //return json_encode($csvArray);
+    
+    $json = array();
+    $i=0;
+    //static $id=1;
+    while($i < count($csvArray))
+    {
+        $pnt = ceil($i/5);
+        //$pnt = 0;
+        //$json[$pnt]['id'] = $id;
+        $json[$pnt]['Longitude'] = $csvArray[$i+1];
+        $json[$pnt]['Latitude'] = $csvArray[$i+2];
+        $json[$pnt]['Date'] = $csvArray[$i+3];
+        $json[$pnt]['Time'] = $csvArray[$i];
+        
+        $i+=5;
+        //$id++;
+    }
+    return json_encode($json);
+    
+}
+
 // required headers
 header("Access-Control-Allow-Origin: *");
 //header("Access-Control-Allow-Headers: access");
@@ -7,67 +38,53 @@ header("Access-Control-Allow-Methods: POST");
 header('Content-Type: application/json');
 //header('Content-Type: application/octet-stream');
 
-require 'config/config.php';
-
 $data = array(); // Initialize default data array
 
 // get id of product to be edited
 $rawBody = file_get_contents("php://input");
 
-$data = json_decode($rawBody); // Then decode it
+// read the file if present
+$handle = @fopen($filepath, 'r+');
 
-//if(!empty($data)) {
-
-    // read the file if present
-    $handle = @fopen($filepath, 'r+');
+// create the file if needed
+if ($handle === false)
+{
+    $handle = fopen($filepath, 'w+');
+}
     
-    // create the file if needed
-    if ($handle === false)
+if ($handle)
+{
+    // seek to the end
+    fseek($handle, 0, SEEK_END);
+
+    // are we at the end of is the file empty
+    if (ftell($handle) > 0)
     {
-        $handle = fopen($filepath, 'w+');
+        // move back a byte
+        fseek($handle, -1, SEEK_END);
+
+        // add the trailing comma
+        fwrite($handle, ',', 1);
+
+        // add the new json string, trim [
+        // not best implementation, can be improved
+        fwrite($handle, ltrim(csvToJson($rawBody),'['));
     }
-    
-    if ($handle)
+    else
     {
-        // seek to the end
-        fseek($handle, 0, SEEK_END);
+        // write the first event inside an array
+        fwrite($handle,csvToJson($rawBody));
+    }
+
+    // close the handle on the file
+    fclose($handle);
     
-        // are we at the end of is the file empty
-        if (ftell($handle) > 0)
-        {
-            // move back a byte
-            fseek($handle, -1, SEEK_END);
+    http_response_code(200);
+    echo '<h1>OK!</h1>';
     
-            // add the trailing comma
-            fwrite($handle, ',', 1);
-    
-            // add the new json string
-            fwrite($handle, $rawBody. ']]');
-        }
-        else
-        {
-            // write the first event inside an array
-            fwrite($handle, '['.$rawBody);
-        }
-    
-        // close the handle on the file
-        fclose($handle);
-        
-        http_response_code(200);
-        echo '<h1>OK!</h1>';
-    //}
 }
 else
     http_response_code(404);
-
-    // write to file
-    //file_put_contents($filepath, $rawBody.','.PHP_EOL , FILE_APPEND | LOCK_EX);
-    
-   // header('Content-Type: application/json; charset=UTF-8');
-   // echo json_encode(array( // Return data
-   //   'data' => $data
-   // ));
-
 
 
 ?>
