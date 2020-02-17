@@ -47,6 +47,12 @@ logging.basicConfig(filename="pmt.log", level=logging.DEBUG,
                     format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
 defaultLogger = logging.getLogger("Default_Logger")
 wifiLogger = logging.getLogger("WiFi_Connection_Logger")
+archiveLogger = logging.getLogger("Archive")
+archiveLogger.level(logging.DEBUG)
+archiveLogger.addHandler(logging.FileHandler(archive))
+unsentLogger = logging.getLogger("Unsent")
+unsentLogger.level(logging.DEBUG)
+unsentLogger.addHandler(logging.FileHandler(unsent))
 
 # SD Card PINOUT:
 #    MISO    PIN 2
