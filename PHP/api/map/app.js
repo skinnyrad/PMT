@@ -14,6 +14,11 @@ var openlOSM = "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 var defaultLayer,tonerLayer,darkLayer;
 
+function zoomTo(lat, long)
+{
+    map.getView().setCenter(ol.proj.transform([long, lat], 'EPSG:4326', 'EPSG:3857'));
+    map.getView().setZoom(20);
+}
 function buildKml(){
     var xhttp = new XMLHttpRequest();
 
@@ -70,8 +75,15 @@ function add_data_points() {
             //console.log(data);
             var id = 1;
             data.forEach(d => {
+                $('#table-data').append("<tr onclick='zoomTo("+d.Latitude+","+d.Longitude+");'><td>"+id+"</td><td>"+
+                    d.Latitude+"</td><td>"+
+                    d.Longitude+"</td><td>"+
+                    d.Date+" "+
+                    d.Time+"</td></tr>");
                 d.id = id++;
                 add_map_point(d.Latitude,d.Longitude,d);
+                
+                
             });
         }
     };

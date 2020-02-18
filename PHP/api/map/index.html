@@ -35,7 +35,6 @@
 
   <nav>
     <div class="nav-wrapper red darken-2">
-     
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <!-- <li>
@@ -56,13 +55,20 @@
   <ul id="nav-mobile" class="sidenav sidenav-fixed">
     <li class="logo"><img src="res/logo_v1_map.png" alt="Smiley face" height="" width="42"></li>
     <h3 class="header">PMT Data</h3>
-    <div class="col s12 grid-example"><span class="flow-text">This div is 12-columns wide on all screen sizes</span></div>
-    <!-- <div class="row">
-      <div class="col s1">ID</div>
-      <div class="col s1">LAT</div>
-      <div class="col s1">LONG</div>
-      <div class="col s1">DATE TIME</div>
-    </div> -->
+
+    <table class="centered striped red white-text">
+      <thead>
+        <tr>
+            <th>ID</th>
+            <th>Lat</th>
+            <th>Long</th>
+            <th>Date Time</th>
+        </tr>
+      </thead>
+      <tbody id="table-data">
+        <!-- DATA POINTS -->
+      </tbody>
+    </table>
 
   </ul>
 
