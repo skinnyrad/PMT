@@ -3,10 +3,16 @@
 */
 var map;
 var mapLat = 34.724600;
-    var mapLng = -86.639590;
+var mapLng = -86.639590;
 var mapDefaultZoom = 15;
 var url = "https://pmtlogger.000webhostapp.com/api/getJSON.php";
 var data = null;
+
+var darkOSM = "http://{a-c}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png";
+var tonerOSM = "http://{a-c}.tile.stamen.com/toner/{z}/{x}/{y}.png";
+var openlOSM = "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png";
+
+var defaultLayer,tonerLayer,darkLayer;
 
 function buildKml(){
     var xhttp = new XMLHttpRequest();
@@ -74,21 +80,36 @@ function add_data_points() {
 }
 
 function initialize_map() {
+
+    defaultLayer = new ol.layer.Tile({
+        source: new ol.source.OSM({
+            url: openlOSM
+        })
+    });
     
+    tonerLayer =  new ol.layer.Tile({
+        source: new ol.source.OSM({
+            url: tonerOSM
+        }),
+        visible: false
+    });
+    
+    darkLayer  = new ol.layer.Tile({
+        source: new ol.source.OSM({
+            url: darkOSM
+        }),
+        visible: false
+    });
+
     map = new ol.Map({
         target: "map",
-        layers: [
-            new ol.layer.Tile({
-                source: new ol.source.OSM({
-                    url: "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                })
-            })
-        ],
+        layers: [ defaultLayer, tonerLayer,darkLayer],
         view: new ol.View({
             center: ol.proj.fromLonLat([mapLng, mapLat]),
             zoom: mapDefaultZoom
         })
     });
+    
     /**
      * Elements that make up the popup.
      */
@@ -145,6 +166,8 @@ function initialize_map() {
             overlay.setPosition(coordinate);
         }
     });
+
+    initComponents();
 }
 
 function add_map_point(lat, lng,props) {
@@ -198,4 +221,34 @@ function onSwitchChanged(){
     else
         $('#live-switch-check').val('on');
     
+}
+
+function initComponents(){
+    // map theme dropdown
+    $('#maptrigger').dropdown();
+    // mobile nav bar
+    $(document).ready(function(){
+        $('.sidenav').sidenav();
+    });
+}
+
+function changeMapSource(val){
+    var selection = "";
+    switch(val){
+        case 'dark': {
+            darkLayer.setVisible(true);
+            defaultLayer.setVisible(false);
+            tonerLayer.setVisible(false);
+        }; break;
+        case 'toner': {
+            darkLayer.setVisible(false);
+            defaultLayer.setVisible(false);
+            tonerLayer.setVisible(true);
+        }; break;
+        case 'default':{
+            darkLayer.setVisible(false);
+            defaultLayer.setVisible(true);
+            tonerLayer.setVisible(false);
+        }; break;
+    }
 }

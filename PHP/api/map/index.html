@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>PMT Data</title>
+<title>PMT Data (Beta 1.0)</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <link type="text/css" rel="stylesheet" href="style.css"/>
@@ -34,8 +34,9 @@
   </div>
 
   <nav>
-    <div class="nav-wrapper blue darken-2">
-      <a href="#" style="margin-left: 15px;" class="brand-logo">PMT Data</a>
+    <div class="nav-wrapper red darken-2">
+     
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <!-- <li>
           LIVE:
@@ -47,10 +48,34 @@
             </label>
           </div>
         </li> -->
+        <a id='maptrigger' class='dropdown-trigger btn orange' data-target='dropdown1'>MAP LOOK</a>
         <li onclick="buildKml();"><a>Download KML</a</li>
       </ul>
     </div>
   </nav>
+  <ul id="nav-mobile" class="sidenav sidenav-fixed">
+    <li class="logo"><img src="res/logo_v1_map.png" alt="Smiley face" height="" width="42"></li>
+    <h3 class="header">PMT Data</h3>
+    <div class="col s12 grid-example"><span class="flow-text">This div is 12-columns wide on all screen sizes</span></div>
+    <!-- <div class="row">
+      <div class="col s1">ID</div>
+      <div class="col s1">LAT</div>
+      <div class="col s1">LONG</div>
+      <div class="col s1">DATE TIME</div>
+    </div> -->
+
+  </ul>
+
+  <ul id='dropdown1' class='dropdown-content'>
+    <li><a onclick="changeMapSource('toner')">TONER</a></li>
+    <li><a onclick="changeMapSource('dark')">DARK</a></li>
+    <li><a onclick="changeMapSource('default')">DEFAULT</a></li>
+  </ul>
+
+  <ul class="sidenav" id="mobile-demo">
+    
+    <li onclick="buildKml();"><a>Download KML</a</li>
+  </ul>
 
   
   <div id="map" style="width: 100%; z-index: 0" ></div>
