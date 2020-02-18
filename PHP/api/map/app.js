@@ -14,10 +14,39 @@ var openlOSM = "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 var defaultLayer,tonerLayer,darkLayer;
 
+var vectorSource;
+
+function styleFunction(props) {
+    return [
+            new ol.style.Style({
+            image: new ol.style.Icon({
+                anchor: [0.5, 0.5],
+                anchorXUnits: "fraction",
+                anchorYUnits: "fraction",
+                src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg"
+            }),
+            text: new ol.style.Text({
+                text: props.id+"",
+                font: 'Normal 12px Arial',
+                fill: new ol.style.Fill({
+                color: '#33BAFF'
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#000000',
+                width: 3
+            }),
+            offsetX: -15,
+            offsetY: 0,
+            rotation: 0
+            })
+        })
+    ];
+}
+
 function zoomTo(lat, long)
 {
     map.getView().setCenter(ol.proj.transform([long, lat], 'EPSG:4326', 'EPSG:3857'));
-    map.getView().setZoom(20);
+    map.getView().setZoom(18);
 }
 function buildKml(){
     var xhttp = new XMLHttpRequest();
@@ -83,8 +112,12 @@ function add_data_points() {
                 d.id = id++;
                 add_map_point(d.Latitude,d.Longitude,d);
                 
-                
             });
+            // vectorSource defined globally
+            var vectorLayer=new ol.layer.Vector({
+                source: vectorSource
+            })
+            map.addLayer(vectorLayer); 
         }
     };
     xhttp.open("GET", url, true);
@@ -112,6 +145,9 @@ function initialize_map() {
         }),
         visible: false
     });
+
+    // data points layer
+    vectorSource = new ol.source.Vector({});
 
     map = new ol.Map({
         target: "map",
@@ -187,35 +223,9 @@ function add_map_point(lat, lng,props) {
         geometry: new ol.geom.Point(ol.proj.transform([parseFloat(lng), parseFloat(lat)], 'EPSG:4326', 'EPSG:3857')),
     });
     feat.setProperties(props);
-    var vectorLayer = new ol.layer.Vector({
-        source:new ol.source.Vector({
-        features: [feat]
-        }),
-    style: new ol.style.Style({
-        image: new ol.style.Icon({
-            anchor: [0.5, 0.5],
-            anchorXUnits: "fraction",
-            anchorYUnits: "fraction",
-            src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg"
-        }),
-        text: new ol.style.Text({
-            text: props.id+"",
-            font: 'Normal 12px Arial',
-            fill: new ol.style.Fill({
-            color: '#33BAFF'
-        }),
-        stroke: new ol.style.Stroke({
-            color: '#000000',
-            width: 3
-        }),
-        offsetX: -15,
-        offsetY: 0,
-        rotation: 0
-        })
-    })
-    });
-
-    map.addLayer(vectorLayer); 
+    feat.setStyle(styleFunction(props));
+    vectorSource.addFeature(feat);
+    // data points added as features to one layer
 }
 var timer = null;
 function onSwitchChanged(){
