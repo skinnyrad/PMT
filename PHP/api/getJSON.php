@@ -1,6 +1,7 @@
 <?php
 require 'config/config.php';
 
+header("Access-Control-Allow-Origin: *");
  // Process download
 if(file_exists($filepath)) {
     // header('Content-Description: File Transfer');
