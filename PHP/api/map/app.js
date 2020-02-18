@@ -110,9 +110,16 @@ function add_data_points() {
                     d.Date+" "+
                     d.Time+"</td></tr>");
                 d.id = id++;
-                add_map_point(d.Latitude,d.Longitude,d);
+                add_map_point(d);
                 
             });
+            // FOR LATER: String time to OBJ
+            let dateString = data[0].Date+" "+data[0].Time
+                , reggie = /(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/
+                , [, year, month, day, hours, minutes, seconds] = reggie.exec(dateString)
+                , dateObject = new Date(Date.UTC(year, month-1, day, hours, minutes, seconds));
+
+            console.log(dateObject);
             // vectorSource defined globally
             var vectorLayer=new ol.layer.Vector({
                 source: vectorSource
@@ -218,9 +225,10 @@ function initialize_map() {
     initComponents();
 }
 
-function add_map_point(lat, lng,props) {
+function add_map_point(props) {
     var feat = new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.transform([parseFloat(lng), parseFloat(lat)], 'EPSG:4326', 'EPSG:3857')),
+        geometry: new ol.geom.Point(ol.proj.transform([parseFloat(props.Longitude),
+            parseFloat(props.Latitude)], 'EPSG:4326', 'EPSG:3857')),
     });
     feat.setProperties(props);
     feat.setStyle(styleFunction(props));
