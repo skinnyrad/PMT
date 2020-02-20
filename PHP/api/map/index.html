@@ -1,152 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<title>OpenStreetMap &amp; OpenLayers - Marker Example</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
-	<script src="https://openlayers.org/en/v4.6.5/build/ol.js" type="text/javascript"></script>
-  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>* {
-  box-sizing: border-box;
-}
+<meta charset="utf-8">
+<title>PMT Data (Beta 1.0)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-/* Style the search field */
-form.example input[type=text] {
-  padding: 10px;
-  font-size: 17px;
-  border: 1px solid grey;
-  float: left;
-  width: 80%;
-  background: #f1f1f1;
-}
+<link type="text/css" rel="stylesheet" href="style.css"/>
+<script src="app.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
 
-/* Style the submit button */
-form.example button {
-  float: left;
-  width: 20%;
-  padding: 10px;
-  background: #2196F3;
-  color: white;
-  font-size: 17px;
-  border: 1px solid grey;
-  border-left: none; /* Prevent double borders */
-  cursor: pointer;
-}
+<link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+<script src="https://openlayers.org/en/v4.6.5/build/ol.js" type="text/javascript"></script>
 
-form.example button:hover {
-  background: #0b7dda;
-}
+ <!--Import Google Icon Font-->
+ <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-/* Clear floats */
-form.example::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-#panel button {
-  float: left;
-  width: 100px;
-  padding: 10px;
-  background: #2196F3;
-  color: white;
-  font-size: 17px;
-  border: 1px solid grey;
-  border-left: none; /* Prevent double borders */
-  cursor: pointer;
-  position: absolute;
-  top: 30px;
-  left: 100px;
-}
-</style>
-  <script>
-    /* OSM & OL example code provided by https://mediarealm.com.au/ */
-    var map;
-    var mapLat = 34.724600;
-		var mapLng = -86.639590;
-    var mapDefaultZoom = 10;
-    
-    function add_data_points() {
-        
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                var dataPoints = JSON.parse(this.responseText);
-                console.log(dataPoints);
-                dataPoints.forEach(d => {
-                    add_map_point(d.Latitude,d.Longitude,d.id);
-                });
-            }
-        };
-        xhttp.open("GET", "https://pmtlogger.000webhostapp.com/api/data/data.txt", true);
-        xhttp.send();
-    }
-    
-    function initialize_map() {
-      map = new ol.Map({
-        target: "map",
-        layers: [
-            new ol.layer.Tile({
-                source: new ol.source.OSM({
-                      url: "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                })
-            })
-        ],
-        view: new ol.View({
-            center: ol.proj.fromLonLat([mapLng, mapLat]),
-            zoom: mapDefaultZoom
-        })
-      });
-    }
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
-    function add_map_point(lat, lng,id) {
-      var vectorLayer = new ol.layer.Vector({
-        source:new ol.source.Vector({
-          features: [new ol.Feature({
-                geometry: new ol.geom.Point(ol.proj.transform([parseFloat(lng), parseFloat(lat)], 'EPSG:4326', 'EPSG:3857')),
-            })]
-        }),
-        style: new ol.style.Style({
-          image: new ol.style.Icon({
-            anchor: [0.5, 0.5],
-            anchorXUnits: "fraction",
-            anchorYUnits: "fraction",
-            src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg"
-          }),
-          text: new ol.style.Text({
-            text: id+"",
-            font: 'Normal 12px Arial',
-            fill: new ol.style.Fill({
-            color: '#33BAFF'
-            }),
-            stroke: new ol.style.Stroke({
-            color: '#000000',
-            width: 3
-            }),
-            offsetX: -15,
-            offsetY: 0,
-            rotation: 0
-       })
-        })
-      });
-
-      map.addLayer(vectorLayer); 
-    }
-
-
-  </script>
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+ <!--Let browser know website is optimized for mobile-->
+ <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
-<body onload="initialize_map(); add_data_points();">
-    
-    <!--<div style="z-index:9999">
-        <form class="example">
-        <input type="text" placeholder="Search.." name="search">
-        <button type="submit"><i class="fa fa-search"></i></button>
-    </form>
+<body onload="initialize_map(); add_data_points();"></body>
+
+  <div id="popup" class="ol-popup">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
+  </div>
+
+  <nav>
+    <div class="nav-wrapper red darken-2">
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <!-- <li>
+          LIVE:
+          <div id="live-switch" class="switch">
+            <label>
+              <input id="live-switch-check" type="checkbox" onclick="onSwitchChanged();">
+              <span class="lever"></span>
+              
+            </label>
+          </div>
+        </li> -->
+        <a id='maptrigger' class='dropdown-trigger btn orange' data-target='dropdown1'>MAP LOOK</a>
+        <li onclick="buildKml();"><a>Download KML</a</li>
+      </ul>
     </div>
-    <div id="panel" style="z-index:9999"><button id="downloadKML" onclick="alert('NOT READY YET! Teach you everything ben!!')">Download KML</button></div>-->
-    <div id="map" style="width: 100%; height: auto; z-index: 0" ></div>
+  </nav>
+  <ul id="nav-mobile" class="sidenav sidenav-fixed">
+    <li class="logo"><img src="res/logo_v1_map.png" alt="Smiley face" height="" width="42"></li>
+    <h3 class="header">PMT Data</h3>
+
+    <table class="centered striped red white-text">
+      <thead>
+        <tr>
+            <th>ID</th>
+            <th>Lat</th>
+            <th>Long</th>
+            <th>Date Time</th>
+        </tr>
+      </thead>
+      <tbody id="table-data">
+        <!-- DATA POINTS -->
+      </tbody>
+    </table>
+
+  </ul>
+
+  <ul id='dropdown1' class='dropdown-content'>
+    <li><a onclick="changeMapSource('usgs')">USGS</a></li>
+    <li><a onclick="changeMapSource('toner')">TONER</a></li>
+    <li><a onclick="changeMapSource('dark')">DARK</a></li>
+    <li><a onclick="changeMapSource('default')">DEFAULT</a></li>
+  </ul>
+
+  <ul class="sidenav" id="mobile-demo">
+    
+    <li onclick="buildKml();"><a>Download KML</a</li>
+  </ul>
+
+  
+  <div id="map" style="width: 100%; z-index: 0" ></div>
+
     
 </body>
 </html>

@@ -108,6 +108,7 @@ class GPS():
         else:
             data = self.uart.read(self.currentRXLength)
             rawData = list(d.replace('\r\n', '\\r\\n') for d in str(data).replace('\\r\\n', '\r\n').splitlines(True))
+            print(rawData)
             try:
                 self.parse_RMCdata(rawData)
             except Exception as e:
