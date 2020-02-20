@@ -55,9 +55,10 @@ url = "https://pmtlogger.000webhostapp.com/api/postEncrypted.php"
 def post(_url, _headers, _post_data):
     return urequests.post(_url, headers=_headers, data=_post_data)
 
+# PKCS#7 for padding => 0x5F (ASCII _)
 def pad_mod_16(_string):
     while not len(_string) % 16 == 0:
-        _string = _string + '\0'
+        _string = _string + '_'
     return _string
 
 # Create a station object to store our connection
