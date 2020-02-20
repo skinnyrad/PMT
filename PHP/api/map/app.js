@@ -12,8 +12,7 @@ var darkOSM = "http://{a-c}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png";
 var tonerOSM = "http://{a-c}.tile.stamen.com/toner/{z}/{x}/{y}.png";
 var openlOSM = "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
-var defaultLayer,tonerLayer,darkLayer;
-
+var defaultLayer,tonerLayer,darkLayer,USGSmap;
 var vectorSource;
 
 function styleFunction(props) {
@@ -136,7 +135,8 @@ function initialize_map() {
     defaultLayer = new ol.layer.Tile({
         source: new ol.source.OSM({
             url: openlOSM
-        })
+        }),
+        visible: true
     });
     
     tonerLayer =  new ol.layer.Tile({
@@ -153,12 +153,32 @@ function initialize_map() {
         visible: false
     });
 
+    USGSmap = new ol.layer.Group({
+        layerId: "topoimagery",
+        visible: false,
+        layers: [
+            new ol.layer.Tile({
+        source: new ol.source.XYZ({ url: 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}' }),
+        //minResolution: 3,
+        //maxResolution: 15,
+        }),
+        new ol.layer.Tile({
+            source: new ol.source.TileArcGISRest({ url: 'https://raster.nationalmap.gov/arcgis/rest/services/Orthoimagery/USGS_EROS_Ortho_1Foot/ImageServer' }),
+            maxResolution: 3
+        }),
+        new ol.layer.Tile({
+            source: new ol.source.TileArcGISRest({ url: 'https://services.nationalmap.gov/arcgis/rest/services/USGSImageryTopoLarge/MapServer' }),
+            maxResolution: 3
+        })]
+    });
+
+
     // data points layer
     vectorSource = new ol.source.Vector({});
 
     map = new ol.Map({
         target: "map",
-        layers: [ defaultLayer, tonerLayer,darkLayer],
+        layers: [ defaultLayer, tonerLayer,darkLayer,USGSmap],
         view: new ol.View({
             center: ol.proj.fromLonLat([mapLng, mapLat]),
             zoom: mapDefaultZoom
@@ -269,16 +289,28 @@ function changeMapSource(val){
             darkLayer.setVisible(true);
             defaultLayer.setVisible(false);
             tonerLayer.setVisible(false);
+            
+            USGSmap.setVisible(false);
         }; break;
         case 'toner': {
             darkLayer.setVisible(false);
             defaultLayer.setVisible(false);
             tonerLayer.setVisible(true);
+            
+            USGSmap.setVisible(false);
         }; break;
         case 'default':{
             darkLayer.setVisible(false);
             defaultLayer.setVisible(true);
             tonerLayer.setVisible(false);
+            
+            USGSmap.setVisible(false);
+        }; break;
+        case 'usgs':{
+            darkLayer.setVisible(false);
+            defaultLayer.setVisible(false);
+            tonerLayer.setVisible(false);
+            USGSmap.setVisible(true);
         }; break;
     }
 }
