@@ -1,6 +1,6 @@
 <?php
 //  ---------------CSV structure---------------
-//  "id","Longitude","Latitude","Date","Time"
+//  "Time","Latitude","Longitude",Date"
 
 require 'config/config.php';
 
@@ -8,22 +8,22 @@ require 'config/config.php';
 function csvToJson($csvString) {
     //read csv headers
     $csvArray = str_getcsv($csvString);
-    //return json_encode($csvArray);
+    // remove last index (extra comma)
+    $removed = array_pop($csvArray);
     
     $json = array();
     $i=0;
     //static $id=1;
     while($i < count($csvArray))
     {
-        $pnt = ceil($i/5);
-        //$pnt = 0;
-        //$json[$pnt]['id'] = $id;
-        $json[$pnt]['Longitude'] = $csvArray[$i+1];
-        $json[$pnt]['Latitude'] = $csvArray[$i+2];
-        $json[$pnt]['Date'] = $csvArray[$i+3];
-        $json[$pnt]['Time'] = $csvArray[$i];
+        $pnt = ceil($i/4);
         
-        $i+=5;
+        $json[$pnt]['Time'] = $csvArray[$i];
+        $json[$pnt]['Latitude'] = $csvArray[$i+1];
+        $json[$pnt]['Longitude'] = $csvArray[$i+2];
+        $json[$pnt]['Date'] = $csvArray[$i+3];
+        
+        $i+=4;
         //$id++;
     }
     return json_encode($json);

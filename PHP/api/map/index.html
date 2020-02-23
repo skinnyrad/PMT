@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PMT Data (Beta 1.0)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<link type="text/css" rel="stylesheet" href="style.css"/>
+<script src="app.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+<script src="https://openlayers.org/en/v4.6.5/build/ol.js" type="text/javascript"></script>
+
+ <!--Import Google Icon Font-->
+ <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+ <!--Let browser know website is optimized for mobile-->
+ <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body onload="initialize_map(); add_data_points();"></body>
+
+  <div id="popup" class="ol-popup">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
+  </div>
+
+  <nav>
+    <div class="nav-wrapper red darken-2">
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <!-- <li>
+          LIVE:
+          <div id="live-switch" class="switch">
+            <label>
+              <input id="live-switch-check" type="checkbox" onclick="onSwitchChanged();">
+              <span class="lever"></span>
+              
+            </label>
+          </div>
+        </li> -->
+        <a id='maptrigger' class='dropdown-trigger btn orange' data-target='dropdown1'>MAP LOOK</a>
+        <li onclick="buildKml();"><a>Download KML</a</li>
+      </ul>
+    </div>
+  </nav>
+  <ul id="nav-mobile" class="sidenav sidenav-fixed">
+    <li class="logo"><img src="res/logo_v1_map.png" alt="Smiley face" height="" width="42"></li>
+    <h3 class="header">PMT Data</h3>
+
+    <table class="centered striped red white-text">
+      <thead>
+        <tr>
+            <th>ID</th>
+            <th>Lat</th>
+            <th>Long</th>
+            <th>Date Time</th>
+        </tr>
+      </thead>
+      <tbody id="table-data">
+        <!-- DATA POINTS -->
+      </tbody>
+    </table>
+
+  </ul>
+
+  <ul id='dropdown1' class='dropdown-content'>
+    <li><a onclick="changeMapSource('toner')">TONER</a></li>
+    <li><a onclick="changeMapSource('dark')">DARK</a></li>
+    <li><a onclick="changeMapSource('default')">DEFAULT</a></li>
+  </ul>
+
+  <ul class="sidenav" id="mobile-demo">
+    
+    <li onclick="buildKml();"><a>Download KML</a</li>
+  </ul>
+
+  
+  <div id="map" style="width: 100%; z-index: 0" ></div>
+
+    
+</body>
+</html>
