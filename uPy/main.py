@@ -77,10 +77,8 @@ while True:
     if not (GPSdata == {}):
         data = ','.join(list(v for v in GPSdata.values()))
         data = data + ','
-        with open(archive, "a+") as file_ptr:
-            file_ptr.write(data)
-        with open(unsent, "a+") as file_ptr:
-            file_ptr.write(data)
+        archiveLogger.info(data)
+        unsentLogger.info(data)
         defaultLogger.info(data)
     else:
         defaultLogger.info("No GPS data.")
