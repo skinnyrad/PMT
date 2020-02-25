@@ -58,7 +58,7 @@ station = network.WLAN(network.STA_IF)
 station.active(True)
 
 station.scan()
-station.connect("SardisTel 6832","KTFujP23")
+station.connect("ssid","password")
 while not station.isconnected():
     utime.sleep(1)
 
