@@ -65,8 +65,17 @@ data = ""
 while True:
     GPSdata = gps.get_RMCdata()
     if not (GPSdata == {}):
-        data = ','.join(list(v for v in GPSdata.values()))
-        data = data + ','
+        b = []
+        lat_pre = float(GPSdata[0]['latitude'])
+        lon_pre = float(GPSdata[0]['longitude'])
+        b.append(GPSdata[0])
+        for d in GPSdata:
+            if (float(d['latitude']) > lat_pre+0.00007 or float(d['latitude']) < lat_pre-0.00007) and (float(d['longitude']) > lon_pre+0.00007 or float(d['longitude']) < lon_pre-0.00007):
+                b.append(d)
+                lat_pre = float(d['latitude'])
+                lon_pre = float(d['longitude'])
+        for v in b:
+            data+=','.join(list(v.values()))+','
         with open(archive, "a+") as file_ptr:
             file_ptr.write(data)
         with open(unsent, "a+") as file_ptr:
