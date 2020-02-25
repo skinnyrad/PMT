@@ -27,30 +27,47 @@ header("Access-Control-Allow-Origin: *");
 //header("Access-Control-Allow-Headers: access");
 header("Access-Control-Allow-Methods: POST");
 //header("Access-Control-Allow-Credentials: true");
-//header('Content-Type: application/json');
-header('Content-Type: application/octet-stream');
+header('Content-Type: text/html; charset=UTF-8');
+//header('Content-Type: application/octet-stream');
 
 require 'config/config.php';
 
 //$data = array(); // Initialize default data array
 
-// get size of the binary file
-$filesize = filesize($filepath);
-// open file for reading in binary mode
-$fp = fopen($filepath, 'rb');
-// read the entire file into a binary string
-$binary = fread($fp, $filesize);
+// get id of product to be edited
+$rawBody = file_get_contents("php://input");
 
-$key = $_GET["key"];
-$iv = $_GET["iv"];
-echo $key.'|'.$iv;
-if(!empty($key) && !empty($iv))
+// read the file if present
+$handle = @fopen($filepath_encrypted, 'r+');
+
+// create the file if needed
+if ($handle === false)
 {
-    $output = openssl_decrypt(base64_decode($binary), 'AES-256-CBC', $key, 0, $iv);
+    $handle = fopen($filepath_encrypted, 'w+');
+}
     
-    echo $output;
-    //http_response_code(200);
+if ($handle)
+{
+    // seek to the end
+    fseek($handle, 0, SEEK_END);
+
+    // are we at the end of is the file empty
+    if (ftell($handle) > 0)
+    {
+        // add the new json string
+        fwrite($handle, $rawBody);
+    }
+    else
+    {
+        // write the first event inside an array
+        fwrite($handle,$rawBody);
+    }
+
+    // close the handle on the file
+    fclose($handle);
     
+    http_response_code(200);
+    echo '<h1>OK!</h1>';
     
 }
 else

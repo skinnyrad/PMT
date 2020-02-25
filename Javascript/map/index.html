@@ -10,8 +10,13 @@
 <script
   src="https://code.jquery.com/jquery-3.4.1.min.js"
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-  crossorigin="anonymous"></script>
+  crossorigin="anonymous">
+</script>
 
+<!-- ENCRYPTION -->
+<script type="text/javascript" src="./aes-js.js"></script>
+<script type="text/javascript" src="./sha256.min.js"></script>
+<!-- ##########-->
 <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
 <script src="https://openlayers.org/en/v4.6.5/build/ol.js" type="text/javascript"></script>
 
@@ -26,7 +31,7 @@
  <!--Let browser know website is optimized for mobile-->
  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
-<body onload="initialize_map(); add_data_points();"></body>
+<body onload="initialize_map(); decrypt();"></body>
 
   <div id="popup" class="ol-popup">
     <a href="#" id="popup-closer" class="ol-popup-closer"></a>
@@ -73,6 +78,7 @@
   </ul>
 
   <ul id='dropdown1' class='dropdown-content'>
+    <li><a onclick="changeMapSource('usgs')">USGS</a></li>
     <li><a onclick="changeMapSource('toner')">TONER</a></li>
     <li><a onclick="changeMapSource('dark')">DARK</a></li>
     <li><a onclick="changeMapSource('default')">DEFAULT</a></li>
