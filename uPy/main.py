@@ -11,13 +11,15 @@
 #  Filename : main.py
 
 from gps import GPS
+from machine import SDCard
 from network import WLAN, STA_IF
+from os import remove
 from post import *
 from utime import sleep
-from wifi_connect import *
-from machine import SDCard
 from uos import mount
-from os import remove
+from wifi_connect import *
+
+import logging
 
 ap_blacklist = [b'xfinitywifi']
 
@@ -36,14 +38,22 @@ station = WLAN(STA_IF)
 # activate station
 station.active(True)
 
-# set post success flag
-successful_post = False
-
 # mount SD card
 mount(SDCard(slot=3), "/sdcard")
 config_file = "/sdcard/pmt.conf"
 archive = "/sdcard/data.csv"
 unsent = "/sdcard/buffer.csv"
+
+logging.basicConfig(filename="pmt.log", level=logging.DEBUG,
+                    format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
+defaultLogger = logging.getLogger("Default_Logger")
+wifiLogger = logging.getLogger("WiFi_Connection_Logger")
+archiveLogger = logging.getLogger("Archive")
+archiveLogger.level(logging.DEBUG)
+archiveLogger.addHandler(logging.FileHandler(archive))
+unsentLogger = logging.getLogger("Unsent")
+unsentLogger.level(logging.DEBUG)
+unsentLogger.addHandler(logging.FileHandler(unsent))
 
 # SD Card PINOUT:
 #    MISO    PIN 2
@@ -74,32 +84,39 @@ except KeyError as e:
     raise
 
 while True:
-    GPSdata = gps.get_RMCdata()
+    GPSdata = gps.get_RMCdata(defaultLogger)
     if not (GPSdata == {}):
         b = []
         lat_pre = float(GPSdata[0]['latitude'])
         lon_pre = float(GPSdata[0]['longitude'])
+        d_post = {}
         b.append(GPSdata[0])
         for d in GPSdata:
             if (float(d['latitude']) > lat_pre+0.00007 or float(d['latitude']) < lat_pre-0.00007) and (float(d['longitude']) > lon_pre+0.00007 or float(d['longitude']) < lon_pre-0.00007):
                 b.append(d)
                 lat_pre = float(d['latitude'])
                 lon_pre = float(d['longitude'])
+            else:
+                d_post = d
+        if d_post != {}:
+            b.append(d_post)
         for v in b:
             data+=','.join(list(v.values()))+','
-        with open(archive, "a+") as file_ptr:
-            file_ptr.write(data)
-        with open(unsent, "a+") as file_ptr:
-            file_ptr.write(data)
+        #TODO: remove print
         print(data)
+        archiveLogger.info(data)
+        unsentLogger.info(data)
+        defaultLogger.info(data)
     else:
+        #TODO: remove print
         print("No GPS data.")
+        defaultLogger.info("No GPS data.")
         data = ""
 
     if station.isconnected():
         if data != "":
             with open(unsent, "r") as file_ptr:
-                post_data(file_ptr.read(), post_url)
+                post_data(file_ptr.read(), post,_url, defaultLogger)
             remove(unsent)
 
     else:
@@ -113,13 +130,17 @@ while True:
             if onet[0] not in ap_blacklist:
                 # Try to connect to WiFi access point
                 apSSID = onet[0]
+                #TODO: remove print
                 print ("Connecting to "+str(onet[0],"utf-8")+" ...\n")
+                wifiLogger.info("Connecting to "+str(onet[0],"utf-8")+" ...\n")
                 station.connect(onet[0])
                 while not station.isconnected():
                     sleep(0.5)
                 if station.isconnected():
-                    station_connected(station)
+                    station_connected(station, wifiLogger)
                     sleep(1)
                 else:
+                    #TODO: remove print
                     print("Unable to Connect")
+                    wifiLogger.warning("Unable to Connect")
     sleep(gps_interval)
