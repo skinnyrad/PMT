@@ -137,7 +137,7 @@ while True:
                 while not station.isconnected():
                     sleep(0.5)
                 if station.isconnected():
-                    station_connected(station, wifiLogger)
+                    station_connected(station) #, wifiLogger)
                     sleep(1)
                 else:
                     #TODO: remove print
