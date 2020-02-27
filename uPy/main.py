@@ -41,6 +41,7 @@ successful_post = False
 
 # mount SD card
 mount(SDCard(slot=3), "/sdcard")
+config_file = "/sdcard/pmt.conf"
 archive = "/sdcard/data.csv"
 unsent = "/sdcard/buffer.csv"
 
@@ -61,6 +62,16 @@ unsent = "/sdcard/buffer.csv"
 # instantiate GPS class
 gps = GPS()
 data = ""
+
+with open(config_file, 'r') as fp:
+    pmt_config = eval(fp.read())
+
+try:
+    post_url = pmt_config['URL']
+    gps_interval = pmt_config['interval']
+except KeyError as e:
+    print(e)
+    raise
 
 while True:
     GPSdata = gps.get_RMCdata()
@@ -111,4 +122,4 @@ while True:
                     sleep(1)
                 else:
                     print("Unable to Connect")
-    sleep(5)
+    sleep(pmt_config['interval'])
