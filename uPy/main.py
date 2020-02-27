@@ -122,4 +122,4 @@ while True:
                     sleep(1)
                 else:
                     print("Unable to Connect")
-    sleep(pmt_config['interval'])
+    sleep(gps_interval)
