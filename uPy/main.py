@@ -67,8 +67,8 @@ with open(config_file, 'r') as fp:
     pmt_config = eval(fp.read())
 
 try:
-    post_url = pmt_config['URL']
-    gps_interval = pmt_config['interval']
+    post_url = pmt_config['post_url']
+    gps_interval = pmt_config['gps_interval']
 except KeyError as e:
     print(e)
     raise
