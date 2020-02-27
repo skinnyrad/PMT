@@ -77,8 +77,8 @@ with open(config_file, 'r') as fp:
     pmt_config = eval(fp.read())
 
 try:
-    post_url = pmt_config['post_url']
-    gps_interval = pmt_config['gps_interval']
+    post_url = pmt_config['URL']
+    gps_interval = pmt_config['interval']
 except KeyError as e:
     print(e)
     raise
@@ -87,17 +87,16 @@ while True:
     GPSdata = gps.get_RMCdata()#defaultLogger)
     if not (GPSdata == {}):
         b = []
-        lat_pre = float(GPSdata[0]['latitude'])
-        lon_pre = float(GPSdata[0]['longitude'])
+        lat_pre = float(GPSdata['latitude'])
+        lon_pre = float(GPSdata['longitude'])
         d_post = {}
-        b.append(GPSdata[0])
-        for d in GPSdata:
-            if (float(d['latitude']) > lat_pre+0.00007 or float(d['latitude']) < lat_pre-0.00007) and (float(d['longitude']) > lon_pre+0.00007 or float(d['longitude']) < lon_pre-0.00007):
-                b.append(d)
-                lat_pre = float(d['latitude'])
-                lon_pre = float(d['longitude'])
-            else:
-                d_post = d
+        b.append(GPSdata)
+        if (float(GPSdata['latitude']) > lat_pre+0.00007 or float(GPSdata['latitude']) < lat_pre-0.00007) and (float(GPSdata['longitude']) > lon_pre+0.00007 or float(GPSdata['longitude']) < lon_pre-0.00007):
+            b.append(d)
+            lat_pre = float(GPSdata['latitude'])
+            lon_pre = float(GPSdata['longitude'])
+        else:
+            d_post = GPSdata
         if d_post != {}:
             b.append(d_post)
         for v in b:
