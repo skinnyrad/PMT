@@ -13,15 +13,13 @@
 from reqst import post
 
 # https request information
-url = "https://pmtlogger.000webhostapp.com/api/post.php"
-
 headers = {
     'Content-Type': 'application-json',
 }
 
-def post_data(post_data) -> bool:
+def post_data(post_data, post_url) -> bool:
     try:
-        response = post(url, headers=headers, data=post_data)
+        response = post(post_url, headers=headers, data=post_data)
         if response.status_code == 200:
             print("Post Request Successful")
             return True
