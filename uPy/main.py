@@ -116,7 +116,7 @@ while True:
     if station.isconnected():
         if data != "":
             with open(unsent, "r") as file_ptr:
-                post_data(file_ptr.read(), post,_url) #, defaultLogger)
+                post_data(file_ptr.read(), post_url) #, defaultLogger)
             remove(unsent)
 
     else:
