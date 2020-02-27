@@ -31,7 +31,7 @@ def GNSS_TIMER_ISR():
 from machine import UART
 from utime import sleep
 
-import logging
+# import logging
 
 class GPS():
     def __init__(self, mac=1, _baudrate=9600, _tx=22, _rx=21, _txbuf=1024, _rxbuf=1024):

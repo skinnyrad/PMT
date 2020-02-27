@@ -13,7 +13,7 @@
 from network import WLAN
 from usocket import getaddrinfo
 
-import logging
+# import logging
 import reqst
 
 def station_connected(station: WLAN, Logger: wifiLogger):
