@@ -68,12 +68,17 @@ while True:
         b = []
         lat_pre = float(GPSdata[0]['latitude'])
         lon_pre = float(GPSdata[0]['longitude'])
+        d_post = {}
         b.append(GPSdata[0])
         for d in GPSdata:
             if (float(d['latitude']) > lat_pre+0.00007 or float(d['latitude']) < lat_pre-0.00007) and (float(d['longitude']) > lon_pre+0.00007 or float(d['longitude']) < lon_pre-0.00007):
                 b.append(d)
                 lat_pre = float(d['latitude'])
                 lon_pre = float(d['longitude'])
+            else:
+                d_post = d
+        if d_post != {}:
+            b.append(d_post)
         for v in b:
             data+=','.join(list(v.values()))+','
         with open(archive, "a+") as file_ptr:
