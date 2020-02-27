@@ -58,10 +58,7 @@ station = network.WLAN(network.STA_IF)
 station.active(True)
 
 station.scan()
-
 station.connect("ssid","password")
->>>>>>> b0b26634b9e85e1d5784f9b8461191257e064b66
-
 while not station.isconnected():
     utime.sleep(1)
 
