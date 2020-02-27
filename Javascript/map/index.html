@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>PMT Data (Beta 1.0)</title>
+<title>PMT Data (Beta 2.0)</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <link type="text/css" rel="stylesheet" href="style.css"/>
@@ -38,6 +38,7 @@
     <div id="popup-content"></div>
   </div>
 
+  
   <nav>
     <div class="nav-wrapper red darken-2">
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
@@ -52,14 +53,17 @@
             </label>
           </div>
         </li> -->
+        <a data-target="upload-modal" class="waves-effect waves-light btn modal-trigger red"><i class="material-icons left">cloud_upload</i>Upload</a>
         <a id='maptrigger' class='dropdown-trigger btn orange' data-target='dropdown1'>MAP LOOK</a>
+        <!-- Modal Trigger -->
         <li onclick="buildKml();"><a>Download KML</a</li>
       </ul>
     </div>
   </nav>
-  <ul id="nav-mobile" class="sidenav sidenav-fixed">
+  
+  <ul id="nav-mobile" class="sidenav sidenav-fixed" style=" width: 350px;">
     <li class="logo"><img src="res/logo_v1_map.png" alt="Smiley face" height="" width="42"></li>
-    <h3 class="header">PMT Data</h3>
+    <h3 class="header">PMT Data v2.0</h3>
 
     <table class="centered striped red white-text">
       <thead>
@@ -92,6 +96,19 @@
   
   <div id="map" style="width: 100%; z-index: 0" ></div>
 
+  <!-- Modal Structure -->
+  <div id="upload-modal" class="modal">
+    <div class="modal-content red-text">
+      <h4>Upload PMT File</h4>
+
+      <input id="upload-file" type="file" />
+      <div id="editor"></div>
+    </div>
+    <div class="modal-footer">
+      <a onclick="handleFileSelect();" class="modal-close waves-effect">Upload</a>
+      <a href="#" class="modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+  </div>
     
 </body>
 </html>

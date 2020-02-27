@@ -5,6 +5,7 @@ var map;
 var mapLat = 34.724600;
 var mapLng = -86.639590;
 var mapDefaultZoom = 15;
+var latLonDecimals = 7;
 var url = "https://pmtlogger.000webhostapp.com/api/getJSON.php";
 var url_encryption = "https://pmtlogger.000webhostapp.com/api/getEnc.php";
 var data = null;
@@ -16,14 +17,22 @@ var openlOSM = "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png";
 var defaultLayer,tonerLayer,darkLayer,USGSmap;
 var vectorSource;
 
-function styleFunction(props) {
+function styleFunction(props, fill) {
     return [
             new ol.style.Style({
-            image: new ol.style.Icon({
-                anchor: [0.5, 0.5],
-                anchorXUnits: "fraction",
-                anchorYUnits: "fraction",
-                src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg"
+            // image: new ol.style.Icon({
+            //     anchor: [0.5, 0.5],
+            //     anchorXUnits: "fraction",
+            //     anchorYUnits: "fraction",
+            //     src: "res/RedDot.svg"
+            // }),
+            image: new ol.style.RegularShape({
+                fill: new ol.style.Fill({color: fill}),
+                stroke: new ol.style.Stroke({color: 'black', width: 2}),
+                points: 5,
+                radius: 10,
+                radius2: 4,
+                angle: 0
             }),
             text: new ol.style.Text({
                 text: props.id+"",
@@ -202,7 +211,7 @@ function decrypt() {
                     inCSV+=decryptedText.replace(/_/g, "");
                     
                 });
-                add_data_points(csvJSON(inCSV));
+                add_data_points(csvJSON(inCSV),'red');
             },
             error: function (err) {
                 console.alert(err);
@@ -211,17 +220,17 @@ function decrypt() {
 }
 // ################
 
-function add_data_points(data) {
+function add_data_points(data,color) {
     
     var id = 1;
     data.forEach(d => {
         $('#table-data').append("<tr onclick='zoomTo("+d.Latitude+","+d.Longitude+");'><td>"+id+"</td><td>"+
-            d.Latitude+"</td><td>"+
-            d.Longitude+"</td><td>"+
+            d.Latitude.toFixed(latLonDecimals)+"</td><td>"+
+            d.Longitude.toFixed(latLonDecimals)+"</td><td>"+
             d.Date+" "+
             d.Time+"</td></tr>");
         d.id = id++;
-        add_map_point(d);
+        add_map_point(d,color);
         
     });
     // FOR LATER: String time to OBJ
@@ -231,6 +240,7 @@ function add_data_points(data) {
         , dateObject = new Date(Date.UTC(year, month-1, day, hours, minutes, seconds));
 
     console.log(dateObject);
+    console.log(dateObject.toString());
     // vectorSource defined globally
     var vectorLayer=new ol.layer.Vector({
         source: vectorSource
@@ -353,13 +363,13 @@ function initialize_map() {
     initComponents();
 }
 
-function add_map_point(props) {
+function add_map_point(props, color) {
     var feat = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.transform([parseFloat(props.Longitude),
             parseFloat(props.Latitude)], 'EPSG:4326', 'EPSG:3857')),
     });
     feat.setProperties(props);
-    feat.setStyle(styleFunction(props));
+    feat.setStyle(styleFunction(props,color));
     vectorSource.addFeature(feat);
     // data points added as features to one layer
 }
@@ -387,6 +397,9 @@ function initComponents(){
     // mobile nav bar
     $(document).ready(function(){
         $('.sidenav').sidenav();
+    });
+    $(document).ready(function(){
+        $('.modal').modal();
     });
 }
 
@@ -423,4 +436,36 @@ function changeMapSource(val)
             USGSmap.setVisible(true);
         }; break;
     }
+}
+
+function handleFileSelect()
+{               
+    if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+        alert('The File APIs are not fully supported in this browser.');
+        return;
+    }   
+
+    var input = document.getElementById('upload-file');
+    if (!input) {
+        alert("Um, couldn't find the fileinput element.");
+    }
+    else if (!input.files) {
+        alert("This browser doesn't seem to support the `files` property of file inputs.");
+    }
+    else if (!input.files[0]) {
+        alert("Please select a file before clicking 'Load'");               
+    }
+    else {
+        var file = input.files[0];
+        var fr = new FileReader();
+        fr.onload = function(e) { 
+            var contents = e.target.result;
+            add_data_points(csvJSON(contents),'blue');
+        }
+        fr.readAsText(file);
+    }
+}
+
+function receivedText(fr) {
+    document.getElementById('editor').appendChild(document.createTextNode(fr.result));
 }
