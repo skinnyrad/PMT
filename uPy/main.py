@@ -19,7 +19,7 @@ from utime import sleep
 from uos import mount
 from wifi_connect import *
 
-import logging
+# import logging
 
 ap_blacklist = [b'xfinitywifi']
 
@@ -44,16 +44,16 @@ config_file = "/sdcard/pmt.conf"
 archive = "/sdcard/data.csv"
 unsent = "/sdcard/buffer.csv"
 
-logging.basicConfig(filename="pmt.log", level=logging.DEBUG,
-                    format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
-defaultLogger = logging.getLogger("Default_Logger")
-wifiLogger = logging.getLogger("WiFi_Connection_Logger")
-archiveLogger = logging.getLogger("Archive")
-archiveLogger.level(logging.DEBUG)
-archiveLogger.addHandler(logging.FileHandler(archive))
-unsentLogger = logging.getLogger("Unsent")
-unsentLogger.level(logging.DEBUG)
-unsentLogger.addHandler(logging.FileHandler(unsent))
+# logging.basicConfig(filename="pmt.log", level=logging.DEBUG,
+#                     format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
+# defaultLogger = logging.getLogger("Default_Logger")
+# wifiLogger = logging.getLogger("WiFi_Connection_Logger")
+# archiveLogger = logging.getLogger("Archive")
+# archiveLogger.level(logging.DEBUG)
+# archiveLogger.addHandler(logging.FileHandler(archive))
+# unsentLogger = logging.getLogger("Unsent")
+# unsentLogger.level(logging.DEBUG)
+# unsentLogger.addHandler(logging.FileHandler(unsent))
 
 # SD Card PINOUT:
 #    MISO    PIN 2
@@ -84,7 +84,7 @@ except KeyError as e:
     raise
 
 while True:
-    GPSdata = gps.get_RMCdata(defaultLogger)
+    GPSdata = gps.get_RMCdata()#defaultLogger)
     if not (GPSdata == {}):
         b = []
         lat_pre = float(GPSdata[0]['latitude'])
@@ -104,19 +104,19 @@ while True:
             data+=','.join(list(v.values()))+','
         #TODO: remove print
         print(data)
-        archiveLogger.info(data)
-        unsentLogger.info(data)
-        defaultLogger.info(data)
+        # archiveLogger.info(data)
+        # unsentLogger.info(data)
+        # defaultLogger.info(data)
     else:
         #TODO: remove print
         print("No GPS data.")
-        defaultLogger.info("No GPS data.")
+        # defaultLogger.info("No GPS data.")
         data = ""
 
     if station.isconnected():
         if data != "":
             with open(unsent, "r") as file_ptr:
-                post_data(file_ptr.read(), post,_url, defaultLogger)
+                post_data(file_ptr.read(), post,_url) #, defaultLogger)
             remove(unsent)
 
     else:
@@ -132,7 +132,7 @@ while True:
                 apSSID = onet[0]
                 #TODO: remove print
                 print ("Connecting to "+str(onet[0],"utf-8")+" ...\n")
-                wifiLogger.info("Connecting to "+str(onet[0],"utf-8")+" ...\n")
+                # wifiLogger.info("Connecting to "+str(onet[0],"utf-8")+" ...\n")
                 station.connect(onet[0])
                 while not station.isconnected():
                     sleep(0.5)
@@ -142,5 +142,5 @@ while True:
                 else:
                     #TODO: remove print
                     print("Unable to Connect")
-                    wifiLogger.warning("Unable to Connect")
+                    # wifiLogger.warning("Unable to Connect")
     sleep(gps_interval)
