@@ -17,6 +17,8 @@ import logging
 import reqst
 
 def station_connected(station: WLAN, Logger: wifiLogger):
+    #TODO: remove print
+    print("Connected...Testing Access...")
     wifiLogger.info("Connected...Testing Access...")
     resolved = getaddrinfo("pmtlogger.000webhostapp.com", 80)
     if resolved == []:

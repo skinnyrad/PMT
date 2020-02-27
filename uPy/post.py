@@ -31,4 +31,6 @@ def post_data(post_data, post_url, logger) -> bool:
             logger.info("Post Request Unsuccessful")
             return False
     except OSError as e:
+        #TODO: remove print
+        print("Warning: " + str(e))
         logger.warning(str(e))

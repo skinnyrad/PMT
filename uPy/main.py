@@ -130,6 +130,8 @@ while True:
             if onet[0] not in ap_blacklist:
                 # Try to connect to WiFi access point
                 apSSID = onet[0]
+                #TODO: remove print
+                print ("Connecting to "+str(onet[0],"utf-8")+" ...\n")
                 wifiLogger.info("Connecting to "+str(onet[0],"utf-8")+" ...\n")
                 station.connect(onet[0])
                 while not station.isconnected():
