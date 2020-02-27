@@ -19,14 +19,14 @@ headers = {
     'Content-Type': 'application-json',
 }
 
-def post_data(post_data) -> bool:
+def post_data(post_data, logger) -> bool:
     try:
         response = post(url, headers=headers, data=post_data)
         if response.status_code == 200:
-            print("Post Request Successful")
+            logger.info("Post Request Successful")
             return True
         else:
-            print("Post Request Unsuccessful")
+            logger.info("Post Request Unsuccessful")
             return False
     except OSError as e:
-        print("Warning: " + str(e))
+        logger.warning(str(e))

@@ -13,14 +13,15 @@
 from network import WLAN
 from usocket import getaddrinfo
 
+import logging
 import reqst
 
-def station_connected(station: WLAN):
-    print("Connected...Testing Access...")
+def station_connected(station: WLAN, Logger: wifiLogger):
+    wifiLogger.info("Connected...Testing Access...")
     resolved = getaddrinfo("pmtlogger.000webhostapp.com", 80)
     if resolved == []:
-        print("No Internet Access")
+        wifiLogger.debug("No Internet Access")
         station.disconnect()
     else:
-        print("Internet Accessible")
-        return [r, logger_errs]
+        wifiLogger.debug("Internet Accessible")
+        
