@@ -40,6 +40,7 @@ station.active(True)
 
 # mount SD card
 mount(SDCard(slot=3), "/sdcard")
+config_file = "/sdcard/pmt.conf"
 archive = "/sdcard/data.csv"
 unsent = "/sdcard/buffer.csv"
 
@@ -71,6 +72,16 @@ unsentLogger.addHandler(logging.FileHandler(unsent))
 # instantiate GPS class
 gps = GPS()
 data = ""
+
+with open(config_file, 'r') as fp:
+    pmt_config = eval(fp.read())
+
+try:
+    post_url = pmt_config['post_url']
+    gps_interval = pmt_config['gps_interval']
+except KeyError as e:
+    print(e)
+    raise
 
 while True:
     GPSdata = gps.get_RMCdata(defaultLogger)
@@ -105,7 +116,7 @@ while True:
     if station.isconnected():
         if data != "":
             with open(unsent, "r") as file_ptr:
-                post_data(file_ptr.read(), defaultLogger)
+                post_data(file_ptr.read(), post,_url, defaultLogger)
             remove(unsent)
 
     else:
@@ -130,4 +141,4 @@ while True:
                     #TODO: remove print
                     print("Unable to Connect")
                     wifiLogger.warning("Unable to Connect")
-    sleep(5)
+    sleep(gps_interval)

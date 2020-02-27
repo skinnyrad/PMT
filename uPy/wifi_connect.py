@@ -20,8 +20,12 @@ def station_connected(station: WLAN, Logger: wifiLogger):
     wifiLogger.info("Connected...Testing Access...")
     resolved = getaddrinfo("pmtlogger.000webhostapp.com", 80)
     if resolved == []:
+        #TODO: remove print
+        print("No Internet Access")
         wifiLogger.debug("No Internet Access")
         station.disconnect()
     else:
+        #TODO: remove print
+        print("Internet Accessible")
         wifiLogger.debug("Internet Accessible")
         

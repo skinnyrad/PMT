@@ -115,5 +115,7 @@ class GPS():
                 self.parse_RMCdata(rawData)
             except Exception as e:
                 self.RMCdata = {}
+                #TODO: remove print
+                print(e)
                 defultLogger.warning(str(e))
             return self.RMCdata
