@@ -2,7 +2,7 @@ ul.sidenav.sidenav-fixed li.logo {
   text-align: center;
   margin-top: 32px;
 }
-tr:hover {
+tbody tr:hover {
   background-color: darkred;
 }
 .col.grid-example {
