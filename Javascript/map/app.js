@@ -169,7 +169,7 @@ function decrypt() {
         // key = '1234567890abcdef'
         var iv = "1234567890123456";
         do{
-            var key = prompt("Please enter your KEY", "1234567890abcdef");
+            var key = prompt("Please enter your KEY", "");
         }
         while(key == null || key == "");
         var delimiter = "TINTINNABULATION";
