@@ -1,5 +1,3 @@
-import sys
-
 CRITICAL = 50
 ERROR    = 40
 WARNING  = 30
@@ -14,8 +12,6 @@ _level_dict = {
     INFO: "INFO",
     DEBUG: "DEBUG",
 }
-
-_stream = sys.stderr
 
 class Logger:
 
