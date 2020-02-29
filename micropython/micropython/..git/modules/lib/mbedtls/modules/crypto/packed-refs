@@ -1,0 +1,82 @@
+# pack-refs with: peeled fully-peeled sorted 
+e8451f22740cba05488ba7489ce72368c7224fad refs/remotes/origin/dev/Patater/cmake-subproject-fix
+a78c958b17d75ddf63d8dd17255b6379dcbf259f refs/remotes/origin/dev/Patater/dev-2028-merge
+ff4f094ee766ad465a143365c6ac1bdf1903170a refs/remotes/origin/dev/Patater/tls-development-20190722
+dea02cc8b3cee604cdba8295c90e585af68e7a83 refs/remotes/origin/dev/Patater/update-dev-tls-dev-crypto-merge
+db29ab528a858a31f2fcdc4c51cb18a38dba7886 refs/remotes/origin/dev/Patater/update-dev-tls-dev-crypto-merge-7
+c7cde03feca387ae32a29d9845dd28a3020f0d97 refs/remotes/origin/dev/dgreen-arm/fix-ecdsa-rng
+b9eb88247fbe375670a08a5b699cb804df72f9a7 refs/remotes/origin/dev/gilles-peskine-arm/c99-tryout
+9e23bea692021f3be46d931aa5843b7d7615c2e8 refs/remotes/origin/dev/gilles-peskine-arm/check_params-test_without_function-crypto
+2838b7bfbaa5ecc78ef01cd8b8b26f917119c398 refs/remotes/origin/dev/gilles-peskine-arm/harvard-md
+7846299adb4d52342f0ec2da3cca7165b3946cf7 refs/remotes/origin/dev/gilles-peskine-arm/havege-asan-crypto
+5b4cb759ba1ea5ced20a6d04bec9869c61ca4149 refs/remotes/origin/dev/gilles-peskine-arm/oss-fuzz-fix-build-crypto
+178c9aa96691c2ff9cdd1d194601b6c6353c6a7b refs/remotes/origin/dev/gilles-peskine-arm/psa-key_derivation-relax_inputs
+4b734223180a81751cbd189f430803464db37cd9 refs/remotes/origin/dev/gilles-peskine-arm/psa-se_driver-create_key
+3e819b7d690416cd24d66a7a605e26b3f7b6b77f refs/remotes/origin/dev/gilles-peskine-arm/psa-streamline_encodings-types_and_curves
+8d63d5ddf40ce4cbd5ea4eb349a766c9a9b75a30 refs/remotes/origin/dev/gilles-peskine-arm/psa-wrap-api-1
+7e88e13d943eb7409439dee44391276677a65a11 refs/remotes/origin/dev/gilles-peskine-arm/test_outcome_file-crypto-fix
+5d972e726465a7088da97af768733589a2b59bdc refs/remotes/origin/dev/hanno-arm/asn1_traversal_api
+4c8ca67c901c154d9eff56ab182a70acdcbce964 refs/remotes/origin/dev/k-stachowiak/IOTCRYPT-791-merge
+417a10a921047bd13a5f0e3a9f08cad8c30cb363 refs/remotes/origin/dev/mbed-crypto-0.1.0-alpha
+5451674f51ea137bda252f9950ad396c3b56a161 refs/remotes/origin/dev/mbedcrypto-for-mbedtls-3.0
+e6e7b9cebe8922859362921700a5e40b090e9cea refs/remotes/origin/dev/mpg/sibling-oid-backwards-deps
+c70a3c76bfa5cb107c592d14688d5df31f09c673 refs/remotes/origin/dev/patater/dev-tls-20190328
+03153b8f21881c3ec42d1af936dd78ce4110fb3f refs/remotes/origin/dev/patater/remove-non-crypto
+521dbc67dabf5f5dc2ad8148b6f01662805caac7 refs/remotes/origin/dev/patater/tls-development-20190417
+9b10cabb0fd9be16b52289ee652e37de6271eaac refs/remotes/origin/dev/patater/tls-development-20190425
+8098fef369ec082d0100b34d7e99d7cc7ff3f4fe refs/remotes/origin/dev/shared/secure-element
+71dcefbb8a04865dfc3e4c1b16301d3a353b936e refs/remotes/origin/dev/yanesca/everest-submodule-testing
+b52317e14eb9d902c37e30930ddc9ac009ddd195 refs/remotes/origin/dev/yanesca/iotcrypt-942
+639b9c49efecb26a13a61039c7dec8a1eb9c3ed1 refs/remotes/origin/dev/yanesca/submodule-everest-testing
+cf4a40ba0a3086cabb5a8227245191161fd26383 refs/remotes/origin/development
+87dd014036b7f0b332b350e52aae65c9a615d7e5 refs/remotes/origin/master
+59fd5aee421bb203d2b8c31802b19eb0d6932ddb refs/remotes/origin/mbedcrypto-0.1.0-beta
+72f8348d1b0a6b344c11fc2304005480b1d89534 refs/remotes/origin/mbedcrypto-1.0
+47f2de132936905d97a93e2ddf7f5237ab232fbe refs/remotes/origin/mbedcrypto-1.1
+bbdf310c667ec26b995838bfc72d073a29172c80 refs/remotes/origin/psa-api-1.0-beta
+896e9d3f23593bbd1cb4d126c75d90891cb908fa refs/remotes/origin/psa-crypto-api
+b9a7ef0889f122b62f7805a36d7ba38677d3b027 refs/remotes/origin/psa-policy_alg2-poc
+0c74e30960de5973c486141ffb19db8561376085 refs/remotes/origin/test-link-seedfile
+d8cf464f7d3d725de8759d790089c88fa3013e9d refs/remotes/origin/test-link-seedfile-02
+c6702ba69cda30178d9bb31a811b78851a8cf9ed refs/remotes/origin/test_outcome_file-crypto-fix
+61e9763a00f7f2e76f3a8be685731f95d65dd25d refs/tags/mbedcrypto-0.1.0a
+^e54e693d3c0444c266d6e4825af89bcb68ea1071
+a8992df78a641eb5008f7946d007da08aba47b6d refs/tags/mbedcrypto-0.1.0a+driver
+417a10a921047bd13a5f0e3a9f08cad8c30cb363 refs/tags/mbedcrypto-0.1.0a+driver-0.3
+414a93eedc8de564b24172f5a3dbc8151cbd09e8 refs/tags/mbedcrypto-0.1.0b
+^0e9ff8546bb496ea971b780f4f3b45874373614b
+863c99934117d3a6f68f01d1840dfd29c9f23dc7 refs/tags/mbedcrypto-0.1.0b2
+^59fd5aee421bb203d2b8c31802b19eb0d6932ddb
+72f8348d1b0a6b344c11fc2304005480b1d89534 refs/tags/mbedcrypto-1.0.0
+dce2a0829d010cc436f058955df78a898b142882 refs/tags/mbedcrypto-1.0.0d0
+^494624d299f39828215f8ff06f4500eff553d253
+4d69cf1a84e6334e244316003a56d28b2b8500c3 refs/tags/mbedcrypto-1.0.0d1
+fa6f146bba0ca6e86f773e1188cd7b125c6cb7dd refs/tags/mbedcrypto-1.0.0d2
+9654e11b1d71251ef762c2a0841b6a7ad68f422a refs/tags/mbedcrypto-1.0.0d3
+c8ed00a04f7f4984a488de4e2dbcd33daab1f20d refs/tags/mbedcrypto-1.0.0d4
+c37fff9b95e5c0c5266f164aa4fc1d0db9d2a6fa refs/tags/mbedcrypto-1.0.0d5
+bf61ca7a0429ae81adfa82d1bbee4e58e3f6ecef refs/tags/mbedcrypto-1.0.0d6
+72f8348d1b0a6b344c11fc2304005480b1d89534 refs/tags/mbedcrypto-1.0.0d7
+12874f299aa851fe7e20bda6f9ef1b4ffe3192bc refs/tags/mbedcrypto-1.1.0
+^47f2de132936905d97a93e2ddf7f5237ab232fbe
+8907b019e756d2f02f21a1a32f072d20de13965e refs/tags/mbedcrypto-1.1.0d0
+cad1223654f36876a5abfa7b974ca88d72dd26c1 refs/tags/mbedcrypto-1.1.0d1
+47f2de132936905d97a93e2ddf7f5237ab232fbe refs/tags/mbedcrypto-1.1.0d2
+e78cd62acb7ea0397f061ebc754b89ed6222b13c refs/tags/mbedcrypto-1.1.1
+da6b7854fbf5efbf28998bd712043d60f50407b0 refs/tags/mbedcrypto-2.0.0
+^92348d1c4931f8c33c2d092928afca556f672c42
+b090d5dc2aabbc103b623c36368f3122c0854211 refs/tags/mbedcrypto-2.0.0d0
+07af6c1adec44f170631e77cf5c70ed94c75973f refs/tags/mbedcrypto-2.0.0d1
+^98d5685b70c1e414636bff71012660c14d326843
+59ad3ddf880237b72967eb264ddf04f8ab01b8c1 refs/tags/mbedcrypto-2.0.0d2
+^92348d1c4931f8c33c2d092928afca556f672c42
+94ec893b0e9742262f1971ed0e4377ebe6fec1d4 refs/tags/mbedcrypto-2.1.0d0
+^150d5777802834f0b7084fad95b32ebbc1e75d16
+3432c5a3cf3dc8e58d891bf99b2649eafb5b1d2b refs/tags/mbedcrypto-3.0.0
+^a337167543d930f4ea2fa26778881fa3a6b47d74
+50b1b6f0f6c98b5b5c908aa946b9f6c5b59c8972 refs/tags/mbedcrypto-3.0.0d0
+^180850a229dbce02069c145e479b5e3234ad0d6a
+1146b4e06011b69a6437e6b728f2af043a06ec19 refs/tags/mbedcrypto-3.0.1
+dad0832dc683efa147dc40c6856e2b74dcabcab6 refs/tags/psa-crypto-api-1.0-beta1
+270420b18f51570cf6e67749316f65c96a046216 refs/tags/psa-crypto-api-1.0-beta2
+4719db39b7d9630cd05d41cc32292fdedeb07864 refs/tags/psa-crypto-api-1.0-beta3

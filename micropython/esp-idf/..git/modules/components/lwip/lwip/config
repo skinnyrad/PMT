@@ -1,0 +1,12 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	worktree = ../../../../../components/lwip/lwip
+[remote "origin"]
+	url = https://github.com/espressif/esp-lwip.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "2.1.2-esp"]
+	remote = origin
+	merge = refs/heads/2.1.2-esp

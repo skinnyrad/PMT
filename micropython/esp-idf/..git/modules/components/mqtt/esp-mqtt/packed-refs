@@ -1,0 +1,8 @@
+# pack-refs with: peeled fully-peeled sorted 
+e3b013e2db58124ea68cf7c8f44a8cba6e1572b7 refs/remotes/origin/bugfix/err_event_mqtt_related
+8fe50dda5f0741a0e92d349690f7cd63af45a876 refs/remotes/origin/feature/kconfig
+0cc4077bd3e10bb93456ff2785309ec9237a5906 refs/remotes/origin/feature/transport_pass_error_codes
+12b326d9696347da5f396288bbe32c22f224eac6 refs/remotes/origin/feature/websocket
+9b003d3504a69c3056a1affc0e7e4907bbcdffc6 refs/remotes/origin/idf
+d801f03f46781333312c0f89e27396f0d0710894 refs/remotes/origin/master
+5fd5523b9b9cbae9f2d2934f4405942884015d18 refs/tags/ESP-MQTT_FOR_IDF_3.1

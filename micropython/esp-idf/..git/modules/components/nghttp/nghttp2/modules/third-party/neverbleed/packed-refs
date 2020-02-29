@@ -1,0 +1,8 @@
+# pack-refs with: peeled fully-peeled sorted 
+59ff5456498a2d203501b23f88030aef427e6775 refs/remotes/origin/kazuho/change-file-ownership-on-setuid
+2095759826ced97355d0d726274a2651e52ca311 refs/remotes/origin/kazuho/reconnect-after-fork
+643fb1be068253931f5467695f6bb61bee53a0d4 refs/remotes/origin/kazuho/record-daemon-pid
+f094745f92adc79c4d73e9fbde5e787e3a99dd16 refs/remotes/origin/kazuho/rsa-finish
+6bf1539a202bc43eaf33d0c5423b593f881971ea refs/remotes/origin/kazuho/set-cloexec-on-communicating-sockets
+5af8bcd18c299b72838199353fc3df592f46cb81 refs/remotes/origin/kazuho/test.c-with-hup
+036dd5ab47151be0d1bf52b2702e27b82aabb80e refs/remotes/origin/master

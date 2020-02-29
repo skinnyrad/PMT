@@ -1,0 +1,19 @@
+# pack-refs with: peeled fully-peeled sorted 
+1dabc2df8ed1acaf0c483b58d757ba72e8b42090 refs/remotes/origin/vendor
+d752828b3654c26ee5c4a236eb13c1ba86bd5aa7 refs/remotes/origin/work-F0-1.9.0+F4-1.16.0+F7-1.7.0+H7-1.2.0+L4-1.8.1
+f8a1dd8ceeef1004cf8c964816af6a8530611451 refs/remotes/origin/work-F4-1.13.1+F7-1.5.0+L4-1.3.0
+90b9961963b625db0f2aabfe8e5e508b1f4fb7f1 refs/remotes/origin/work-F4-1.16.0+F7-1.7.0+H7-1.2.0+L4-1.8.1
+d2bcfda543d3b99361e44112aca929225bdcc07f refs/remotes/origin/work-F4-1.16.0+F7-1.7.0+L4-1.8.1
+166a236ca1fc35943cb0c747e2db7deffd5558c3 refs/tags/F0-1.9.0+F4-1.16.0+F7-1.7.0+H7-1.2.0+L4-1.8.1
+cdce9c76634596862a7647effaa7437c55d4c268 refs/tags/F4-1.13.0+F7-1.1.0+L4-1.3.0
+bddec43554a0db52ced4d0048be46366aa5bb628 refs/tags/F4-1.13.1+F7-1.1.0+L4-1.3.0
+1107e4bc5faa29d2e565bb62c2e11a71c8afbcec refs/tags/F4-1.13.1+F7-1.5.0+L4-1.3.0
+90619577a3fdd5c6901a6e3305375bd2da495284 refs/tags/F4-1.14.0+F7-1.5.0+L4-1.3.0
+af79444354ace19f60ef7737b939eef12021d52e refs/tags/F4-1.16.0+F7-1.5.0+L4-1.3.0
+dc7b551c3f49fb199d6fd0dcc0ef01e3b1079260 refs/tags/F4-1.16.0+F7-1.7.0+H7-1.2.0+L4-1.8.1
+fd8ba19d600c36379c22ca345aa084c60ff23148 refs/tags/F4-1.16.0+F7-1.7.0+L4-1.3.0
+0496e4f557d4b1e9a9f554563b344f600b84d001 refs/tags/F4-1.16.0+F7-1.7.0+L4-1.8.0
+540ae5c50a54d430b0ee943adf078a9fe8b3c16c refs/tags/F4-1.16.0+F7-1.7.0+L4-1.8.1
+9da262367ad6874b6a3f7f82645a09561b84dcad refs/tags/F4-1.3.0
+37ed7930b7076fefba88bcc5007f715c785fc217 refs/tags/F4-1.5.0+F7-1.1.0
+5d7b2ad09426dc952379d07361a4c6a8ee84e59e refs/tags/F4-1.5.0+F7-1.1.0+L4-1.3.0

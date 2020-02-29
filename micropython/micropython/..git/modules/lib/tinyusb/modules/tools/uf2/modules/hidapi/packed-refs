@@ -1,0 +1,22 @@
+# pack-refs with: peeled fully-peeled sorted 
+3371977dd8b380a747ce6bf2bcb5f674c4099e6b refs/remotes/origin/autotools
+edf1183114d23671bf842867b4899b3ed1ada504 refs/remotes/origin/enumerate_fix
+a6a622ffb680c55da0de787ff93b80280498330f refs/remotes/origin/master
+0c462aac125d7afc4c09080a5b0eadd903648334 refs/remotes/origin/windows_check_driver
+21d7d2d208ca918bc1b9047835752854843a204d refs/remotes/origin/windows_write_timeout
+2e4835471c22b6132a6bdd9fdac346abdad5e43e refs/remotes/origin/write_timeout_2
+2fb125f4bfc6997e083898f0409e826aef785e39 refs/tags/hidapi-0.1.0
+03179fe66115cbd60daf8ddb79c05809f86d1222 refs/tags/hidapi-0.2.2
+0a76c844ac20ffb4d115e660f86f10353bdd5df5 refs/tags/hidapi-0.2.3
+353308641d1d3834795db550b87ec316339f27f6 refs/tags/hidapi-0.2.4
+e78f74041bfa9c59360347601cbe25ab74213e4c refs/tags/hidapi-0.3.0
+727399b79e3081779ae45c9e87d53bc83cdf6ef4 refs/tags/hidapi-0.5.0
+82f596051ca0f9c182440f49f0d968f9c43c1dfe refs/tags/hidapi-0.5.1
+^cc51331c6c98a7565f23521e079a6197a251f284
+e3b3ee5e5e4f546562bd2bc33eab608cb8262681 refs/tags/hidapi-0.5.2
+^b5bdda08dac2511479fce6b616d4518595c725c2
+19f0fd3d86f3e4981efa20efd47dcd442e90bff1 refs/tags/hidapi-0.6.0
+^6ad666c5b597901caa3e5bfef586e8a511398464
+4efe27d95082ff233c8166b06738a3dd5fdc5c6e refs/tags/hidapi-0.7.0
+^edf1899837468d9373d9cb3d971ee99fd7c6be8a
+40cf516139b5b61e30d9403a48db23d8f915f52c refs/tags/hidapi-0.8.0-rc1

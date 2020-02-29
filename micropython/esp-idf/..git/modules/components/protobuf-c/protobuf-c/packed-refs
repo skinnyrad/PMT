@@ -1,0 +1,18 @@
+# pack-refs with: peeled fully-peeled sorted 
+1ec9c1f38eab5252aaa2313d23fb780744d2752b refs/remotes/origin/edmonds/meson-build-system
+efd1b2ef45f9b111999e749a27bcf7c6157150e9 refs/remotes/origin/gh-pages
+39cd58f5ff06048574ed5ce17ee602dc84006162 refs/remotes/origin/master
+39cd58f5ff06048574ed5ce17ee602dc84006162 refs/remotes/origin/next
+4c2225d0a75456666f1c6c233d7c16824e429ed4 refs/tags/v1.0.0
+c11a598e3cccd34465b8b602b9b7be51df7f1c6a refs/tags/v1.0.0-rc1
+93b9674e932c2781730befaeae8f37974798a607 refs/tags/v1.0.0-rc2
+ce90c3be88e7e2efd8f449c4a29f72b269bf3e63 refs/tags/v1.0.1
+0481c71e064dd2e33cfc572006267220f498ef16 refs/tags/v1.0.2
+b0b0e874a402aba4ca973c720a95a9e4532fca4a refs/tags/v1.1.0
+3b7d27a462bcbd9500f21a8de06655f779e247a2 refs/tags/v1.1.1
+1d4aff96484af1304cd11fe68b69d507c3980781 refs/tags/v1.2.0
+006d69bd8481738323c58af5cd4c8477d09eb9f5 refs/tags/v1.2.1
+dac1a65feac4ad72f612aab99f487056fbcf5c1a refs/tags/v1.3.0
+269771b4b45d3aba04e59569f53600003db8d9ff refs/tags/v1.3.1
+1390409f4ee4e26d0635310995b516eb702c3f9e refs/tags/v1.3.2
+f20a3fa131c275a0e795d99a28f94b4dbbb5af26 refs/tags/v1.3.3
