@@ -18,7 +18,7 @@ headers = {
     'Content-Type': 'application-json',
 }
 
-def post_data(post_data, post_url, Logger: logger) -> bool:
+def post_data(post_data, post_url, logger: Logger) -> bool:
     try:
         response = post(post_url, headers=headers, data=post_data)
         if response.status_code == 200:

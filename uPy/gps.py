@@ -98,7 +98,7 @@ class GPS():
         else:
             self.RMCdata = {}
 
-    def get_RMCdata(self, Logger: defaultLogger):
+    def get_RMCdata(self, defaultLogger: Logger):
         self.oldRXLength = self.currentRXLength
         self.currentRXLength = self.uart.any()
 

@@ -41,6 +41,10 @@ class Logger:
             with open(self.logname, "a+") as fp:
                 fp.write("%s:%s:%s\n" % (self._level_str(level), self.name, msg))
 
+    def write(self, msg):
+        with open(self.logname, "a+") as fp:
+            fp.write(msg)
+
     def debug(self, msg):
         self.log(DEBUG, msg)
 

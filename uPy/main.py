@@ -105,8 +105,8 @@ while True:
             data+=','.join(list(v.values()))+','
         #TODO: remove print
         print(data)
-        archiveLogger.info(data)
-        unsentLogger.info(data)
+        archiveLogger.write(data)
+        unsentLogger.write(data)
         defaultLogger.info(data)
     else:
         #TODO: remove print

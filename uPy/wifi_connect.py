@@ -16,7 +16,7 @@ from usocket import getaddrinfo
 import logging
 import reqst
 
-def station_connected(station: WLAN, Logger: wifiLogger):
+def station_connected(station: WLAN, wifiLogger: Logger):
     #TODO: remove print
     print("Connected...Testing Access...")
     wifiLogger.info("Connected...Testing Access...")
