@@ -1,0 +1,15 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	worktree = ../../../../lib/mbedtls
+[remote "origin"]
+	url = https://github.com/ARMmbed/mbedtls.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "development"]
+	remote = origin
+	merge = refs/heads/development
+[submodule "crypto"]
+	active = true
+	url = https://github.com/ARMmbed/mbed-crypto

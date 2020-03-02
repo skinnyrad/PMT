@@ -1,0 +1,7 @@
+# pack-refs with: peeled fully-peeled sorted 
+039b5f3bbc3f4ba4421e581db290560d59fef625 refs/remotes/origin/circuitpython
+d270f79aa16dd8fd4ae3b6c14544283dcb992e9c refs/remotes/origin/master
+e6f4999d1fdb496711450b3880de4c1956697c32 refs/remotes/origin/master_bugfixes
+5d058da37ec550083d20d677f391259af8149e95 refs/remotes/origin/orthrus-changes
+2171478dc9ed784d1f1e17f4fea2f8a0830c525c refs/remotes/origin/samr
+a419479ca608777746cb80fdb00a4a19d7dd9173 refs/remotes/origin/usart_fixes

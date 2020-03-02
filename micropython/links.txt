@@ -1,0 +1,18 @@
+Some recommended links:
+
+	-- Guide I used on how to build firemware:
+		https://github.com/micropython/micropython/blob/master/ports/esp32/README.md#building-the-firmware
+
+
+	-- C code examples for extending micropython:
+		https://forum.micropython.org/viewtopic.php?p=39040
+		https://github.com/v923z/micropython-usermod/blob/master/snippets/arbitrarykeyword/arbitrarykeyword.c
+		https://micropython-usermod.readthedocs.io/en/latest/usermods_03.html
+
+
+	-- The official micropython docs:
+		https://docs.micropython.org/en/latest/esp32/tutorial/intro.html
+
+
+	-- Official docs on how to extend micropython:
+		https://docs.micropython.org/en/latest/develop/cmodules.html
