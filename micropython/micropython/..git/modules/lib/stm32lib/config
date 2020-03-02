@@ -1,0 +1,12 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	worktree = ../../../../lib/stm32lib
+[remote "origin"]
+	url = https://github.com/micropython/stm32lib
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "vendor"]
+	remote = origin
+	merge = refs/heads/vendor

@@ -1,0 +1,32 @@
+# pack-refs with: peeled fully-peeled sorted 
+2f81c7d46e13f8d4add4b32c993576dc33407348 refs/remotes/origin/experiment/ch340_timeout_bug
+9c41a57955b3c4b3873d653ac0d87c0900b135ff refs/remotes/origin/feature/esp32s2beta
+4f5772b3f4ebb5f07b1a3f5c0ecabf2699413952 refs/remotes/origin/feature/standalone_builds
+939b3e987ac6efde171add89ee26a34031058760 refs/remotes/origin/master
+aaa25e0cf0c38ffba2b73270773eec3ded2f69c3 refs/tags/v1.0.1
+aff71ca37be2cc077daabddd62f52e50512e9bdd refs/tags/v1.1
+9dfcb350e1a91bb4641f725fc6c2f126791013ce refs/tags/v1.2
+793efa71e0c554eaa845febf90eeddfb4b705b10 refs/tags/v1.2.1
+3aa853434641bffc190d208703c8f0901f54e977 refs/tags/v1.3
+582a069ebadb5a2a97edee0e798f5190ff58845f refs/tags/v2.0
+76b179ab101dfd4cf9873ff5f4d0efd575cf419e refs/tags/v2.0-beta2
+ffde3f07b3ed735b6c9b9dfd0c12073a081444c1 refs/tags/v2.0.1
+76b179ab101dfd4cf9873ff5f4d0efd575cf419e refs/tags/v2.0beta2
+4dab24e1b28632d270adf7305fe0d008d1acee99 refs/tags/v2.1
+a532bc42573861779b39b989c333e1b5bcc723ed refs/tags/v2.2
+200ab6e39487bef1df9db12a5be5b0682d80d3c1 refs/tags/v2.2.1
+4bd8975379fee8d60d08c98a572c097d2f6e7789 refs/tags/v2.3
+da31d9d7a1bb496995f8e30a6be259689948e43e refs/tags/v2.3.1
+385213616d270091a87b8cf755d00dabc74537e7 refs/tags/v2.4.0
+^e753e5f45a52fe18030a610845a904b5d6bd360e
+b56827f2d1d8151ad9cc264b4816e8a07c6db09f refs/tags/v2.4.1
+^d915e7789b7ffcdde3530360cb6241080beef405
+fd8c25d2160505fb9d5abbe56f85116a136afb05 refs/tags/v2.5.0
+5979a47a0b6e169945387908cd2bbf92ae41ab93 refs/tags/v2.5.1
+^59b8dd8bfe3927dc11ffc06603fa082cb0f523bb
+0062a9b3a2e5fc885fa056fe14305a7a16f947f0 refs/tags/v2.6
+^9ad444a6e06e58833d5e6044c1d5f3eb3dd56023
+e75538efdc06834b4e9a756c7c44a6c2ae003777 refs/tags/v2.7
+^1319c49adb2fe99d2981151ff781930d6ed62729
+80c2a3f90f6fc818b93f1db2af015fcbab0dc9fd refs/tags/v2.8
+^de30f21a222ec62f5a023dd955439b4f57702768

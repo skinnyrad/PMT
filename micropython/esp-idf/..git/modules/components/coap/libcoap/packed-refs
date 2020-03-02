@@ -1,0 +1,30 @@
+# pack-refs with: peeled fully-peeled sorted 
+ef4c01df044b1f2bfca60c3425a0bfbb202c55f0 refs/remotes/origin/develop
+b3c026f1d9b05924a2db853f0a002fa7643541e2 refs/remotes/origin/disable-tcp
+25863042ae1e95138776f65c772f9fa6ce60495c refs/remotes/origin/dtls
+6fc3a7315f6629d804cc7928004cddeb4a84443c refs/remotes/origin/master
+cfec0d072c5b99ed3e54828ca50ea2f6b91e1f50 refs/remotes/origin/release-4.2.0
+6fc3a7315f6629d804cc7928004cddeb4a84443c refs/remotes/origin/release-4.2.1
+787f999f35a7c376c5bc923bba5faf478aa94f92 refs/remotes/origin/riot/gnrc_sock_udp
+3de9fe7102d42a3b95f2d6d7096c58de52272844 refs/remotes/origin/riot/posix_sockets
+346ac35bd947f8737c380d51bee99eca2f3116f7 refs/tags/bsd-licensed
+^bfca87cfb77b965f022d32ec82343a8eb368aa00
+9e99ad975bca93e3a0b7ffb042d2625fb49a9c35 refs/tags/coap-lwip
+6749cbdc698a08bbe85c2fddd80bd6567e5036ea refs/tags/coap-tinydtls
+^25863042ae1e95138776f65c772f9fa6ce60495c
+53e73f46571fdc4feee934309485aafd92d0a248 refs/tags/v4.1.1
+^6e293342f649ef45adac162c2d59dc111a88e313
+b2fd1292d8da67c4d1a1c3b49e7ab872f8a2a98d refs/tags/v4.1.2
+^fa5248603049ddf95cc84608aad569120763bf2b
+cfec0d072c5b99ed3e54828ca50ea2f6b91e1f50 refs/tags/v4.2.0
+86831531d678dac56dddf63903c9c47715430489 refs/tags/v4.2.0-rc1
+^92dd8281ad963334484485a146d4a162a188937f
+08a786224c4b777d597d72fc378da6a256806b0d refs/tags/v4.2.0-rc2
+^00486a4f46e0278dd24a8ff3411416ff420cde29
+337b682a4542cd4161caffc5592bc40f2e9aeba1 refs/tags/v4.2.0-rc3
+^d52de2b8e990294ed7c11b95419f14ac32c908ce
+845cf4fd9ed5ad8824a9848cc594620a0187191e refs/tags/v4.2.0-rc4
+^bcff6dec61d5b2137fd4fd06a6156c0329680193
+57ec8e76e47f0aaa9ba7c3a645e959c29efdb1c8 refs/tags/v4.2.1
+^6fc3a7315f6629d804cc7928004cddeb4a84443c
+6e293342f649ef45adac162c2d59dc111a88e313 refs/tags/v4_1_1

@@ -1,0 +1,12 @@
+# pack-refs with: peeled fully-peeled sorted 
+5e9acef74faffba86375258d822f49d0b1173b5e refs/remotes/origin/master
+5fc72fbca19153252704fc7d646a744622b8fd8f refs/remotes/origin/refactor/optional_setup_through_scripting
+f3b87bb91c8d1b8c1999bc96e718e31d18f43881 refs/remotes/origin/refactor/self-test-cleanup
+179b492e1842b434786735c7e0438b634387d5cf refs/remotes/origin/refactor/split_mem_from_fixture
+84390f7f252013d067a696fd35e5038f42b62158 refs/remotes/origin/stack_traces
+731e0f6b5f96b83adb94c209b582765c14215b2c refs/tags/v2.1.0
+661c1b2d568693e3b6b631ae66f6872b194674f1 refs/tags/v2.4.0
+f96c05532b3e00c9ca77e58fc07f9401cd46510d refs/tags/v2.4.1
+60b13f0685246b009810aecbffafe17fb665d970 refs/tags/v2.4.2
+287e076962ec711cd2bdf08364a8df9ce51e106b refs/tags/v2.4.3
+c3d7662a1e692aa0934fa61a2a67229f3b73a5a2 refs/tags/v2.5.0

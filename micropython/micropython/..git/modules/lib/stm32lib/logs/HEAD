@@ -1,0 +1,2 @@
+0000000000000000000000000000000000000000 b2487bdea963af3343fc198681c9dc698e267303 user <user@ubuntu.(none)> 1582252883 -0800	clone: from https://github.com/micropython/stm32lib
+b2487bdea963af3343fc198681c9dc698e267303 668d7a9e54aea98f8fe8a858eac1d3daa80fa824 user <user@ubuntu.(none)> 1582252916 -0800	checkout: moving from vendor to 668d7a9e54aea98f8fe8a858eac1d3daa80fa824
