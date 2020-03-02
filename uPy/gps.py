@@ -31,7 +31,7 @@ def GNSS_TIMER_ISR():
 from machine import UART
 from utime import sleep
 
-# import logging
+import logging
 
 class GPS():
     def __init__(self, mac=1, _baudrate=9600, _tx=22, _rx=21, _txbuf=1024, _rxbuf=1024):
@@ -98,7 +98,7 @@ class GPS():
         else:
             self.RMCdata = {}
 
-    def get_RMCdata(self): #, Logger: defaultLogger):
+    def get_RMCdata(self, defaultLogger: Logger):
         self.oldRXLength = self.currentRXLength
         self.currentRXLength = self.uart.any()
 
@@ -110,12 +110,11 @@ class GPS():
         else:
             data = self.uart.read(self.currentRXLength)
             rawData = list(d.replace('\r\n', '\\r\\n') for d in str(data).replace('\\r\\n', '\r\n').splitlines(True))
-            print(rawData)
             try:
                 self.parse_RMCdata(rawData)
             except Exception as e:
                 self.RMCdata = {}
                 #TODO: remove print
                 print(e)
-                # defaultLogger.warning(str(e))
+                defaultLogger.warning(str(e))
             return self.RMCdata
