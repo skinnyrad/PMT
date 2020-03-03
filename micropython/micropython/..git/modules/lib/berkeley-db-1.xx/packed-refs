@@ -1,0 +1,4 @@
+# pack-refs with: peeled fully-peeled sorted 
+35aaec4418ad78628a3b935885dd189d41ce779b refs/remotes/origin/embedded
+a80dc5fbaeb3adce72f9cf66ba6fd79279d87d9e refs/remotes/origin/embedded-BTREEINFO.cachesize-pages
+7b31cae3c0892a7fca2089cb0354a4920c98c413 refs/remotes/origin/master
