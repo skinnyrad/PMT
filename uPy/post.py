@@ -12,7 +12,6 @@
 
 from reqst import post
 import logging
-
 # https request information
 headers = {
     'Content-Type': 'application-json',

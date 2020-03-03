@@ -19,6 +19,10 @@ from post import *
 from utime import sleep
 from uos import mount
 from wifi_connect import *
+from gc import collect
+
+import encry 
+# import logging
 
 ap_blacklist = [b'xfinitywifi']
 
@@ -81,6 +85,7 @@ with open(config_file, 'r') as fp:
 try:
     post_url = pmt_config['post_url']
     gps_interval = pmt_config['gps_interval']
+    enc_key = pmt_config['encryption_key']
 except KeyError as e:
     print(e)
     raise
@@ -105,6 +110,10 @@ while True:
             data+=','.join(list(v.values()))+','
         #TODO: remove print
         print(data)
+        with open(unsent, "w+") as file_ptr:
+            file_ptr.write(data)
+        with open(archive, "w+") as file_ptr:
+            file_ptr.write(data)
         archiveLogger.write(data)
         unsentLogger.write(data)
         defaultLogger.info(data)
@@ -117,13 +126,17 @@ while True:
     if station.isconnected():
         if data != "":
             with open(unsent, "r") as file_ptr:
-                post_data(file_ptr.read(), post_url, defaultLogger)
+                rawData = file_ptr.read()
+                enc_data = encry.encrypt(enc_key, rawData)
+                post_data(enc_data, post_url) #, defaultLogger)
+                del rawData
+                del enc_data
+                collect()
             remove(unsent)
 
     else:
         # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
         nets = station.scan()
-
         # get only open nets
         openNets = [n for n in nets if n[4] == 0]
 
