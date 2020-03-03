@@ -11,7 +11,6 @@
 #  Filename : post.py
 
 from reqst import post
-
 # https request information
 headers = {
     'Content-Type': 'application-json',
