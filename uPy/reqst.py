@@ -162,6 +162,9 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         host, port = host.split(":", 1)
         port = int(port)
 
+    #default value
+    redirected = False
+
     ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
 
     ai = ai[0]

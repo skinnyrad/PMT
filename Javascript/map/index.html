@@ -13,6 +13,14 @@
   crossorigin="anonymous">
 </script>
 
+<script>
+  
+  do{
+      var key = prompt("Please enter your KEY","1234567890abcdef");
+    }
+  while(key == null || key == "");
+</script>
+
 <!-- ENCRYPTION -->
 <script type="text/javascript" src="./aes-js.js"></script>
 <script type="text/javascript" src="./sha256.min.js"></script>
@@ -31,7 +39,7 @@
  <!--Let browser know website is optimized for mobile-->
  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
-<body onload="initialize_map(); decrypt();"></body>
+<body onload="initialize_map();decrypt(key);"></body>
 
   <div id="popup" class="ol-popup">
     <a href="#" id="popup-closer" class="ol-popup-closer"></a>
