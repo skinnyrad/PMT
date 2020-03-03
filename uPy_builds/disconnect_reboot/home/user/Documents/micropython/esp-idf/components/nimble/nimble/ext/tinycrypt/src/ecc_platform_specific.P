@@ -1,3 +1,0 @@
-build-GENERIC//home/user/Documents/micropython/esp-idf/components/nimble/nimble/ext/tinycrypt/src/ecc_platform_specific.o: \
- /home/user/Documents/micropython/esp-idf/components/nimble/nimble/ext/tinycrypt/src/ecc_platform_specific.c
- /home/user/Documents/micropython/esp-idf/components/nimble/nimble/ext/tinycrypt/src/ecc_platform_specific.c :
