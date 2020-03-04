@@ -153,6 +153,8 @@ while True:
                 if station.isconnected():
                     station_connected(station, wifiLogger)
                     sleep(1)
+                if station.isconnected():
+                    break
                 else:
                     #TODO: remove print
                     print("Unable to Connect")
