@@ -128,7 +128,7 @@ while True:
             with open(unsent, "r") as file_ptr:
                 rawData = file_ptr.read()
                 enc_data = encry.encrypt(enc_key, rawData)
-                post_data(enc_data, post_url) #, defaultLogger)
+                post_data(enc_data, post_url, defaultLogger)
                 del rawData
                 del enc_data
                 collect()
