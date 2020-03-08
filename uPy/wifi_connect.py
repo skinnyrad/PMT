@@ -32,10 +32,10 @@ def station_connected(station: WLAN, wifiLogger: Logger):
     timer.deinit()
     if resolved == []:
         #TODO: remove print
-        print("No Internet Access")
-        wifiLogger.debug("No Internet Access")
+        print("DNS Lookup [Failed]")
+        wifiLogger.debug("DNS Lookup [Failed]")
         station.disconnect()
     else:
         #TODO: remove print
-        print("Internet Accessible")
-        wifiLogger.debug("Internet Accessible")
+        print("DNS Lookup [OK]")
+        wifiLogger.debug("DNS Lookup [OK]")

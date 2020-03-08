@@ -109,7 +109,7 @@ while True:
         for v in b:
             data+=','.join(list(v.values()))+','
         #TODO: remove print
-        #print(data)
+        print(data)
         with open(unsent, "w+") as file_ptr:
             file_ptr.write(data)
         with open(archive, "w+") as file_ptr:

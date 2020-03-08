@@ -213,7 +213,8 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
                     raise ValueError("Unsupported " + l)
             elif l.startswith(b"Location:") and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
-                #print ("\n\n\n"+location+"\n\n\n")
+                
+                print ("Redirection ["+location+"]")
                 # need to get the method from the redirection
                 redirected = True
                 return redirect('GET',location)
