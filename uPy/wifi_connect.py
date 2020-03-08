@@ -12,14 +12,22 @@
 
 from network import WLAN
 from usocket import getaddrinfo
-
+from machine import Timer, reset
 import logging
 import reqst
+
+def handlerTimer(timer):
+    print("Timer Timeout")
+    #Resets the device in a manner similar to pushing the external RESET button.
+    reset()
 
 def station_connected(station: WLAN, wifiLogger: Logger):
     #TODO: remove print
     print("Connected...Testing Access...")
     wifiLogger.info("Connected...Testing Access...")
+    # init harware timer
+    timer = Timer(0)
+    timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
     resolved = getaddrinfo("pmtlogger.000webhostapp.com", 80)
     if resolved == []:
         #TODO: remove print
