@@ -29,6 +29,7 @@ def station_connected(station: WLAN, wifiLogger: Logger):
     timer = Timer(0)
     timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
     resolved = getaddrinfo("pmtlogger.000webhostapp.com", 80)
+    timer.deinit()
     if resolved == []:
         #TODO: remove print
         print("No Internet Access")
