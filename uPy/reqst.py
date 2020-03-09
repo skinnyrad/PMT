@@ -122,8 +122,10 @@ def redirect(method, url, data=None, json=None, headers={}, stream=None, timeout
 
     if parseSplashPage:
         # read all bytes from socket
-        r = s.read()
-        print(r)
+        r = s.read(20)
+        while r:
+            print(r)
+            r = s.read(20)
         # parse socket bytes
         # a = []
         # while r.find(b'<a') != -1:
@@ -133,7 +135,9 @@ def redirect(method, url, data=None, json=None, headers={}, stream=None, timeout
         #     r = r[end+1:]
         
         #free memory   
-        del r
+            del r
+
+        s.close()
         del s
         gc.collect()
 
@@ -217,7 +221,8 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
                     raise ValueError("Unsupported " + l)
             elif l.startswith(b"Location:") and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
-                
+                # close socket (should prevent ENOMEM error)
+                s.close()
                 print ("Redirection ["+location+"]")
                 # need to get the method from the redirection
                 #redirected = True
