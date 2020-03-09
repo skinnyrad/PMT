@@ -27,9 +27,9 @@ def post_data(post_data, post_url, logger: Logger) -> bool:
     try:
         # init harware timer
         timer = Timer(0)
-        timer.init(period=10000, mode=Timer.ONE_SHOT,callback=handlerTimer)
+        #timer.init(period=10000, mode=Timer.ONE_SHOT,callback=handlerTimer)
         response = post(post_url, headers=headers, data=post_data)
-        timer.deinit()
+        #timer.deinit()
         print("Data sent.")
         if response.status_code == 200:
             #TODO: remove print
