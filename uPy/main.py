@@ -86,9 +86,12 @@ try:
     post_url = pmt_config['post_url']
     gps_interval = pmt_config['gps_interval']
     enc_key = pmt_config['encryption_key']
+    operation_mode = pmt_config['operation_mode']
 except KeyError as e:
     print(e)
     raise
+
+posted = False
 
 while True:
     GPSdata = gps.get_RMCdata(defaultLogger)
@@ -123,40 +126,45 @@ while True:
         defaultLogger.info("No GPS data.")
         data = ""
 
-    if station.isconnected():
-        if data != "":
-            with open(unsent, "r") as file_ptr:
-                rawData = file_ptr.read()
-                enc_data = encry.encrypt(enc_key, rawData)
-                post_data(enc_data, post_url, defaultLogger)
-                del rawData
-                del enc_data
-                collect()
-            remove(unsent)
+    if operation_mode == "operational":
+        if station.isconnected():
+            if data != "":
+                with open(unsent, "r") as file_ptr:
+                    rawData = file_ptr.read()
+                    enc_data = encry.encrypt(enc_key, rawData)
+                    posted = post_data(enc_data, post_url, defaultLogger)
 
-    else:
-        # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
-        nets = station.scan()
-        # get only open nets
-        openNets = [n for n in nets if n[4] == 0]
+                    msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(apSSID), posted)
+                    wifiLogger.write(msg)
 
-        for onet in openNets:
-            if onet[0] not in ap_blacklist:
-                # Try to connect to WiFi access point
-                apSSID = onet[0]
-                #TODO: remove print
-                print ("Connecting to "+str(onet[0],"utf-8")+" ...\n")
-                wifiLogger.info("Connecting to "+str(onet[0],"utf-8")+" ...\n")
-                station.connect(onet[0])
-                while not station.isconnected():
-                    sleep(0.5)
-                if station.isconnected():
-                    station_connected(station, wifiLogger)
-                    sleep(1)
-                if station.isconnected():
-                    break
-                else:
+                    del rawData
+                    del enc_data
+                    collect()
+                remove(unsent)
+
+        else:
+            # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
+            nets = station.scan()
+            # get only open nets
+            openNets = [n for n in nets if n[4] == 0]
+
+            for onet in openNets:
+                if onet[0] not in ap_blacklist:
+                    # Try to connect to WiFi access point
+                    apSSID = onet[0]
                     #TODO: remove print
-                    print("Unable to Connect")
-                    wifiLogger.warning("Unable to Connect")
+                    print ("Connecting to "+str(onet[0],"utf-8")+" ...\n")
+                    wifiLogger.info("Connecting to "+str(onet[0],"utf-8")+" ...\n")
+                    station.connect(onet[0])
+                    while not station.isconnected():
+                        sleep(0.5)
+                    if station.isconnected():
+                        station_connected(station, wifiLogger)
+                        sleep(1)
+                    if station.isconnected():
+                        break
+                    else:
+                        #TODO: remove print
+                        print("Unable to Connect")
+                        wifiLogger.warning("Unable to Connect")
     sleep(gps_interval)
