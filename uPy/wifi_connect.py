@@ -39,10 +39,4 @@ def station_connected(station: WLAN, wifiLogger: Logger):
         #TODO: remove print
         print("DNS Lookup [OK]")
         wifiLogger.debug("DNS Lookup [OK]")
-        #timer = Timer(0)
-        #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
         response = reqst.get("http://www.google.com")
-        # socket closing is done in reqst if redirected
-        #response.close()
-        #timer.deinit()
-        #print("Data sent.")
