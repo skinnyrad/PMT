@@ -1,0 +1,4 @@
+The following is a list of where the modified file resides/should be placed if it is not already
+
+modnetwork.c:
+/home/user/Documents/micropython/micropython/ports/esp32
