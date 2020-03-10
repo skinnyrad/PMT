@@ -47,3 +47,4 @@ def post_data(post_data, post_url, logger: Logger) -> bool:
         #TODO: remove print
         print("Warning: " + str(e))
         logger.warning(str(e))
+        return False
