@@ -122,10 +122,8 @@ def redirect(method, url, data=None, json=None, headers={}, stream=None, timeout
 
     if parseSplashPage:
         # read all bytes from socket
-        r = s.read(20)
-        while r:
-            print(r)
-            r = s.read(20)
+        r = s.read()
+        print(r)
         # parse socket bytes
         # a = []
         # while r.find(b'<a') != -1:
@@ -135,8 +133,8 @@ def redirect(method, url, data=None, json=None, headers={}, stream=None, timeout
         #     r = r[end+1:]
         
         #free memory   
-            del r
-
+        del r
+        # close socket
         s.close()
         del s
         gc.collect()
@@ -176,7 +174,7 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
     ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
 
     ai = ai[0]
-
+    print(str(ai))
     s = usocket.socket(ai[0], ai[1], ai[2])
     # set timeout
     s.settimeout(timeout)
@@ -205,7 +203,7 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
             s.write(data)
 
         l = s.readline()
-        #print(l)
+        print(l)
         l = l.split(None, 2)
         status = int(l[1])
         reason = ""
