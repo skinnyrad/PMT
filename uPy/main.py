@@ -91,6 +91,9 @@ except KeyError as e:
     print(e)
     raise
 
+connected = False
+posted = False
+
 while True:
     GPSdata = gps.get_RMCdata(defaultLogger)
     if not (GPSdata == {}):
@@ -130,13 +133,18 @@ while True:
                 with open(unsent, "r") as file_ptr:
                     rawData = file_ptr.read()
                     enc_data = encry.encrypt(enc_key, rawData)
-                    post_data(enc_data, post_url, defaultLogger)
+                    posted = post_data(enc_data, post_url, defaultLogger)
+
+                    msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(apSSID), posted)
+                    wifiLogger.write(msg)
+
                     del rawData
                     del enc_data
                     collect()
                 remove(unsent)
 
         else:
+            connected = False
             # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
             nets = station.scan()
             # get only open nets
@@ -156,6 +164,7 @@ while True:
                         station_connected(station, wifiLogger)
                         sleep(1)
                     if station.isconnected():
+                        connected = True
                         break
                     else:
                         #TODO: remove print
