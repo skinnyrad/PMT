@@ -12,21 +12,31 @@
 
 from network import WLAN
 from usocket import getaddrinfo
-
+from machine import Timer, reset
 import logging
 import reqst
+
+def handlerTimer(timer):
+    print("DNS_Lookup: Timer Timeout")
+    #Resets the device in a manner similar to pushing the external RESET button.
+    reset()
 
 def station_connected(station: WLAN, wifiLogger: Logger):
     #TODO: remove print
     print("Connected...Testing Access...")
     wifiLogger.info("Connected...Testing Access...")
+    # init harware timer
+    timer = Timer(0)
+    timer.init(period=1000, mode=Timer.ONE_SHOT,callback=handlerTimer)
     resolved = getaddrinfo("pmtlogger.000webhostapp.com", 80)
+    timer.deinit()
     if resolved == []:
         #TODO: remove print
-        print("No Internet Access")
-        wifiLogger.debug("No Internet Access")
+        print("DNS Lookup [Failed]")
+        wifiLogger.debug("DNS Lookup [Failed]")
         station.disconnect()
     else:
         #TODO: remove print
-        print("Internet Accessible")
-        wifiLogger.debug("Internet Accessible")
+        print("DNS Lookup [OK]")
+        wifiLogger.debug("DNS Lookup [OK]")
+        response = reqst.get("http://www.google.com")
