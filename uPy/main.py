@@ -91,7 +91,6 @@ except KeyError as e:
     print(e)
     raise
 
-connected = False
 posted = False
 
 while True:
@@ -144,7 +143,6 @@ while True:
                 remove(unsent)
 
         else:
-            connected = False
             # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
             nets = station.scan()
             # get only open nets
@@ -164,7 +162,6 @@ while True:
                         station_connected(station, wifiLogger)
                         sleep(1)
                     if station.isconnected():
-                        connected = True
                         break
                     else:
                         #TODO: remove print
