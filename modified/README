@@ -2,3 +2,8 @@ The following is a list of where the modified file resides/should be placed if i
 
 modnetwork.c:
 /home/user/Documents/micropython/micropython/ports/esp32
+
+sdkconfig.c:
+after building the micropython project replace the generated sdkconfig.h with this sdkconfig.h
+/home/user/Documents/micropython/micropython/ports/esp32/build-GENERIC
+
