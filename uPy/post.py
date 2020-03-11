@@ -29,20 +29,18 @@ def post_data(post_data, post_url, logger: Logger) -> bool:
         timer = Timer(0)
         #TODO: Uncomment this for solution
         #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
-        response = post(post_url, headers=headers, data=post_data)
+        [status, _] = post(post_url, headers=headers, data=post_data)
         #TODO: Uncomment this for solution
         #timer.deinit()
-        if response.status_code == 200:
+        if status == 200:
             #TODO: remove print
-            response.close()
-            print("Post Request Successful")
-            logger.info("Post Request Successful")
+            print("Post Request [OK]")
+            logger.info("Post Request [OK]")
             return True
         else:
             #TODO: remove print
-            response.close()
-            print("Post Request Unsuccessful")
-            logger.info("Post Request Unsuccessful")
+            print("Post Request [Failed]")
+            logger.info("Post Request [Failed]")
             return False
     except OSError as e:
         #TODO: remove print
