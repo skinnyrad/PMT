@@ -1,0 +1,694 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fmodern Consolas;}{\f1\fnil\fcharset129 Courier New;}}
+{\colortbl ;\red20\green20\blue20;\red142\green142\blue142;\red9\green118\blue72;}
+\viewkind4\uc1\pard\f0\fs20 ets Jun  8 2016 00:22:57\cf1\highlight2 
+\par 
+\par \cf0\highlight0 rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)\cf1\highlight2 
+\par \cf0\highlight0 configsip: 188777542, SPIWP:0xee\cf1\highlight2 
+\par \cf0\highlight0 clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00\cf1\highlight2 
+\par \cf0\highlight0 mode:DIO, clock div:2\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff0018,len:4\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff001c,len:5100\cf1\highlight2 
+\par \cf0\highlight0 load:0x40078000,len:10600\cf1\highlight2 
+\par \cf0\highlight0 load:0x40080400,len:5684\cf1\highlight2 
+\par \cf0\highlight0 entry 0x400806bc\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Pro cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Application information:\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Compile time:     Feb 28 2020 21:21:22\cf1\highlight2 
+\par \cf3\highlight0 I (529) cpu_start: ELF file SHA256:  0000000000000000...\cf1\highlight2 
+\par \cf3\highlight0 I (535) cpu_start: ESP-IDF:\cf1\highlight2 
+\par \cf3\highlight0 I (539) cpu_start: Starting app cpu, entry point is 0x40083a30\cf1\highlight2 
+\par \cf3\highlight0 I (0) cpu_start: App cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (550) heap_init: Initializing. RAM available for dynamic allocation:\cf1\highlight2 
+\par \cf3\highlight0 I (557) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (563) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (569) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (575) heap_init: At 3FFBDB5C len 00000004 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (581) heap_init: At 3FFCC830 len 000137D0 (77 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (587) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (594) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (600) heap_init: At 40099A80 len 00006580 (25 KiB): IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (606) cpu_start: Pro cpu start user code\cf1\highlight2 
+\par \cf3\highlight0 I (289) cpu_start: Starting scheduler on PRO CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (0) cpu_start: Starting scheduler on APP CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (630) modsocket: Initializing\cf1\highlight2 
+\par \cf0\highlight0 I (710) wifi: wifi driver task: 3ffd2f38, prio:23, stack:3584, core=0\cf1\highlight2 
+\par \cf3\highlight0 I (1711) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf3\highlight0 I (1711) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf0\highlight0 I (1751) wifi: wifi firmware version: ac331d7\cf1\highlight2 
+\par \cf0\highlight0 I (1751) wifi: config NVS flash: enabled\cf1\highlight2 
+\par \cf0\highlight0 I (1751) wifi: config nano formating: disabled\cf1\highlight2 
+\par \cf0\highlight0 I (1751) wifi: Init dynamic tx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1751) wifi: Init data frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1761) wifi: Init management frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1761) wifi: Init management short buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1771) wifi: Init static rx buffer size: 1600\cf1\highlight2 
+\par \cf0\highlight0 I (1771) wifi: Init static rx buffer num: 10\cf1\highlight2 
+\par \cf0\highlight0 I (1781) wifi: Init dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf3\highlight0 I (1881) phy: phy_version: 4102, 2fa7a43, Jul 15 2019, 13:06:06, 0, 0\cf1\highlight2 
+\par \cf0\highlight0 I (1881) wifi: mode : sta (d8:a0:1d:69:f8:78)\cf1\highlight2 
+\par \cf3\highlight0 I (1881) wifi: STA_START\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf3\highlight0 I (1881) gpio: GPIO[13]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0\cf1\highlight2 
+\par \cf3\highlight0 I (1951) uart: ALREADY NULL\cf1\highlight2 
+\par \cf0\highlight0 No GPS data.\cf1\highlight2 
+\par \cf3\highlight0 I (4031) network: event 1\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Connecting to Dunkin' Donuts Guest ...\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (4211) wifi: new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1\cf1\highlight2 
+\par \cf0\highlight0 I (4221) wifi: state: init -> auth (b0)\cf1\highlight2 
+\par \cf0\highlight0 I (4231) wifi: state: auth -> assoc (0)\cf1\highlight2 
+\par \cf0\highlight0 I (4231) wifi: state: assoc -> run (10)\cf1\highlight2 
+\par \cf0\highlight0 I (4241) wifi: connected with Dunkin' Donuts Guest, aid = 1, channel 1, BW20, bssid = ea:cb:bc:4a:bb:a6\cf1\highlight2 
+\par \cf0\highlight0 I (4241) wifi: security type: 0, phy: bgn, rssi: -40\cf1\highlight2 
+\par \cf0\highlight0 I (4241) wifi: pm start, type: 1\cf1\highlight2 
+\par 
+\par \cf3\highlight0 I (4251) network: CONNECTED\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 I (4331) wifi: AP's beacon interval = 102400 us, DTIM period = 1\cf1\highlight2 
+\par \cf3\highlight0 I (17371) event: sta ip: 192.168.100.200, mask: 255.255.255.0, gw: 192.168.100.1\cf1\highlight2 
+\par \cf3\highlight0 I (17371) network: GOT_IP\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Connected...Testing Access...\cf1\highlight2 
+\par \cf0\highlight0 DNS Lookup [OK]\cf1\highlight2 
+\par \cf0\highlight0 23:17:25,34.64183,-86.56621,2020-03-09,23:17:25,34.64183,-86.56621,2020-03-09,\cf1\highlight2 
+\par \cf0\highlight0 (2, 1, 0, 'pmtlogger.000webhostapp.com', ('145.14.144.201', 443))\cf1\highlight2 
+\par \cf0\highlight0 mbedtls_ssl_handshake error: -4290\cf1\highlight2 
+\par \cf0\highlight0 Warning: [Errno 5] EIO\cf1\highlight2 
+\par \cf0\highlight0 Post: Timer Timeout\cf1\highlight2 
+\par \cf0\highlight0 I (26011) wifi: state: run -> init (0)\cf1\highlight2 
+\par \cf0\highlight0 I (26011) wifi: pm stop, total sleep time: 16710160 us / 21764790 us\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (26011) wifi: new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1\cf1\highlight2 
+\par \cf0\highlight0 SYSTEM_EVENT_STA_DISCONNECTED\cf1\highlight2 
+\par \cf3\highlight0 I (26021) wifi: STA_DISCONNECTED, reason:8\cf1\highlight2 
+\par \cf0\highlight0 ets Jun  8 2016 00:22:57\cf1\highlight2 
+\par 
+\par \cf0\highlight0 rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)\cf1\highlight2 
+\par \cf0\highlight0 configsip: 188777542, SPIWP:0xee\cf1\highlight2 
+\par \cf0\highlight0 clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00\cf1\highlight2 
+\par \cf0\highlight0 mode:DIO, clock div:2\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff0018,len:4\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff001c,len:5100\cf1\highlight2 
+\par \cf0\highlight0 load:0x40078000,len:10600\cf1\highlight2 
+\par \cf0\highlight0 load:0x40080400,len:5684\cf1\highlight2 
+\par \cf0\highlight0 entry 0x400806bc\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Pro cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Application information:\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Compile time:     Feb 28 2020 21:21:22\cf1\highlight2 
+\par \cf3\highlight0 I (529) cpu_start: ELF file SHA256:  0000000000000000...\cf1\highlight2 
+\par \cf3\highlight0 I (535) cpu_start: ESP-IDF:\cf1\highlight2 
+\par \cf3\highlight0 I (540) cpu_start: Starting app cpu, entry point is 0x40083a30\cf1\highlight2 
+\par \cf3\highlight0 I (532) cpu_start: App cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (550) heap_init: Initializing. RAM available for dynamic allocation:\cf1\highlight2 
+\par \cf3\highlight0 I (557) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (563) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (569) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (575) heap_init: At 3FFBDB5C len 00000004 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (582) heap_init: At 3FFCC830 len 000137D0 (77 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (588) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (594) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (600) heap_init: At 40099A80 len 00006580 (25 KiB): IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (607) cpu_start: Pro cpu start user code\cf1\highlight2 
+\par \cf3\highlight0 I (290) cpu_start: Starting scheduler on PRO CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (0) cpu_start: Starting scheduler on APP CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (630) modsocket: Initializing\cf1\highlight2 
+\par \cf0\highlight0 I (710) wifi: wifi driver task: 3ffd2f38, prio:23, stack:3584, core=0\cf1\highlight2 
+\par \cf3\highlight0 I (1712) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf3\highlight0 I (1712) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: wifi firmware version: ac331d7\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: config NVS flash: enabled\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: config nano formating: disabled\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: Init dynamic tx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: Init data frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1762) wifi: Init management frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1762) wifi: Init management short buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1772) wifi: Init static rx buffer size: 1600\cf1\highlight2 
+\par \cf0\highlight0 I (1772) wifi: Init static rx buffer num: 10\cf1\highlight2 
+\par \cf0\highlight0 I (1782) wifi: Init dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf3\highlight0 I (1882) phy: phy_version: 4102, 2fa7a43, Jul 15 2019, 13:06:06, 0, 0\cf1\highlight2 
+\par \cf0\highlight0 I (1882) wifi: mode : sta (d8:a0:1d:69:f8:78)\cf1\highlight2 
+\par \cf3\highlight0 I (1882) wifi: STA_START\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf3\highlight0 I (1882) gpio: GPIO[13]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0\cf1\highlight2 
+\par \cf3\highlight0 I (1952) uart: ALREADY NULL\cf1\highlight2 
+\par \cf0\highlight0 No GPS data.\cf1\highlight2 
+\par \cf3\highlight0 I (4032) network: event 1\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Connecting to Dunkin' Donuts Guest ...\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (4212) wifi: new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1\cf1\highlight2 
+\par \cf0\highlight0 I (4212) wifi: state: init -> auth (b0)\cf1\highlight2 
+\par \cf0\highlight0 I (4222) wifi: state: auth -> assoc (0)\cf1\highlight2 
+\par \cf0\highlight0 I (4222) wifi: state: assoc -> run (10)\cf1\highlight2 
+\par \cf0\highlight0 I (4222) wifi: connected with Dunkin' Donuts Guest, aid = 1, channel 1, BW20, bssid = ea:cb:bc:4a:bb:a6\cf1\highlight2 
+\par \cf0\highlight0 I (4232) wifi: security type: 0, phy: bgn, rssi: -39\cf1\highlight2 
+\par \cf0\highlight0 I (4232) wifi: pm start, type: 1\cf1\highlight2 
+\par 
+\par \cf3\highlight0 I (4242) network: CONNECTED\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 I (4262) wifi: AP's beacon interval = 102400 us, DTIM period = 1\cf1\highlight2 
+\par \cf3\highlight0 I (15872) event: sta ip: 192.168.100.232, mask: 255.255.255.0, gw: 192.168.100.1\cf1\highlight2 
+\par \cf3\highlight0 I (15872) network: GOT_IP\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Connected...Testing Access...\cf1\highlight2 
+\par \cf0\highlight0 DNS Lookup [OK]\cf1\highlight2 
+\par \cf0\highlight0 23:17:51,34.64182,-86.56619,2020-03-09,23:17:51,34.64182,-86.56619,2020-03-09,\cf1\highlight2 
+\par \cf0\highlight0 (2, 1, 0, 'pmtlogger.000webhostapp.com', ('145.14.144.86', 443))\cf1\highlight2 
+\par \cf0\highlight0 mbedtls_ssl_handshake error: -4290\cf1\highlight2 
+\par \cf0\highlight0 Warning: [Errno 5] EIO\cf1\highlight2 
+\par \cf0\highlight0 Post: Timer Timeout\cf1\highlight2 
+\par \cf0\highlight0 I (24512) wifi: state: run -> init (0)\cf1\highlight2 
+\par \cf0\highlight0 I (24512) wifi: pm stop, total sleep time: 15210761 us / 20270185 us\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (24512) wifi: new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1\cf1\highlight2 
+\par \cf0\highlight0 SYSTEM_EVENT_STA_DISCONNECTED\cf1\highlight2 
+\par \cf3\highlight0 I (24512) wifi: STA_DISCONNECTED, reason:8\cf1\highlight2 
+\par \cf0\highlight0 ets Jun  8 2016 00:22:57\cf1\highlight2 
+\par 
+\par \cf0\highlight0 rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)\cf1\highlight2 
+\par \cf0\highlight0 configsip: 188777542, SPIWP:0xee\cf1\highlight2 
+\par \cf0\highlight0 clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00\cf1\highlight2 
+\par \cf0\highlight0 mode:DIO, clock div:2\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff0018,len:4\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff001c,len:5100\cf1\highlight2 
+\par \cf0\highlight0 load:0x40078000,len:10600\cf1\highlight2 
+\par \cf0\highlight0 load:0x40080400,len:5684\cf1\highlight2 
+\par \cf0\highlight0 entry 0x400806bc\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Pro cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Application information:\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Compile time:     Feb 28 2020 21:21:22\cf1\highlight2 
+\par \cf3\highlight0 I (529) cpu_start: ELF file SHA256:  0000000000000000...\cf1\highlight2 
+\par \cf3\highlight0 I (535) cpu_start: ESP-IDF:\cf1\highlight2 
+\par \cf3\highlight0 I (540) cpu_start: Starting app cpu, entry point is 0x40083a30\cf1\highlight2 
+\par \cf3\highlight0 I (532) cpu_start: App cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (550) heap_init: Initializing. RAM available for dynamic allocation:\cf1\highlight2 
+\par \cf3\highlight0 I (557) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (563) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (569) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (575) heap_init: At 3FFBDB5C len 00000004 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (582) heap_init: At 3FFCC830 len 000137D0 (77 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (588) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (594) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (600) heap_init: At 40099A80 len 00006580 (25 KiB): IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (607) cpu_start: Pro cpu start user code\cf1\highlight2 
+\par \cf3\highlight0 I (290) cpu_start: Starting scheduler on PRO CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (0) cpu_start: Starting scheduler on APP CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (630) modsocket: Initializing\cf1\highlight2 
+\par \cf0\highlight0 I (710) wifi: wifi driver task: 3ffd2f38, prio:23, stack:3584, core=0\cf1\highlight2 
+\par \cf3\highlight0 I (1712) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf3\highlight0 I (1712) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: wifi firmware version: ac331d7\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: config NVS flash: enabled\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: config nano formating: disabled\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: Init dynamic tx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: Init data frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1762) wifi: Init management frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1762) wifi: Init management short buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1772) wifi: Init static rx buffer size: 1600\cf1\highlight2 
+\par \cf0\highlight0 I (1772) wifi: Init static rx buffer num: 10\cf1\highlight2 
+\par \cf0\highlight0 I (1782) wifi: Init dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf3\highlight0 I (1872) phy: phy_version: 4102, 2fa7a43, Jul 15 2019, 13:06:06, 0, 0\cf1\highlight2 
+\par \cf0\highlight0 I (1882) wifi: mode : sta (d8:a0:1d:69:f8:78)\cf1\highlight2 
+\par \cf3\highlight0 I (1882) wifi: STA_START\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf3\highlight0 I (1882) gpio: GPIO[13]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0\cf1\highlight2 
+\par \cf3\highlight0 I (1952) uart: ALREADY NULL\cf1\highlight2 
+\par \cf0\highlight0 No GPS data.\cf1\highlight2 
+\par \cf3\highlight0 I (4032) network: event 1\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Traceback (most recent call last):\cf1\highlight2 
+\par \cf0\highlight0   File "main.py", line 141, in <module>\cf1\highlight2 
+\par \cf0\highlight0   File "main.py", line 141, in <listcomp>\cf1\highlight2 
+\par \cf0\highlight0 KeyboardInterrupt:\cf1\highlight2 
+\par \cf0\highlight0 MicroPython 2a00a703 on 2020-03-02; ESP32 module with ESP32\cf1\highlight2 
+\par \cf0\highlight0 Type "help()" for more information.\cf1\highlight2 
+\par \cf0\highlight0 >>> ets Jun  8 2016 00:22:57\cf1\highlight2 
+\par 
+\par \cf0\highlight0 rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)\cf1\highlight2 
+\par \cf0\highlight0 configsip: 188777542, SPIWP:0xee\cf1\highlight2 
+\par \cf0\highlight0 clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00\cf1\highlight2 
+\par \cf0\highlight0 mode:DIO, clock div:2\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff0018,len:4\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff001c,len:5100\cf1\highlight2 
+\par \cf0\highlight0 load:0x40078000,len:10600\cf1\highlight2 
+\par \cf0\highlight0 load:0x40080400,len:5684\cf1\highlight2 
+\par \cf0\highlight0 entry 0x400806bc\cf1\highlight2 
+\par \cf3\highlight0 I (525) cpu_start: Pro cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Application information:\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Compile time:     Feb 28 2020 21:21:22\cf1\highlight2 
+\par \cf3\highlight0 I (529) cpu_start: ELF file SHA256:  0000000000000000...\cf1\highlight2 
+\par \cf3\highlight0 I (535) cpu_start: ESP-IDF:\cf1\highlight2 
+\par \cf3\highlight0 I (539) cpu_start: Starting app cpu, entry point is 0x40083a30\cf1\highlight2 
+\par \cf3\highlight0 I (0) cpu_start: App cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (550) heap_init: Initializing. RAM available for dynamic allocation:\cf1\highlight2 
+\par \cf3\highlight0 I (557) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (563) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (569) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (575) heap_init: At 3FFBDB5C len 00000004 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (581) heap_init: At 3FFCC830 len 000137D0 (77 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (587) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (593) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (600) heap_init: At 40099A80 len 00006580 (25 KiB): IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (606) cpu_start: Pro cpu start user code\cf1\highlight2 
+\par \cf3\highlight0 I (289) cpu_start: Starting scheduler on PRO CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (0) cpu_start: Starting scheduler on APP CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (630) modsocket: Initializing\cf1\highlight2 
+\par \cf0\highlight0 I (710) wifi: wifi driver task: 3ffd2f38, prio:23, stack:3584, core=0\cf1\highlight2 
+\par \cf3\highlight0 I (1711) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf3\highlight0 I (1711) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf0\highlight0 I (1751) wifi: wifi firmware version: ac331d7\cf1\highlight2 
+\par \cf0\highlight0 I (1751) wifi: config NVS flash: enabled\cf1\highlight2 
+\par \cf0\highlight0 I (1751) wifi: config nano formating: disabled\cf1\highlight2 
+\par \cf0\highlight0 I (1751) wifi: Init dynamic tx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1751) wifi: Init data frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1761) wifi: Init management frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1761) wifi: Init management short buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1771) wifi: Init static rx buffer size: 1600\cf1\highlight2 
+\par \cf0\highlight0 I (1771) wifi: Init static rx buffer num: 10\cf1\highlight2 
+\par \cf0\highlight0 I (1781) wifi: Init dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf3\highlight0 I (1871) phy: phy_version: 4102, 2fa7a43, Jul 15 2019, 13:06:06, 0, 0\cf1\highlight2 
+\par \cf0\highlight0 I (1871) wifi: mode : sta (d8:a0:1d:69:f8:78)\cf1\highlight2 
+\par \cf3\highlight0 I (1871) wifi: STA_START\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf3\highlight0 I (1881) gpio: GPIO[13]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0\cf1\highlight2 
+\par \cf3\highlight0 I (1951) uart: ALREADY NULL\cf1\highlight2 
+\par \cf0\highlight0 No GPS data.\cf1\highlight2 
+\par \cf3\highlight0 I (4031) network: event 1\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Connecting to Dunkin' Donuts Guest ...\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (4211) wifi: new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1\cf1\highlight2 
+\par \cf0\highlight0 I (4211) wifi: state: init -> auth (b0)\cf1\highlight2 
+\par \cf0\highlight0 I (4221) wifi: state: auth -> assoc (0)\cf1\highlight2 
+\par \cf0\highlight0 I (4221) wifi: state: assoc -> run (10)\cf1\highlight2 
+\par \cf0\highlight0 I (4221) wifi: connected with Dunkin' Donuts Guest, aid = 1, channel 1, BW20, bssid = ea:cb:bc:4a:bb:a6\cf1\highlight2 
+\par \cf0\highlight0 I (4231) wifi: security type: 0, phy: bgn, rssi: -41\cf1\highlight2 
+\par \cf0\highlight0 I (4231) wifi: pm start, type: 1\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (4241) wifi: AP's beacon interval = 102400 us, DTIM period = 1\cf1\highlight2 
+\par \cf3\highlight0 I (4251) network: CONNECTED\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf3\highlight0 I (19371) event: sta ip: 192.168.100.149, mask: 255.255.255.0, gw: 192.168.100.1\cf1\highlight2 
+\par \cf3\highlight0 I (19371) network: GOT_IP\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Connected...Testing Access...\cf1\highlight2 
+\par \cf0\highlight0 DNS Lookup [OK]\cf1\highlight2 
+\par \cf0\highlight0 23:19:15,34.64179,-86.56626,2020-03-09,23:19:15,34.64179,-86.56626,2020-03-09,\cf1\highlight2 
+\par \cf0\highlight0 (2, 1, 0, 'pmtlogger.000webhostapp.com', ('145.14.145.227', 443))\cf1\highlight2 
+\par \cf0\highlight0 Post: Timer Timeout\cf1\highlight2 
+\par \cf0\highlight0 I (28101) wifi: state: run -> init (0)\cf1\highlight2 
+\par \cf0\highlight0 I (28101) wifi: pm stop, total sleep time: 15302768 us / 23861570 us\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (28101) wifi: new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1\cf1\highlight2 
+\par \cf0\highlight0 SYSTEM_EVENT_STA_DISCONNECTED\cf1\highlight2 
+\par \cf3\highlight0 I (28111) wifi: STA_DISCONNECTED, reason:8\cf1\highlight2 
+\par \cf0\highlight0 ets Jun  8 2016 00:22:57\cf1\highlight2 
+\par 
+\par \cf0\highlight0 rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)\cf1\highlight2 
+\par \cf0\highlight0 configsip: 188777542, SPIWP:0xee\cf1\highlight2 
+\par \cf0\highlight0 clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00\cf1\highlight2 
+\par \cf0\highlight0 mode:DIO, clock div:2\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff0018,len:4\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff001c,len:5100\cf1\highlight2 
+\par \cf0\highlight0 load:0x40078000,len:10600\cf1\highlight2 
+\par \cf0\highlight0 load:0x40080400,len:5684\cf1\highlight2 
+\par \cf0\highlight0 entry 0x400806bc\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Pro cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Application information:\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Compile time:     Feb 28 2020 21:21:22\cf1\highlight2 
+\par \cf3\highlight0 I (529) cpu_start: ELF file SHA256:  0000000000000000...\cf1\highlight2 
+\par \cf3\highlight0 I (535) cpu_start: ESP-IDF:\cf1\highlight2 
+\par \cf3\highlight0 I (540) cpu_start: Starting app cpu, entry point is 0x40083a30\cf1\highlight2 
+\par \cf3\highlight0 I (532) cpu_start: App cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (550) heap_init: Initializing. RAM available for dynamic allocation:\cf1\highlight2 
+\par \cf3\highlight0 I (557) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (563) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (569) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (575) heap_init: At 3FFBDB5C len 00000004 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (582) heap_init: At 3FFCC830 len 000137D0 (77 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (588) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (594) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (600) heap_init: At 40099A80 len 00006580 (25 KiB): IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (607) cpu_start: Pro cpu start user code\cf1\highlight2 
+\par \cf3\highlight0 I (290) cpu_start: Starting scheduler on PRO CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (0) cpu_start: Starting scheduler on APP CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (630) modsocket: Initializing\cf1\highlight2 
+\par \cf0\highlight0 I (710) wifi: wifi driver task: 3ffd2f38, prio:23, stack:3584, core=0\cf1\highlight2 
+\par \cf3\highlight0 I (1712) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf3\highlight0 I (1712) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: wifi firmware version: ac331d7\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: config NVS flash: enabled\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: config nano formating: disabled\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: Init dynamic tx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: Init data frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1762) wifi: Init management frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1762) wifi: Init management short buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1772) wifi: Init static rx buffer size: 1600\cf1\highlight2 
+\par \cf0\highlight0 I (1772) wifi: Init static rx buffer num: 10\cf1\highlight2 
+\par \cf0\highlight0 I (1782) wifi: Init dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf3\highlight0 I (1872) phy: phy_version: 4102, 2fa7a43, Jul 15 2019, 13:06:06, 0, 0\cf1\highlight2 
+\par \cf0\highlight0 I (1882) wifi: mode : sta (d8:a0:1d:69:f8:78)\cf1\highlight2 
+\par \cf3\highlight0 I (1882) wifi: STA_START\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf3\highlight0 I (1882) gpio: GPIO[13]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0\cf1\highlight2 
+\par \cf3\highlight0 I (1952) uart: ALREADY NULL\cf1\highlight2 
+\par \cf0\highlight0 No GPS data.\cf1\highlight2 
+\par \cf3\highlight0 I (4032) network: event 1\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Connecting to Dunkin' Donuts Guest ...\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (4212) wifi: new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1\cf1\highlight2 
+\par \cf0\highlight0 I (4222) wifi: state: init -> auth (b0)\cf1\highlight2 
+\par \cf0\highlight0 I (4222) wifi: state: auth -> assoc (0)\cf1\highlight2 
+\par \cf0\highlight0 I (4222) wifi: state: assoc -> run (10)\cf1\highlight2 
+\par \cf0\highlight0 I (4222) wifi: connected with Dunkin' Donuts Guest, aid = 1, channel 1, BW20, bssid = ea:cb:bc:4a:bb:a6\cf1\highlight2 
+\par \cf0\highlight0 I (4232) wifi: security type: 0, phy: bgn, rssi: -43\cf1\highlight2 
+\par \cf0\highlight0 I (4232) wifi: pm start, type: 1\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (4242) wifi: AP's beacon interval = 102400 us, DTIM period = 1\cf1\highlight2 
+\par \cf3\highlight0 I (4252) network: CONNECTED\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf3\highlight0 I (15872) event: sta ip: 192.168.100.29, mask: 255.255.255.0, gw: 192.168.100.1\cf1\highlight2 
+\par \cf3\highlight0 I (15872) network: GOT_IP\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Connected...Testing Access...\cf1\highlight2 
+\par \cf0\highlight0 DNS Lookup [OK]\cf1\highlight2 
+\par \cf0\highlight0 23:19:43,34.64182,-86.56627,2020-03-09,23:19:43,34.64182,-86.56627,2020-03-09,\cf1\highlight2 
+\par \cf0\highlight0 (2, 1, 0, 'pmtlogger.000webhostapp.com', ('145.14.145.162', 443))\cf1\highlight2 
+\par \cf0\highlight0 Post: Timer Timeout\cf1\highlight2 
+\par \cf0\highlight0 I (25512) wifi: state: run -> init (0)\cf1\highlight2 
+\par \cf0\highlight0 I (25512) wifi: pm stop, total sleep time: 12522700 us / 21270043 us\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (25512) wifi: new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1\cf1\highlight2 
+\par \cf0\highlight0 SYSTEM_EVENT_STA_DISCONNECTED\cf1\highlight2 
+\par \cf3\highlight0 I (25522) wifi: STA_DISCONNECTED, reason:8\cf1\highlight2 
+\par \cf0\highlight0 ets Jun  8 2016 00:22:57\cf1\highlight2 
+\par 
+\par \cf0\highlight0 rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)\cf1\highlight2 
+\par \cf0\highlight0 configsip: 188777542, SPIWP:0xee\cf1\highlight2 
+\par \cf0\highlight0 clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00\cf1\highlight2 
+\par \cf0\highlight0 mode:DIO, clock div:2\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff0018,len:4\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff001c,len:5100\cf1\highlight2 
+\par \cf0\highlight0 load:0x40078000,len:10600\cf1\highlight2 
+\par \cf0\highlight0 load:0x40080400,len:5684\cf1\highlight2 
+\par \cf0\highlight0 entry 0x400806bc\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Pro cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Application information:\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Compile time:     Feb 28 2020 21:21:22\cf1\highlight2 
+\par \cf3\highlight0 I (529) cpu_start: ELF file SHA256:  0000000000000000...\cf1\highlight2 
+\par \cf3\highlight0 I (535) cpu_start: ESP-IDF:\cf1\highlight2 
+\par \cf3\highlight0 I (540) cpu_start: Starting app cpu, entry point is 0x40083a30\cf1\highlight2 
+\par \cf3\highlight0 I (532) cpu_start: App cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (550) heap_init: Initializing. RAM available for dynamic allocation:\cf1\highlight2 
+\par \cf3\highlight0 I (557) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (563) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (569) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (575) heap_init: At 3FFBDB5C len 00000004 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (582) heap_init: At 3FFCC830 len 000137D0 (77 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (588) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (594) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (600) heap_init: At 40099A80 len 00006580 (25 KiB): IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (607) cpu_start: Pro cpu start user code\cf1\highlight2 
+\par \cf3\highlight0 I (290) cpu_start: Starting scheduler on PRO CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (0) cpu_start: Starting scheduler on APP CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (630) modsocket: Initializing\cf1\highlight2 
+\par \cf0\highlight0 I (710) wifi: wifi driver task: 3ffd2f38, prio:23, stack:3584, core=0\cf1\highlight2 
+\par \cf3\highlight0 I (1712) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf3\highlight0 I (1712) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: wifi firmware version: ac331d7\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: config NVS flash: enabled\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: config nano formating: disabled\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: Init dynamic tx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: Init data frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1762) wifi: Init management frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1762) wifi: Init management short buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1772) wifi: Init static rx buffer size: 1600\cf1\highlight2 
+\par \cf0\highlight0 I (1772) wifi: Init static rx buffer num: 10\cf1\highlight2 
+\par \cf0\highlight0 I (1782) wifi: Init dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf3\highlight0 I (1872) phy: phy_version: 4102, 2fa7a43, Jul 15 2019, 13:06:06, 0, 0\cf1\highlight2 
+\par \cf0\highlight0 I (1872) wifi: mode : sta (d8:a0:1d:69:f8:78)\cf1\highlight2 
+\par \cf3\highlight0 I (1882) wifi: STA_START\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf3\highlight0 I (1882) gpio: GPIO[13]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0\cf1\highlight2 
+\par \cf3\highlight0 I (1952) uart: ALREADY NULL\cf1\highlight2 
+\par \cf0\highlight0 No GPS data.\cf1\highlight2 
+\par \cf3\highlight0 I (4032) network: event 1\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Connecting to Dunkin' Donuts Guest ...\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (4212) wifi: new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1\cf1\highlight2 
+\par \cf0\highlight0 I (4212) wifi: state: init -> auth (b0)\cf1\highlight2 
+\par \cf0\highlight0 I (4222) wifi: state: auth -> assoc (0)\cf1\highlight2 
+\par \cf0\highlight0 I (4232) wifi: state: assoc -> run (10)\cf1\highlight2 
+\par \cf0\highlight0 I (4232) wifi: connected with Dunkin' Donuts Guest, aid = 1, channel 1, BW20, bssid = ea:cb:bc:4a:bb:a6\cf1\highlight2 
+\par \cf0\highlight0 I (4232) wifi: security type: 0, phy: bgn, rssi: -44\cf1\highlight2 
+\par \cf0\highlight0 I (4242) wifi: pm start, type: 1\cf1\highlight2 
+\par 
+\par \cf3\highlight0 I (4242) network: CONNECTED\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 I (4262) wifi: AP's beacon interval = 102400 us, DTIM period = 1\cf1\highlight2 
+\par \cf3\highlight0 I (15872) event: sta ip: 192.168.100.142, mask: 255.255.255.0, gw: 192.168.100.1\cf1\highlight2 
+\par \cf3\highlight0 I (15872) network: GOT_IP\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Connected...Testing Access...\cf1\highlight2 
+\par \cf0\highlight0 DNS Lookup [OK]\cf1\highlight2 
+\par \cf0\highlight0 23:20:08,34.64182,-86.56623,2020-03-09,23:20:08,34.64182,-86.56623,2020-03-09,\cf1\highlight2 
+\par \cf0\highlight0 (2, 1, 0, 'pmtlogger.000webhostapp.com', ('145.14.145.161', 443))\cf1\highlight2 
+\par \cf0\highlight0 mbedtls_ssl_handshake error: -4290\cf1\highlight2 
+\par \cf0\highlight0 Warning: [Errno 5] EIO\cf1\highlight2 
+\par \cf0\highlight0 Post: Timer Timeout\cf1\highlight2 
+\par \cf0\highlight0 I (24462) wifi: state: run -> init (0)\cf1\highlight2 
+\par \cf0\highlight0 I (24462) wifi: pm stop, total sleep time: 13245022 us / 20218058 us\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (24462) wifi: new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1\cf1\highlight2 
+\par \cf0\highlight0 SYSTEM_EVENT_STA_DISCONNECTED\cf1\highlight2 
+\par \cf3\highlight0 I (24462) wifi: STA_DISCONNECTED, reason:8\cf1\highlight2 
+\par \cf0\highlight0 ets Jun  8 2016 00:22:57\cf1\highlight2 
+\par 
+\par \cf0\highlight0 rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)\cf1\highlight2 
+\par \cf0\highlight0 configsip: 188777542, SPIWP:0xee\cf1\highlight2 
+\par \cf0\highlight0 clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00\cf1\highlight2 
+\par \cf0\highlight0 mode:DIO, clock div:2\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff0018,len:4\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff001c,len:5100\cf1\highlight2 
+\par \cf0\highlight0 load:0x40078000,len:10600\cf1\highlight2 
+\par \cf0\highlight0 load:0x40080400,len:5684\cf1\highlight2 
+\par \cf0\highlight0 entry 0x400806bc\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Pro cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Application information:\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Compile time:     Feb 28 2020 21:21:22\cf1\highlight2 
+\par \cf3\highlight0 I (529) cpu_start: ELF file SHA256:  0000000000000000...\cf1\highlight2 
+\par \cf3\highlight0 I (535) cpu_start: ESP-IDF:\cf1\highlight2 
+\par \cf3\highlight0 I (540) cpu_start: Starting app cpu, entry point is 0x40083a30\cf1\highlight2 
+\par \cf3\highlight0 I (532) cpu_start: App cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (550) heap_init: Initializing. RAM available for dynamic allocation:\cf1\highlight2 
+\par \cf3\highlight0 I (557) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (563) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (569) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (575) heap_init: At 3FFBDB5C len 00000004 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (582) heap_init: At 3FFCC830 len 000137D0 (77 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (588) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (594) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (600) heap_init: At 40099A80 len 00006580 (25 KiB): IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (607) cpu_start: Pro cpu start user code\cf1\highlight2 
+\par \cf3\highlight0 I (290) cpu_start: Starting scheduler on PRO CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (0) cpu_start: Starting scheduler on APP CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (630) modsocket: Initializing\cf1\highlight2 
+\par \cf0\highlight0 I (710) wifi: wifi driver task: 3ffd2f38, prio:23, stack:3584, core=0\cf1\highlight2 
+\par \cf3\highlight0 I (1712) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf3\highlight0 I (1712) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: wifi firmware version: ac331d7\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: config NVS flash: enabled\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: config nano formating: disabled\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: Init dynamic tx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: Init data frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1762) wifi: Init management frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1762) wifi: Init management short buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1772) wifi: Init static rx buffer size: 1600\cf1\highlight2 
+\par \cf0\highlight0 I (1772) wifi: Init static rx buffer num: 10\cf1\highlight2 
+\par \cf0\highlight0 I (1782) wifi: Init dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf3\highlight0 I (1872) phy: phy_version: 4102, 2fa7a43, Jul 15 2019, 13:06:06, 0, 0\cf1\highlight2 
+\par \cf0\highlight0 I (1872) wifi: mode : sta (d8:a0:1d:69:f8:78)\cf1\highlight2 
+\par \cf3\highlight0 I (1882) wifi: STA_START\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf3\highlight0 I (1882) gpio: GPIO[13]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0\cf1\highlight2 
+\par \cf3\highlight0 I (1952) uart: ALREADY NULL\cf1\highlight2 
+\par \cf0\highlight0 No GPS data.\cf1\highlight2 
+\par \cf3\highlight0 I (4032) network: event 1\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Connecting to Dunkin' Donuts Guest ...\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (4212) wifi: new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1\cf1\highlight2 
+\par \cf0\highlight0 I (4212) wifi: state: init -> auth (b0)\cf1\highlight2 
+\par \cf0\highlight0 I (4222) wifi: state: auth -> assoc (0)\cf1\highlight2 
+\par \cf0\highlight0 I (4232) wifi: state: assoc -> run (10)\cf1\highlight2 
+\par \cf0\highlight0 I (4232) wifi: connected with Dunkin' Donuts Guest, aid = 1, channel 1, BW20, bssid = ea:cb:bc:4a:bb:a6\cf1\highlight2 
+\par \cf0\highlight0 I (4232) wifi: security type: 0, phy: bgn, rssi: -49\cf1\highlight2 
+\par \cf0\highlight0 I (4242) wifi: pm start, type: 1\cf1\highlight2 
+\par 
+\par \cf3\highlight0 I (4242) network: CONNECTED\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 I (4322) wifi: AP's beacon interval = 102400 us, DTIM period = 1\cf1\highlight2 
+\par \cf3\highlight0 I (15872) event: sta ip: 192.168.100.40, mask: 255.255.255.0, gw: 192.168.100.1\cf1\highlight2 
+\par \cf3\highlight0 I (15872) network: GOT_IP\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Connected...Testing Access...\cf1\highlight2 
+\par \cf0\highlight0 DNS Lookup [OK]\cf1\highlight2 
+\par \cf0\highlight0 23:20:32,34.6418,-86.56625,2020-03-09,23:20:32,34.6418,-86.56625,2020-03-09,\cf1\highlight2 
+\par \cf0\highlight0 (2, 1, 0, 'pmtlogger.000webhostapp.com', ('145.14.145.251', 443))\cf1\highlight2 
+\par \cf0\highlight0 mbedtls_ssl_handshake error: -4290\cf1\highlight2 
+\par \cf0\highlight0 Warning: [Errno 5] EIO\cf1\highlight2 
+\par \cf0\highlight0 Post: Timer Timeout\cf1\highlight2 
+\par \cf0\highlight0 I (24512) wifi: state: run -> init (0)\cf1\highlight2 
+\par \cf0\highlight0 I (24512) wifi: pm stop, total sleep time: 14483762 us / 20271344 us\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (24512) wifi: new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1\cf1\highlight2 
+\par \cf0\highlight0 SYSTEM_EVENT_STA_DISCONNECTED\cf1\highlight2 
+\par \cf3\highlight0 I (24522) wifi: STA_DISCONNECTED, reason:8\cf1\highlight2 
+\par \cf0\highlight0 ets Jun  8 2016 00:22:57\cf1\highlight2 
+\par 
+\par \cf0\highlight0 rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)\cf1\highlight2 
+\par \cf0\highlight0 configsip: 188777542, SPIWP:0xee\cf1\highlight2 
+\par \cf0\highlight0 clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00\cf1\highlight2 
+\par \cf0\highlight0 mode:DIO, clock div:2\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff0018,len:4\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff001c,len:5100\cf1\highlight2 
+\par \cf0\highlight0 load:0x40078000,len:10600\cf1\highlight2 
+\par \cf0\highlight0 load:0x40080400,len:5684\cf1\highlight2 
+\par \cf0\highlight0 entry 0x400806bc\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Pro cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Application information:\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Compile time:     Feb 28 2020 21:21:22\cf1\highlight2 
+\par \cf3\highlight0 I (529) cpu_start: ELF file SHA256:  0000000000000000...\cf1\highlight2 
+\par \cf3\highlight0 I (535) cpu_start: ESP-IDF:\cf1\highlight2 
+\par \cf3\highlight0 I (540) cpu_start: Starting app cpu, entry point is 0x40083a30\cf1\highlight2 
+\par \cf3\highlight0 I (532) cpu_start: App cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (550) heap_init: Initializing. RAM available for dynamic allocation:\cf1\highlight2 
+\par \cf3\highlight0 I (557) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (563) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (569) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (575) heap_init: At 3FFBDB5C len 00000004 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (582) heap_init: At 3FFCC830 len 000137D0 (77 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (588) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (594) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (600) heap_init: At 40099A80 len 00006580 (25 KiB): IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (607) cpu_start: Pro cpu start user code\cf1\highlight2 
+\par \cf3\highlight0 I (290) cpu_start: Starting scheduler on PRO CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (0) cpu_start: Starting scheduler on APP CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (630) modsocket: Initializing\cf1\highlight2 
+\par \cf0\highlight0 I (710) wifi: wifi driver task: 3ffd2f38, prio:23, stack:3584, core=0\cf1\highlight2 
+\par \cf3\highlight0 I (1712) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf3\highlight0 I (1712) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: wifi firmware version: ac331d7\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: config NVS flash: enabled\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: config nano formating: disabled\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: Init dynamic tx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: Init data frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1762) wifi: Init management frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1762) wifi: Init management short buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1772) wifi: Init static rx buffer size: 1600\cf1\highlight2 
+\par \cf0\highlight0 I (1772) wifi: Init static rx buffer num: 10\cf1\highlight2 
+\par \cf0\highlight0 I (1782) wifi: Init dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf3\highlight0 I (1872) phy: phy_version: 4102, 2fa7a43, Jul 15 2019, 13:06:06, 0, 0\cf1\highlight2 
+\par \cf0\highlight0 I (1872) wifi: mode : sta (d8:a0:1d:69:f8:78)\cf1\highlight2 
+\par \cf3\highlight0 I (1882) wifi: STA_START\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf3\highlight0 I (1882) gpio: GPIO[13]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0\cf1\highlight2 
+\par \cf3\highlight0 I (1952) uart: ALREADY NULL\cf1\highlight2 
+\par \cf0\highlight0 No GPS data.\cf1\highlight2 
+\par \cf3\highlight0 I (4032) network: event 1\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Connecting to Dunkin' Donuts Guest ...\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (4212) wifi: new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1\cf1\highlight2 
+\par \cf0\highlight0 I (4222) wifi: state: init -> auth (b0)\cf1\highlight2 
+\par \cf0\highlight0 I (4222) wifi: state: auth -> assoc (0)\cf1\highlight2 
+\par \cf0\highlight0 I (4232) wifi: state: assoc -> run (10)\cf1\highlight2 
+\par \cf0\highlight0 I (4232) wifi: connected with Dunkin' Donuts Guest, aid = 1, channel 1, BW20, bssid = ea:cb:bc:4a:bb:a6\cf1\highlight2 
+\par \cf0\highlight0 I (4232) wifi: security type: 0, phy: bgn, rssi: -41\cf1\highlight2 
+\par \cf0\highlight0 I (4242) wifi: pm start, type: 1\cf1\highlight2 
+\par 
+\par \cf3\highlight0 I (4242) network: CONNECTED\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 I (4322) wifi: AP's beacon interval = 102400 us, DTIM period = 1\cf1\highlight2 
+\par \cf3\highlight0 I (15872) event: sta ip: 192.168.100.219, mask: 255.255.255.0, gw: 192.168.100.1\cf1\highlight2 
+\par \cf3\highlight0 I (15872) network: GOT_IP\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Connected...Testing Access...\cf1\highlight2 
+\par \cf0\highlight0 DNS Lookup [OK]\cf1\highlight2 
+\par \cf0\highlight0 23:20:56,34.64183,-86.56624,2020-03-09,23:20:56,34.64183,-86.56624,2020-03-09,\cf1\highlight2 
+\par \cf0\highlight0 (2, 1, 0, 'pmtlogger.000webhostapp.com', ('145.14.144.129', 443))\cf1\highlight2 
+\par \cf0\highlight0 mbedtls_ssl_handshake error: -4290\cf1\highlight2 
+\par \cf0\highlight0 Warning: [Errno 5] EIO\cf1\highlight2 
+\par \cf0\highlight0 Post: Timer Timeout\cf1\highlight2 
+\par \cf0\highlight0 I (24512) wifi: state: run -> init (0)\cf1\highlight2 
+\par \cf0\highlight0 I (24512) wifi: pm stop, total sleep time: 15934741 us / 20272997 us\cf1\highlight2 
+\par 
+\par \cf0\highlight0 I (24512) wifi: new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1\cf1\highlight2 
+\par \cf0\highlight0 SYSTEM_EVENT_STA_DISCONNECTED\cf1\highlight2 
+\par \cf3\highlight0 I (24522) wifi: STA_DISCONNECTED, reason:8\cf1\highlight2 
+\par \cf0\highlight0 ets Jun  8 2016 00:22:57\cf1\highlight2 
+\par 
+\par \cf0\highlight0 rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)\cf1\highlight2 
+\par \cf0\highlight0 configsip: 188777542, SPIWP:0xee\cf1\highlight2 
+\par \cf0\highlight0 clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00\cf1\highlight2 
+\par \cf0\highlight0 mode:DIO, clock div:2\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff0018,len:4\cf1\highlight2 
+\par \cf0\highlight0 load:0x3fff001c,len:5100\cf1\highlight2 
+\par \cf0\highlight0 load:0x40078000,len:10600\cf1\highlight2 
+\par \cf0\highlight0 load:0x40080400,len:5684\cf1\highlight2 
+\par \cf0\highlight0 entry 0x400806bc\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Pro cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Application information:\cf1\highlight2 
+\par \cf3\highlight0 I (526) cpu_start: Compile time:     Feb 28 2020 21:21:22\cf1\highlight2 
+\par \cf3\highlight0 I (529) cpu_start: ELF file SHA256:  0000000000000000...\cf1\highlight2 
+\par \cf3\highlight0 I (535) cpu_start: ESP-IDF:\cf1\highlight2 
+\par \cf3\highlight0 I (540) cpu_start: Starting app cpu, entry point is 0x40083a30\cf1\highlight2 
+\par \cf3\highlight0 I (532) cpu_start: App cpu up.\cf1\highlight2 
+\par \cf3\highlight0 I (550) heap_init: Initializing. RAM available for dynamic allocation:\cf1\highlight2 
+\par \cf3\highlight0 I (557) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (563) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (569) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (575) heap_init: At 3FFBDB5C len 00000004 (0 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (582) heap_init: At 3FFCC830 len 000137D0 (77 KiB): DRAM\cf1\highlight2 
+\par \cf3\highlight0 I (588) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (594) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (600) heap_init: At 40099A80 len 00006580 (25 KiB): IRAM\cf1\highlight2 
+\par \cf3\highlight0 I (607) cpu_start: Pro cpu start user code\cf1\highlight2 
+\par \cf3\highlight0 I (290) cpu_start: Starting scheduler on PRO CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (0) cpu_start: Starting scheduler on APP CPU.\cf1\highlight2 
+\par \cf3\highlight0 I (630) modsocket: Initializing\cf1\highlight2 
+\par \cf0\highlight0 I (710) wifi: wifi driver task: 3ffd2f38, prio:23, stack:3584, core=0\cf1\highlight2 
+\par \cf3\highlight0 I (1712) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf3\highlight0 I (1712) system_api: Base MAC address is not set, read default base MAC address from BLK0 of EFUSE\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: wifi firmware version: ac331d7\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: config NVS flash: enabled\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: config nano formating: disabled\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: Init dynamic tx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1752) wifi: Init data frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1762) wifi: Init management frame dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1762) wifi: Init management short buffer num: 32\cf1\highlight2 
+\par \cf0\highlight0 I (1772) wifi: Init static rx buffer size: 1600\cf1\highlight2 
+\par \cf0\highlight0 I (1772) wifi: Init static rx buffer num: 10\cf1\highlight2 
+\par \cf0\highlight0 I (1782) wifi: Init dynamic rx buffer num: 32\cf1\highlight2 
+\par \cf3\highlight0 I (1872) phy: phy_version: 4102, 2fa7a43, Jul 15 2019, 13:06:06, 0, 0\cf1\highlight2 
+\par \cf0\highlight0 I (1872) wifi: mode : sta (d8:a0:1d:69:f8:78)\cf1\highlight2 
+\par \cf3\highlight0 I (1872) wifi: STA_START\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf3\highlight0 I (1882) gpio: GPIO[13]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0\cf1\highlight2 
+\par \cf3\highlight0 I (1952) uart: ALREADY NULL\cf1\highlight2 
+\par \cf0\highlight0 No GPS data.\cf1\highlight2 
+\par \cf3\highlight0 I (4032) network: event 1\cf1\highlight2 
+\par \cf0\highlight0 EXIT: event_handle\cf1\highlight2 
+\par \cf0\highlight0 Traceback (most recent call last):\cf1\highlight2 
+\par \cf0\highlight0   File "main.py", line 141, in <module>\cf1\highlight2 
+\par \cf0\highlight0   File "main.py", line 141, in <listcomp>\cf1\highlight2 
+\par \cf0\highlight0 KeyboardInterrupt:\cf1\highlight2 
+\par \cf0\highlight0 MicroPython 2a00a703 on 2020-03-02; ESP32 module with ESP32\cf1\highlight2 
+\par \cf0\highlight0 Type "help()" for more information.\cf1\highlight2 
+\par \cf0\highlight0 >>>\cf1\highlight2 
+\par \pard\cf0\highlight0\f1\fs16 
+\par }
+ 
