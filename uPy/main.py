@@ -110,7 +110,7 @@ while True:
         if d_post != {}:
             b.append(d_post)
         for v in b:
-            data+=','.join(list(v.values()))+','
+            data=','.join(list(v.values()))+','
         #TODO: remove print
         print(data)
         with open(unsent, "w+") as file_ptr:
