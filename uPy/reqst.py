@@ -15,7 +15,7 @@ def handlerTimer(timer):
     #Resets the device in a manner similar to pushing the external RESET button.
     reset()
 
-def request_dns_internet(method, url, data=None, json=None, headers={}, stream=None, timeout=500):
+def request_dns_internet(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
     try:
         proto, dummy, host, path = url.split("/", 3)
     except ValueError:
@@ -39,7 +39,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
 
     ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
     if ai != []:
-        print("DNS Lookup [OK]")
+        print("DNS Test Lookup [OK]")
         # deinit timer
         timer.deinit()
 
@@ -81,12 +81,13 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
             l = s.readline()
             if not l or l == b"\r\n":
                 break
-            #print(l)
+            print(l)
             if l.startswith(b"Transfer-Encoding:"):
                 if b"chunked" in l:
                     raise ValueError("Unsupported " + l)
             elif l.startswith(b"Location:") and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
+                print("Location [{}]".format(location))
                 # close socket (should prevent ENOMEM error)
                 s.close()
                 del s
@@ -105,7 +106,21 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     gc.collect()
     return [status,None]
 
-def request_splash_page(method, url, data=None, json=None, headers={}, stream=None, timeout=500):
+def splash_breaking_a(b_html):
+    # read all bytes from socket
+    print("<a> search...")
+    # parse socket bytes
+    a = []
+    while b_html.find(b'<a') != -1:
+        beg = b_html.find(b'<a')
+        end = b_html.find(b'</a>')+4
+        a.append(b_html[beg:end])
+        b_html = b_html[end+1:]
+    
+    #print(a)
+    return a
+
+def request_splash_page(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
     try:
         proto, dummy, host, path = url.split("/", 3)
     except ValueError:
@@ -177,11 +192,13 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
                     raise ValueError("Unsupported " + l)
             elif l.startswith(b"Location:") and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
+                
+                print("L2 Location [{}]".format(location))
                 # close socket (should prevent ENOMEM error)
                 s.close()
                 del s
                 gc.collect()
-                print("No L2 Redirection")
+                print("L2 Redirection")
                 # need to get the method from the redirection
                 return [status, None]
     except OSError as err:
@@ -193,6 +210,17 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
 
     page = s.read()
     s.close()
+
+    #-------DUNKIN-------
+    # a = splash_breaking_a(page)
+    # for v in a:
+    #     print (str(v).split("\"")[1])   
+    #     [status, _ ] = get(str(v).split("\"")[1])
+    #     if status == 200:
+    #         return [status, _ ]
+    #--------------------
+
+
     del s
     gc.collect()
     return [status,page]
@@ -261,13 +289,14 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
                     raise ValueError("Unsupported " + l)
             elif l.startswith(b"Location:") and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
+                print("Post Request Location [{}]".format(location))
                 # close socket (should prevent ENOMEM error)
                 s.close()
                 del s
                 gc.collect()
-                print("No LN Redirection")
+                print("Post Request Redirection")
                 # need to get the method from the redirection
-                return [status, None]
+                return request_splash_page("GET",location)
     except OSError as err:
         #s.close()
         raise

@@ -37,7 +37,7 @@ def station_connected(station: WLAN, wifiLogger: Logger):
 
     # test DNS -> GET Request and Handles Redirection
     [status, location] = reqst.test_dns_internet("https://www.example.com")
-
+    print
     # NO SPLASH PAGE
     if status == 200:
         return True
@@ -46,17 +46,18 @@ def station_connected(station: WLAN, wifiLogger: Logger):
     elif location and 300 <= status <= 309:
         [status,splashpage] = reqst.request_splash_page(location)
         # splashpage received
+        print(splashpage)
         if status == 200:
             print("Splashpage [OK]")
             print("Splashpage Length [{}]".format(len(splashpage)))
             
             print("Splashpage Breaking...")
             # <a> TAG Splash Page Breaking
-            a = splash_breaking_a(splashpage)
-            for v in a:
-                [status, _ ] = reqst.get(v)
-                if status == 200:
-                    return True
+            # a = splash_breaking_a(splashpage)
+            # for v in a:
+            #     [status, _ ] = reqst.get(v)
+            #     if status == 200:
+            #         return True
             # -----------------------------
             return False
         else:
