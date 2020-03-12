@@ -32,8 +32,8 @@ def splash_breaking_a(b_html):
 
 def station_connected(station: WLAN, wifiLogger: Logger):
     #TODO: remove print
-    print("Connected...Testing Access...")
-    wifiLogger.info("Connected...Testing Access...")
+    print("Connected [Testing Access]")
+    wifiLogger.info("Connected [Testing Access]")
 
     # test DNS -> GET Request and Handles Redirection
     [status, location] = reqst.test_dns_internet("https://www.example.com")
@@ -58,6 +58,8 @@ def station_connected(station: WLAN, wifiLogger: Logger):
             #     if status == 200:
             #         return True
             # -----------------------------
+            #TODO: When You know you broke the page and allow DATA SENDING
+            # return True
             return False
         else:
             print("Splashpage [Failed]")
