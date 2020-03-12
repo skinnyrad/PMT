@@ -14,22 +14,7 @@
 # GPS TX => Pin 21 (Master RX)
 # GPS RX => Pin 22 (Master TX)
 
-def GNSS_parse(data):
-    return data
-
-def GNSS_UART_ISR():
-    #disable UART ISR
-    nothing = 0
-
-    #Enable Timer ISR
-
-def GNSS_TIMER_ISR():
-    oldRXLength = currentRXLength
-    currentRXLength = uart1.any()
-
-
 from machine import UART
-from utime import sleep
 
 import logging
 

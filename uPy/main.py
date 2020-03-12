@@ -153,8 +153,8 @@ while True:
                     # Try to connect to WiFi access point
                     apSSID = onet[0]
                     #TODO: remove print
-                    print ("Connecting to "+str(onet[0],"utf-8")+" ...\n")
-                    wifiLogger.info("Connecting to "+str(onet[0],"utf-8")+" ...\n")
+                    print ("Connecting to {0} ...\n".format(str(onet[0],"utf-8")))
+                    wifiLogger.info("Connecting to {0} ...\n".format(str(onet[0],"utf-8")))
                     station.connect(onet[0])
                     while not station.isconnected():
                         sleep(0.5)
