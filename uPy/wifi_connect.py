@@ -37,7 +37,6 @@ def station_connected(station: WLAN, wifiLogger: Logger):
 
     # test DNS -> GET Request and Handles Redirection
     [status, location] = reqst.test_dns_internet("https://www.example.com")
-    print
     # NO SPLASH PAGE
     if status == 200:
         return True
