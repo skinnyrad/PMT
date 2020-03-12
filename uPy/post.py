@@ -44,6 +44,6 @@ def post_data(post_data, post_url, logger: Logger) -> bool:
             return False
     except OSError as e:
         #TODO: remove print
-        print("Warning: " + str(e))
+        print("Warning: {0}".format(str(e)))
         logger.warning(str(e))
         return False

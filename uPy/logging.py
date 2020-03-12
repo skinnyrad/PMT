@@ -39,7 +39,7 @@ class Logger:
     def log(self, level, msg):
         if level >= (self.level or _level):
             with open(self.logname, "a+") as fp:
-                fp.write("%s:%s:%s\n" % (self._level_str(level), self.name, msg))
+                fp.write("{0}:{1}:{2}\n".format(self._level_str(level), self.name, msg))
 
     def write(self, msg):
         with open(self.logname, "a+") as fp:
