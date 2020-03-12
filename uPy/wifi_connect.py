@@ -16,27 +16,51 @@ from machine import Timer, reset
 import logging
 import reqst
 
-def handlerTimer(timer):
-    print("DNS_Lookup: Timer Timeout")
-    #Resets the device in a manner similar to pushing the external RESET button.
-    reset()
+def splash_breaking_a(b_html):
+    # read all bytes from socket
+    print("<a> search...")
+    # parse socket bytes
+    a = []
+    while b_html.find(b'<a') != -1:
+        beg = b_html.find(b'<a')
+        end = b_html.find(b'</a>')+4
+        a.append(b_html[beg:end])
+        b_html = b_html[end+1:]
+    
+    print(a)
+    return a
 
 def station_connected(station: WLAN, wifiLogger: Logger):
     #TODO: remove print
-    print("Connected...Testing Access...")
-    wifiLogger.info("Connected...Testing Access...")
-    # init harware timer
-    timer = Timer(0)
-    timer.init(period=1000, mode=Timer.ONE_SHOT,callback=handlerTimer)
-    resolved = getaddrinfo("pmtlogger.000webhostapp.com", 80)
-    timer.deinit()
-    if resolved == []:
-        #TODO: remove print
-        print("DNS Lookup [Failed]")
-        wifiLogger.debug("DNS Lookup [Failed]")
-        station.disconnect()
-    else:
-        #TODO: remove print
-        print("DNS Lookup [OK]")
-        wifiLogger.debug("DNS Lookup [OK]")
-        response = reqst.get("http://www.google.com")
+    print("Connected [Testing Access]")
+    wifiLogger.info("Connected [Testing Access]")
+
+    # test DNS -> GET Request and Handles Redirection
+    [status, location] = reqst.test_dns_internet("https://www.example.com")
+    # NO SPLASH PAGE
+    if status == 200:
+        return True
+
+    # Redirection
+    elif location and 300 <= status <= 309:
+        [status,splashpage] = reqst.request_splash_page(location)
+        # splashpage received
+        print(splashpage)
+        if status == 200:
+            print("Splashpage [OK]")
+            print("Splashpage Length [{}]".format(len(splashpage)))
+            
+            print("Splashpage Breaking...")
+            # <a> TAG Splash Page Breaking
+            # a = splash_breaking_a(splashpage)
+            # for v in a:
+            #     [status, _ ] = reqst.get(v)
+            #     if status == 200:
+            #         return True
+            # -----------------------------
+            #TODO: When You know you broke the page and allow DATA SENDING
+            # return True
+            return False
+        else:
+            print("Splashpage [Failed]")
+            return False
