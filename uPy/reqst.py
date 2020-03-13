@@ -101,6 +101,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
         raise
     
     print("Status_Code [{}]".format(status))
+    print(s.read())
     s.close()
     del s
     gc.collect()
