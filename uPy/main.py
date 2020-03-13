@@ -12,7 +12,7 @@
 
 from gps import GPS
 import logging
-from machine import SDCard
+from machine import SDCard, WDT
 from network import WLAN, STA_IF
 from os import remove
 from post import *
@@ -78,6 +78,11 @@ unsentLogger.setLevel(logging.DEBUG)
 # instantiate GPS class
 gps = GPS()
 data = ""
+
+#setup core WDT for partial reset (temporary)
+#TODO change out with RWDT in esp32/panic.c
+wdt = WDT( timeout = (20 * 1000) )
+
 
 with open(config_file, 'r') as fp:
     pmt_config = eval(fp.read())
@@ -168,3 +173,7 @@ while True:
                         print("Unable to Connect")
                         wifiLogger.warning("Unable to Connect")
     sleep(gps_interval)
+
+    #reset WDT to avoid Software Reset 0xc
+    wdt.feed()
+    print("Fed WDT")
