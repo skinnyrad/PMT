@@ -87,7 +87,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
                     raise ValueError("Unsupported " + l)
             elif l.startswith(b"Location:") and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
-                print("Location [{}]".format(location))
+                #print("Location [{}]".format(location))
                 # close socket (should prevent ENOMEM error)
                 s.close()
                 del s
@@ -95,7 +95,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
                 print("Redirection [{}]".format(location))
                 # need to get the method from the redirection
                 return [status,location]
-    except OSError as err:
+    except OSError as err:  
         # if not s:
         #     s.close()
         raise
@@ -200,7 +200,7 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
                 gc.collect()
                 print("L2 Redirection")
                 # need to get the method from the redirection
-                return [status, None]
+                return test_dns_internet(location)
     except OSError as err:
         # if not s:
         #     s.close()
