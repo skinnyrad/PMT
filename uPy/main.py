@@ -79,12 +79,6 @@ unsentLogger.setLevel(logging.DEBUG)
 gps = GPS()
 data = ""
 
-#setup core WDT for partial reset (temporary)
-#TODO change out with RWDT in esp32/panic.c
-collect()
-wdt = WDT( timeout = ((20+gps_interval)*1000) )
-
-
 with open(config_file, 'r') as fp:
     pmt_config = eval(fp.read())
 
@@ -98,6 +92,11 @@ except KeyError as e:
     raise
 
 posted = False
+
+#setup core WDT for partial reset (temporary)
+#TODO change out with RWDT in esp32/panic.c
+collect()
+wdt = WDT(timeout=((20+gps_interval)*1000))
 
 while True:
     GPSdata = gps.get_RMCdata(defaultLogger)
