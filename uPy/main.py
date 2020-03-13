@@ -24,7 +24,7 @@ from gc import collect
 import encry 
 # import logging
 
-ap_blacklist = [b'xfinitywifi']
+ap_blacklist = [b'xfinitywifi', b'CableWiFi']
 
 # HELPFUL 
 
@@ -82,7 +82,7 @@ data = ""
 #setup core WDT for partial reset (temporary)
 #TODO change out with RWDT in esp32/panic.c
 collect()
-wdt = WDT( timeout = (20 * 1000) )
+wdt = WDT( timeout = ((20+gps_interval)*1000) )
 
 
 with open(config_file, 'r') as fp:
