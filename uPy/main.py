@@ -81,6 +81,7 @@ data = ""
 
 #setup core WDT for partial reset (temporary)
 #TODO change out with RWDT in esp32/panic.c
+collect()
 wdt = WDT( timeout = (20 * 1000) )
 
 
