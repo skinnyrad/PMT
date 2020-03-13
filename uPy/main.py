@@ -12,7 +12,7 @@
 
 from gps import GPS
 import logging
-from machine import SDCard
+from machine import SDCard, WDT
 from network import WLAN, STA_IF
 from os import remove
 from post import *
@@ -24,7 +24,7 @@ from gc import collect
 import encry 
 # import logging
 
-ap_blacklist = [b'xfinitywifi']
+ap_blacklist = [b'xfinitywifi', b'CableWiFi']
 
 # HELPFUL 
 
@@ -92,6 +92,11 @@ except KeyError as e:
     raise
 
 posted = False
+
+#setup core WDT for partial reset (temporary)
+#TODO change out with RWDT in esp32/panic.c
+collect()
+wdt = WDT(timeout=((20+gps_interval)*1000))
 
 while True:
     GPSdata = gps.get_RMCdata(defaultLogger)
@@ -168,3 +173,7 @@ while True:
                         print("Unable to Connect")
                         wifiLogger.warning("Unable to Connect")
     sleep(gps_interval)
+
+    #reset WDT to avoid Software Reset 0xc
+    wdt.feed()
+    print("Fed WDT")
