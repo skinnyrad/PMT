@@ -101,11 +101,10 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
         raise
     
     print("Status_Code [{}]".format(status))
-    print(s.read())
     s.close()
     del s
     gc.collect()
-    return [status,None]
+    return [status,None,s.read()]
 
 def splash_breaking_a(b_html):
     # read all bytes from socket
