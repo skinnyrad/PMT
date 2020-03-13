@@ -30,13 +30,15 @@ def splash_breaking_a(b_html):
     print(a)
     return a
 
-def station_connected(station: WLAN, wdt: WDT, wifiLogger: Logger):
+def station_connected(station: WLAN, host: String, wdt: WDT, wifiLogger: Logger):
     #TODO: remove print
     print("Connected [Testing Access]")
     wifiLogger.info("Connected [Testing Access]")
 
+
+
     # test DNS -> GET Request and Handles Redirection
-    [status, location] = reqst.test_dns_internet("https://www.example.com")
+    [status, location] = reqst.test_dns_internet(host)
     # NO SPLASH PAGE
     if status == 200:
         return True
