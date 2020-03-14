@@ -18,11 +18,11 @@ def main():
 
     for line in contents:
         if r.match(line):
-            matches.append(r.match(line).group(0))
+            matches.append(line)
 
     for match in matches:
         if r_true.match(match):
-            trues.append(r_true.match(match).group(0))
+            trues.append(match)
 
     print("WiFi Connection Analysis:\n|")
     print(f"| --> Number of Posts Attemped - {len(matches)}")
