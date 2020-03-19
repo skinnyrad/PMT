@@ -107,7 +107,7 @@ while True:
         d_post = {}
         b.append(GPSdata)
         if (float(GPSdata['latitude']) > lat_pre+0.00007 or float(GPSdata['latitude']) < lat_pre-0.00007) and (float(GPSdata['longitude']) > lon_pre+0.00007 or float(GPSdata['longitude']) < lon_pre-0.00007):
-            b.append(d)
+            b.append()
             lat_pre = float(GPSdata['latitude'])
             lon_pre = float(GPSdata['longitude'])
         else:
@@ -118,10 +118,6 @@ while True:
             data=','.join(list(v.values()))+','
         #TODO: remove print
         print(data)
-        with open(unsent, "w+") as file_ptr:
-            file_ptr.write(data)
-        with open(archive, "w+") as file_ptr:
-            file_ptr.write(data)
         archiveLogger.write(data)
         unsentLogger.write(data)
         defaultLogger.info(data)
@@ -131,47 +127,46 @@ while True:
         defaultLogger.info("No GPS data.")
         data = ""
 
-    if operation_mode == "operational":
-        if station.isconnected():
-            if data != "":
-                with open(unsent, "r") as file_ptr:
-                    rawData = file_ptr.read()
-                    enc_data = encry.encrypt(enc_key, rawData)
-                    posted = post_data(enc_data, post_url, defaultLogger)
+    if station.isconnected():
+        if data != "":
+            with open(unsent, "r") as file_ptr:
+                rawData = file_ptr.read()
+                enc_data = encry.encrypt(enc_key, rawData)
+                posted = post_data(enc_data, post_url, defaultLogger)
 
-                    msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(apSSID), posted)
-                    wifiLogger.write(msg)
+                msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(apSSID), posted)
+                wifiLogger.write(msg)
 
-                    del rawData
-                    del enc_data
-                    collect()
-                remove(unsent)
+                del rawData
+                del enc_data
+                collect()
+            remove(unsent)
 
-        else:
-            # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
-            nets = station.scan()
-            # get only open nets
-            openNets = [n for n in nets if n[4] == 0]
+    else:
+        # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
+        nets = station.scan()
+        # get only open nets
+        openNets = [n for n in nets if n[4] == 0]
 
-            for onet in openNets:
-                if onet[0] not in ap_blacklist:
-                    # Try to connect to WiFi access point
-                    apSSID = onet[0]
+        for onet in openNets:
+            if onet[0] not in ap_blacklist:
+                # Try to connect to WiFi access point
+                apSSID = onet[0]
+                #TODO: remove print
+                print ("Connecting to {0} ...\n".format(str(onet[0],"utf-8")))
+                wifiLogger.info("Connecting to {0} ...\n".format(str(onet[0],"utf-8")))
+                station.connect(onet[0])
+                while not station.isconnected():
+                    sleep(0.5)
+                if station.isconnected():
+                    station_connected(station, post_url, wdt, wifiLogger)
+                    sleep(1)
+                if station.isconnected():
+                    break
+                else:
                     #TODO: remove print
-                    print ("Connecting to {0} ...\n".format(str(onet[0],"utf-8")))
-                    wifiLogger.info("Connecting to {0} ...\n".format(str(onet[0],"utf-8")))
-                    station.connect(onet[0])
-                    while not station.isconnected():
-                        sleep(0.5)
-                    if station.isconnected():
-                        station_connected(station, post_url, wdt, wifiLogger)
-                        sleep(1)
-                    if station.isconnected():
-                        break
-                    else:
-                        #TODO: remove print
-                        print("Unable to Connect")
-                        wifiLogger.warning("Unable to Connect")
+                    print("Unable to Connect")
+                    wifiLogger.warning("Unable to Connect")
     sleep(gps_interval)
 
     #reset WDT to avoid Software Reset 0xc
