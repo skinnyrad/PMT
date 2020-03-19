@@ -95,7 +95,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
                 print("Redirection [{}]".format(location))
                 # need to get the method from the redirection
                 return [status,location,None]
-    except OSError as err:
+    except (OSError, TypeError) as err:
         # if not s:
         #     s.close()
         raise
