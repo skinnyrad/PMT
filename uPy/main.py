@@ -35,6 +35,11 @@ ap_blacklist = [b'xfinitywifi', b'CableWiFi']
 ## Run python script within REPL 
 # execfile('<filename>')
 
+#setup core WDT for partial reset (temporary)
+#TODO change out with RWDT in esp32/panic.c
+collect()
+wdt = WDT(timeout=((20+gps_interval)*1000))
+
 # Create a station object to store our connection
 station = WLAN(STA_IF)
 
@@ -92,10 +97,7 @@ except KeyError as e:
 
 posted = False
 
-#setup core WDT for partial reset (temporary)
-#TODO change out with RWDT in esp32/panic.c
-collect()
-wdt = WDT(timeout=((20+gps_interval)*1000))
+wdt.feed()
 
 while True:
     GPSdata = gps.get_RMCdata(defaultLogger)
