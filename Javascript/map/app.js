@@ -4,7 +4,7 @@
 var map;
 var mapLat = 34.724600;
 var mapLng = -86.639590;
-var mapDefaultZoom = 15;
+var mapDefaultZoom = 5;
 var latLonDecimals = 7;
 var url = "https://pmtlogger.000webhostapp.com/api/getJSON.php";
 var url_encryption = "https://pmtlogger.000webhostapp.com/api/getEnc.php";
