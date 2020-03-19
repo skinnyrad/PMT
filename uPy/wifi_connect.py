@@ -35,10 +35,9 @@ def station_connected(station: WLAN, host: String, wdt: WDT, wifiLogger: Logger)
     print("Connected [Testing Access]")
     wifiLogger.info("Connected [Testing Access]")
 
-
-
     # test DNS -> GET Request and Handles Redirection
     [status, location, body] = reqst.test_dns_internet(host)
+
     # NO SPLASH PAGE
     if status == 200 and body == "OK":
         print("Internet Access [OK]")

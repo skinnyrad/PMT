@@ -105,7 +105,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     s.close()
     del s
     gc.collect()
-    return [status,None,body]
+    return [status,None,body.decode("utf-8")]
 
 def splash_breaking_a(b_html):
     # read all bytes from socket
