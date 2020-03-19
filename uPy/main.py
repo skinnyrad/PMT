@@ -86,7 +86,6 @@ try:
     post_url = pmt_config['post_url']
     gps_interval = pmt_config['gps_interval']
     enc_key = pmt_config['encryption_key']
-    operation_mode = pmt_config['operation_mode']
 except KeyError as e:
     print(e)
     raise
