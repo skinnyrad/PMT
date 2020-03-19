@@ -41,8 +41,14 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     proto, dummy, host, path, port = breakdown_url(url)
     # No need to check if Host is IP. It's first request we
     # do after connection
-
+    # TODO: Uncomment if we decide it's needed
+    # init harware timer
+    # timer = Timer(0)
+    # TODO: Uncomment this for solution
+    #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
     ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
+    #TODO: Uncomment this for solution
+    #timer.deinit()
     if ai != []:
         print(str(ai))
         print("DNS Lookup [OK]")
