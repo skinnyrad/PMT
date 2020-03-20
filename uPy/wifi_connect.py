@@ -76,10 +76,30 @@ def station_connected(station: WLAN, host: String, wdt: WDT, wifiLogger: Logger)
             return False
             
         elif 500 <= status <= 599:
+            """
+                station.active(False) seems to flush wifi module
+
+                board output:
+                    I (35596) wifi: flush txq
+                    I (35596) wifi: stop sw txq
+                    I (35596) wifi: lmac stop hw txq
+            """
+            station.active(False)
+            station.active(True)
             return False
         else:
             print("Splashpage [Failed]")
             return False
 
     elif 500 <= status <= 599:
+        """
+            station.active(False) seems to flush wifi module
+
+            board output:
+                I (35596) wifi: flush txq
+                I (35596) wifi: stop sw txq
+                I (35596) wifi: lmac stop hw txq
+        """
+        station.active(False)
+        station.active(True)
         return False

@@ -47,5 +47,14 @@ def post_data(post_data, post_url, logger: Logger) -> bool:
         print("Warning: {0}".format(str(e)))
         logger.warning(str(e))
         if str(e) == "[Errno 113] EHOSTUNREACH":
-            reset()
+            """
+                station.active(False) seems to flush wifi module
+
+                board output:
+                    I (35596) wifi: flush txq
+                    I (35596) wifi: stop sw txq
+                    I (35596) wifi: lmac stop hw txq
+            """
+            station.active(False)
+            station.active(True)
         return False
