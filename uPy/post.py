@@ -46,4 +46,6 @@ def post_data(post_data, post_url, logger: Logger) -> bool:
         #TODO: remove print
         print("Warning: {0}".format(str(e)))
         logger.warning(str(e))
+        if str(e) == "[Errno 113] EHOTSUNREACH":
+            reset()
         return False
