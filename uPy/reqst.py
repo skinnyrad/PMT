@@ -9,6 +9,7 @@ import usocket
 # garbage collector
 import gc
 from machine import reset,Timer
+import ussl
 
 # Returns Tuple of information from URL
 def breakdown_url(url):
@@ -20,7 +21,6 @@ def breakdown_url(url):
     if proto == "http:":
         port = 80
     elif proto == "https:":
-        import ussl
         port = 443
     else:
         raise ValueError("Unsupported protocol: " + proto)
