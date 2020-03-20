@@ -139,25 +139,30 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
     
     # DNS Host or IPv4
     is_ipv4 = False
-    if "." in host:
-        eight_bits = host.split(".")[0]
-        # check 8 bits is enought
+    eight_bits = host.split(".")[0]
+    # check 8 bits is enought
+    try:
         if 0 < int(eight_bits) < 255:
             is_ipv4 = True
+    except ValueError:
+        # not an IP
+        pass
 
     #DNS Resolving Test
     if not is_ipv4:
         ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
         if ai != []:
             print("DNS Lookup [OK]")
+            ai = ai[0]
         else:
             print("DNS Lookup [Failed]")
             return [584,None]
     else:
-        print(host)
+        # Is IPv4
         print("DNS Lookup [Skipped]")
-        
-    ai = ai[0]
+        # socket settings
+        ai = [(2,1,0,(host,port))]
+
     print(str(ai))
     s = usocket.socket(ai[0], ai[1], ai[2])
     try:
@@ -240,22 +245,29 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
 
     # DNS Host or IPv4
     is_ipv4 = False
-    if "." in host:
-        eight_bits = host.split(".")[0]
-        # check 8 bits is enought
+    eight_bits = host.split(".")[0]
+    # check 8 bits is enought
+    try:
         if 0 < int(eight_bits) < 255:
             is_ipv4 = True
+    except ValueError:
+        # not an IP
+        pass
 
     #DNS Resolving Test
     if not is_ipv4:
         ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
         if ai != []:
             print("DNS Lookup [OK]")
+            ai = ai[0]
         else:
             print("DNS Lookup [Failed]")
             return [584,None]
-
-    ai = ai[0]
+    else:
+        # Is IPv4
+        print("DNS Lookup [Skipped]")
+        # socket settings
+        ai = [(2,1,0,(host,port))]
     
     s = usocket.socket(ai[0], ai[1], ai[2])
     # set timeout
