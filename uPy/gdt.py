@@ -41,7 +41,6 @@ class GDT():
     def feed(self):
         self.deinit_timer()
         self.init_timer()
-        print("GDT has been fed")
 
     def timer_exp_func(self, timer):
         self.station.active(False)
