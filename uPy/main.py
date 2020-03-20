@@ -133,7 +133,7 @@ while True:
             with open(unsent, "r") as file_ptr:
                 rawData = file_ptr.read()
                 enc_data = encry.encrypt(enc_key, rawData)
-                posted = post_data(enc_data, post_url, defaultLogger)
+                posted = post_data(enc_data, post_url, station, defaultLogger)
 
                 msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(apSSID), posted)
                 wifiLogger.write(msg)

@@ -23,7 +23,7 @@ def handlerTimer(timer):
     #Resets the device in a manner similar to pushing the external RESET button.
     reset()
 
-def post_data(post_data, post_url, logger: Logger) -> bool:
+def post_data(post_data, post_url, station, logger: Logger) -> bool:
     try:
         # init harware timer
         timer = Timer(0)
