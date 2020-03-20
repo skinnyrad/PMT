@@ -74,6 +74,12 @@ def station_connected(station: WLAN, host: String, wdt: WDT, wifiLogger: Logger)
             #TODO: When You know you broke the page and allow DATA SENDING
             # return True
             return False
+            
+        elif 500 <= status <= 599:
+            return False
         else:
             print("Splashpage [Failed]")
             return False
+
+    elif 500 <= status <= 599:
+        return False

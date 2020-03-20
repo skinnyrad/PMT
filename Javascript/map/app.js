@@ -4,7 +4,7 @@
 var map;
 var mapLat = 34.724600;
 var mapLng = -86.639590;
-var mapDefaultZoom = 15;
+var mapDefaultZoom = 5;
 var latLonDecimals = 7;
 var url = "https://pmtlogger.000webhostapp.com/api/getJSON.php";
 var url_encryption = "https://pmtlogger.000webhostapp.com/api/getEnc.php";
@@ -52,11 +52,13 @@ function styleFunction(props, fill) {
     ];
 }
 
+// Zooms MAP to specified Lat/Long
 function zoomTo(lat, long)
 {
     map.getView().setCenter(ol.proj.transform([long, lat], 'EPSG:4326', 'EPSG:3857'));
     map.getView().setZoom(18);
 }
+// Constructs KML
 function buildKml(){
     var xhttp = new XMLHttpRequest();
 
@@ -107,7 +109,7 @@ function buildKml(){
 function ab2str(buf) {
     return String.fromCharCode.apply(null, new Uint8Array(buf));
 }
-
+// Converts string to ByteArray
 function strToByteArray(str){
     var bytes = []; // char codes
     var bytesv2 = []; // char codes
@@ -162,7 +164,7 @@ function csvJSON(csv){
     }
 
     return json;
-    }
+}
 
 // DECRYPTION
 function decrypt(key) {
@@ -246,6 +248,7 @@ function add_data_points(data,color) {
     map.addLayer(vectorLayer); 
 }
 
+// Inits MAP
 function initialize_map() {
 
     defaultLayer = new ol.layer.Tile({
@@ -371,24 +374,26 @@ function add_map_point(props, color) {
     vectorSource.addFeature(feat);
     // data points added as features to one layer
 }
-var timer = null;
-function onSwitchChanged(){
+// var timer = null;
+// function onSwitchChanged(){
 
-    if($('#live-switch-check').val() == "on"){
-        //loadlink(); // This will run on page load
+//     if($('#live-switch-check').val() == "on"){
+//         //loadlink(); // This will run on page load
         
-        var timer = setInterval(function(){
-            if($('#live-switch-check').val() == "off")
-                clearInterval(this);
-            add_data_points() // this will run after every 5 seconds
-        }, 5000);
-        $('#live-switch-check').val('off');
-    }
-    else
-        $('#live-switch-check').val('on');
+//         var timer = setInterval(function(){
+//             if($('#live-switch-check').val() == "off")
+//                 clearInterval(this);
+//             add_data_points() // this will run after every 5 seconds
+//         }, 5000);
+//         $('#live-switch-check').val('off');
+//     }
+//     else
+//         $('#live-switch-check').val('on');
     
-}
+// }
 
+
+// Inits Javascript Components
 function initComponents(){
     // map theme dropdown
     $('#maptrigger').dropdown();
@@ -401,6 +406,7 @@ function initComponents(){
     });
 }
 
+// Sets MAP Layers according to selection
 function changeMapSource(val)
 {
     var selection = "";
@@ -436,7 +442,8 @@ function changeMapSource(val)
     }
 }
 
-function handleFileSelect()
+// Prompt FileBrowser Window to select file to upload
+function handleFileUpload()
 {               
     if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
         alert('The File APIs are not fully supported in this browser.');
@@ -462,8 +469,4 @@ function handleFileSelect()
         }
         fr.readAsText(file);
     }
-}
-
-function receivedText(fr) {
-    document.getElementById('editor').appendChild(document.createTextNode(fr.result));
 }

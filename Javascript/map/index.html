@@ -1,52 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>PMT Data (Beta 2.0)</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta charset="utf-8">
+  <title>PMT Data (Beta 2.0)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-<link type="text/css" rel="stylesheet" href="style.css"/>
-<script src="app.js"></script>
-<script
-  src="https://code.jquery.com/jquery-3.4.1.min.js"
-  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-  crossorigin="anonymous">
-</script>
+  <!-- App.js & style.css Include -->
+  <link type="text/css" rel="stylesheet" href="style.css"/>
+  <script src="app.js"></script>
+  <!-- JQuery Include -->
+  <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous">
+  </script>
 
-<script>
-  
-  do{
-      var key = prompt("Please enter your KEY","1234567890abcdef");
-    }
-  while(key == null || key == "");
-</script>
+  <script>
+    // PROMPT Client for Private Key before whole page loads
+    do{
+        var key = prompt("Please enter your KEY","1234567890abcdef");
+      }
+    while(key == null || key == "");
+  </script>
 
-<!-- ENCRYPTION -->
-<script type="text/javascript" src="./aes-js.js"></script>
-<script type="text/javascript" src="./sha256.min.js"></script>
-<!-- ##########-->
-<link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
-<script src="https://openlayers.org/en/v4.6.5/build/ol.js" type="text/javascript"></script>
-
- <!--Import Google Icon Font-->
- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-<!-- Compiled and minified CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
-<!-- Compiled and minified JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
- <!--Let browser know website is optimized for mobile-->
- <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- ENCRYPTION JS Includes-->
+  <script type="text/javascript" src="./aes-js.js"></script>
+  <script type="text/javascript" src="./sha256.min.js"></script>
+  <!-- ##########-->
+  <!-- OpenLayers CSS & JS Includes-->
+  <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+  <script src="https://openlayers.org/en/v4.6.5/build/ol.js" type="text/javascript"></script>
+  <!-- ##########-->
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- ##########-->
+  <!-- Compiled and minified CSS & JS for MATERIAL DESIGN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <!-- ##########-->
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
-<body onload="initialize_map();decrypt(key);"></body>
 
+<body onload="initialize_map();decrypt(key);"></body>
+  <!-- DOM Element used for Popup of cliecked data point -->
   <div id="popup" class="ol-popup">
     <a href="#" id="popup-closer" class="ol-popup-closer"></a>
     <div id="popup-content"></div>
   </div>
 
-  
+  <!-- NAVIGATION BAR -->
   <nav>
     <div class="nav-wrapper red darken-2">
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
@@ -69,6 +72,7 @@
     </div>
   </nav>
   
+  <!-- MOBILE SIDE BAR -->
   <ul id="nav-mobile" class="sidenav sidenav-fixed" style=" width: 350px;">
     <li class="logo"><img src="res/logo_v1_map.png" alt="Smiley face" height="" width="42"></li>
     <h3 class="header">PMT Data v2.0</h3>
@@ -89,22 +93,24 @@
 
   </ul>
 
+  <!-- MAP selectio dropdown -->
   <ul id='dropdown1' class='dropdown-content'>
     <li><a onclick="changeMapSource('usgs')">USGS</a></li>
     <li><a onclick="changeMapSource('toner')">TONER</a></li>
     <li><a onclick="changeMapSource('dark')">DARK</a></li>
     <li><a onclick="changeMapSource('default')">DEFAULT</a></li>
   </ul>
-
+  <!-- Download KML of datapoints on map -->
   <ul class="sidenav" id="mobile-demo">
-    
     <li onclick="buildKml();"><a>Download KML</a</li>
   </ul>
 
-  
+  <!-- MAP DOM Element -->
   <div id="map" style="width: 100%; z-index: 0" ></div>
 
-  <!-- Modal Structure -->
+  <!-- Modal Structure 
+      Modal Popover for upload of local files
+  -->
   <div id="upload-modal" class="modal">
     <div class="modal-content red-text">
       <h4>Upload PMT File</h4>
@@ -113,7 +119,7 @@
       <div id="editor"></div>
     </div>
     <div class="modal-footer">
-      <a onclick="handleFileSelect();" class="modal-close waves-effect">Upload</a>
+      <a onclick="handleFileUpload();" class="modal-close waves-effect">Upload</a>
       <a href="#" class="modal-close waves-effect waves-green btn-flat">Close</a>
     </div>
   </div>

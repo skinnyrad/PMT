@@ -10,12 +10,8 @@ import usocket
 import gc
 from machine import reset,Timer
 
-def handlerTimer(timer):
-    print("DNS_Lookup_Test: Timer Timeout")
-    #Resets the device in a manner similar to pushing the external RESET button.
-    reset()
-
-def request_dns_internet(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
+# Returns Tuple of information from URL
+def breakdown_url(url):
     try:
         proto, dummy, host, path = url.split("/", 3)
     except ValueError:
@@ -33,18 +29,34 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
         host, port = host.split(":", 1)
         port = int(port)
 
-    #DNS Resolving Test
-    timer = Timer(0)
-    timer.init(period=timeout, mode=Timer.ONE_SHOT,callback=handlerTimer)
+    return [proto, dummy, host, path, port]
 
+def handlerTimer(timer):
+    print("DNS_Lookup_Test: Timer Timeout")
+    #Resets the device in a manner similar to pushing the external RESET button.
+    reset()
+
+def request_dns_internet(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
+    # Get stuff from URL
+    proto, dummy, host, path, port = breakdown_url(url)
+    # No need to check if Host is IP. It's first request we
+    # do after connection
+    # TODO: Uncomment if we decide it's needed
+    # init harware timer
+    # timer = Timer(0)
+    # TODO: Uncomment this for solution
+    #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
     ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
+    #TODO: Uncomment this for solution
+    #timer.deinit()
     if ai != []:
-        print("DNS Test Lookup [OK]")
-        # deinit timer
-        timer.deinit()
+        print(str(ai))
+        print("DNS Lookup [OK]")
+    else:
+        print("DNS Lookup [Failed]")
+        return [584,None,None]
 
     ai = ai[0]
-    print(str(ai))
     s = usocket.socket(ai[0], ai[1], ai[2])
     try:
         s.connect(ai[-1])
@@ -87,7 +99,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
                     raise ValueError("Unsupported " + l)
             elif l.startswith(b"Location:") and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
-                print("Location [{}]".format(location))
+                #print("Location [{}]".format(location))
                 # close socket (should prevent ENOMEM error)
                 s.close()
                 del s
@@ -122,33 +134,26 @@ def splash_breaking_a(b_html):
     return a
 
 def request_splash_page(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
-    try:
-        proto, dummy, host, path = url.split("/", 3)
-    except ValueError:
-        proto, dummy, host = url.split("/", 2)
-        path = ""
-    if proto == "http:":
-        port = 80
-    elif proto == "https:":
-        import ussl
-        port = 443
-    else:
-        raise ValueError("Unsupported protocol: " + proto)
-
-    if ":" in host:
-        host, port = host.split(":", 1)
-        port = int(port)
+    # Get stuff from URL
+    proto, dummy, host, path, port = breakdown_url(url)
+    
+    # DNS Host or IPv4
+    is_ipv4 = False
+    if "." in host:
+        eight_bits = host.split(".")[0]
+        # check 8 bits is enought
+        if 0 < int(eight_bits) < 255:
+            is_ipv4 = True
 
     #DNS Resolving Test
-    timer = Timer(0)
-    timer.init(period=timeout, mode=Timer.ONE_SHOT,callback=handlerTimer)
-
-    ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
-    if ai != []:
-        print("DNS Redirect Lookup [OK]")
-        # deinit timer
-        timer.deinit()
-
+    if not is_ipv4:
+        ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
+        if ai != []:
+            print("DNS Lookup [OK]")
+        else:
+            print("DNS Lookup [Failed]")
+            return [584,None]
+        
     ai = ai[0]
     print(str(ai))
     s = usocket.socket(ai[0], ai[1], ai[2])
@@ -201,10 +206,9 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
                 gc.collect()
                 print("L2 Redirection")
                 # need to get the method from the redirection
-                return [status, None]
+                return test_dns_internet(location)
     except OSError as err:
-        # if not s:
-        #     s.close()
+        print(str(err))
         raise
     
     print("Status_Code [{}]".format(status))
@@ -227,26 +231,29 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
     return [status,page]
 
 def request(method, url, data=None, json=None, headers={}, stream=None, timeout=0.5):
-    try:
-        proto, dummy, host, path = url.split("/", 3)
-    except ValueError:
-        proto, dummy, host = url.split("/", 2)
-        path = ""
-    if proto == "http:":
-        port = 80
-    elif proto == "https:":
-        import ussl
-        port = 443
-    else:
-        raise ValueError("Unsupported protocol: " + proto)
-    if ":" in host:
-        host, port = host.split(":", 1)
-        port = int(port)
-    #default value
-    #redirected = False
-    ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
+
+    # Get stuff from URL
+    proto, dummy, host, path, port = breakdown_url(url)
+
+    # DNS Host or IPv4
+    is_ipv4 = False
+    if "." in host:
+        eight_bits = host.split(".")[0]
+        # check 8 bits is enought
+        if 0 < int(eight_bits) < 255:
+            is_ipv4 = True
+
+    #DNS Resolving Test
+    if not is_ipv4:
+        ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
+        if ai != []:
+            print("DNS Lookup [OK]")
+        else:
+            print("DNS Lookup [Failed]")
+            return [584,None]
+
     ai = ai[0]
-    print(str(ai))
+    
     s = usocket.socket(ai[0], ai[1], ai[2])
     # set timeout
     s.settimeout(timeout)
