@@ -154,6 +154,7 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
             print("DNS Lookup [Failed]")
             return [584,None]
     else:
+        print(host)
         print("DNS Lookup [Skipped]")
         
     ai = ai[0]
