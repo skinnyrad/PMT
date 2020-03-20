@@ -144,8 +144,13 @@ while True:
             remove(unsent)
 
     else:
-        # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
-        nets = station.scan()
+        try:
+            # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
+            nets = station.scan()
+        except RuntimeError as e:
+            #TODO: remove print
+            print("Warning: {0}".format(str(e)))
+            defaultLogger.warning(str(e)) 
         # get only open nets
         openNets = [n for n in nets if n[4] == 0]
 
