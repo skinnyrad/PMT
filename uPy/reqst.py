@@ -153,6 +153,8 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
         else:
             print("DNS Lookup [Failed]")
             return [584,None]
+    else:
+        print("DNS Lookup [Skipped]")
         
     ai = ai[0]
     print(str(ai))
