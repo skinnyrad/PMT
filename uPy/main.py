@@ -12,7 +12,7 @@
 
 from gps import GPS
 import logging
-from machine import SDCard, WDT
+from machine import SDCard
 from network import WLAN, STA_IF
 from os import remove
 from post import *
@@ -20,6 +20,7 @@ from utime import sleep
 from uos import mount
 from wifi_connect import *
 from gc import collect
+from gdt import GDT
 
 import encry 
 # import logging
@@ -35,10 +36,10 @@ ap_blacklist = [b'xfinitywifi', b'CableWiFi']
 ## Run python script within REPL 
 # execfile('<filename>')
 
-#setup core WDT for partial reset (temporary)
-#TODO change out with RWDT in esp32/panic.c
-collect()
-wdt = WDT(timeout=((10)*1000))
+# if the SD card does not mount reset
+# manually remove and reinsert SD card before reset to fix
+# TODO: "Figure this out Ben you big dummy" - Ben
+# sd_wdt = WDT(timeout=((5)*1000))
 
 # Create a station object to store our connection
 station = WLAN(STA_IF)
@@ -97,12 +98,11 @@ except KeyError as e:
 
 posted = False
 
-del wdt
-
 #setup core WDT for partial reset (temporary)
 #TODO change out with RWDT in esp32/panic.c
 collect()
-wdt = WDT(timeout=((20+gps_interval)*1000))
+# wdt = WDT(timeout=((5+gps_interval)*1000))
+gdt = GDT(5+gps_interval, station)
 
 while True:
     GPSdata = gps.get_RMCdata(defaultLogger)
@@ -170,7 +170,7 @@ while True:
                 while not station.isconnected():
                     sleep(0.5)
                 if station.isconnected():
-                    station_connected(station, post_url, wdt, wifiLogger)
+                    station_connected(station, post_url, gdt, wifiLogger)
                     sleep(1)
                 if station.isconnected():
                     break
@@ -181,5 +181,5 @@ while True:
     sleep(gps_interval)
 
     #reset WDT to avoid Software Reset 0xc
-    wdt.feed()
-    print("Fed WDT in FSM")
+    gdt.feed()
+    print("Fed GDT in FSM")
