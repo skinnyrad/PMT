@@ -105,7 +105,7 @@ collect()
 gdt = GDT(5+gps_interval, station)
 
 while True:
-    GPSdata = gps.get_RMCdata(defaultLogger)
+    [GPSdata, speed] = gps.get_RMCdata(defaultLogger)
     if not (GPSdata == {}):
         b = []
         lat_pre = float(GPSdata['latitude'])
@@ -148,36 +148,37 @@ while True:
                 collect()
             remove(unsent)
 
-    else:
-        try:
-            # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
-            nets = station.scan()
-        except RuntimeError as e:
-            #TODO: remove print
-            print("Warning: {0}".format(str(e)))
-            defaultLogger.warning(str(e)) 
-        # get only open nets
-        openNets = [n for n in nets if n[4] == 0]
-
-        for onet in openNets:
-            if onet[0] not in ap_blacklist:
-                # Try to connect to WiFi access point
-                apSSID = onet[0]
+    if (speed is not None) and (speed <= 10.00):
+        if not station.isconnected():
+            try:
+                # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
+                nets = station.scan()
+            except RuntimeError as e:
                 #TODO: remove print
-                print ("Connecting to {0} ...\n".format(str(onet[0],"utf-8")))
-                wifiLogger.info("Connecting to {0} ...\n".format(str(onet[0],"utf-8")))
-                station.connect(onet[0])
-                while not station.isconnected():
-                    sleep(0.5)
-                if station.isconnected():
-                    station_connected(station, post_url, gdt, wifiLogger)
-                    sleep(1)
-                if station.isconnected():
-                    break
-                else:
+                print("Warning: {0}".format(str(e)))
+                defaultLogger.warning(str(e)) 
+            # get only open nets
+            openNets = [n for n in nets if n[4] == 0]
+
+            for onet in openNets:
+                if onet[0] not in ap_blacklist:
+                    # Try to connect to WiFi access point
+                    apSSID = onet[0]
                     #TODO: remove print
-                    print("Unable to Connect")
-                    wifiLogger.warning("Unable to Connect")
+                    print ("Connecting to {0} ...\n".format(str(onet[0],"utf-8")))
+                    wifiLogger.info("Connecting to {0} ...\n".format(str(onet[0],"utf-8")))
+                    station.connect(onet[0])
+                    while not station.isconnected():
+                        sleep(0.5)
+                    if station.isconnected():
+                        station_connected(station, post_url, gdt, wifiLogger)
+                        sleep(1)
+                    if station.isconnected():
+                        break
+                    else:
+                        #TODO: remove print
+                        print("Unable to Connect")
+                        wifiLogger.warning("Unable to Connect")
     sleep(gps_interval)
 
     #reset WDT to avoid Software Reset 0xc

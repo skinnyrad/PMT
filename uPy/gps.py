@@ -27,6 +27,8 @@ class GPS():
         self.oldRXLength = 0
         self.currentRXLength = 0
 
+        self.speed = 0
+
         #make a dictionary for RMC data
         self.RMCdata = {}
         self.RMCfound = False
@@ -60,9 +62,9 @@ class GPS():
 
         # TODO: Let's revisit this...
         # #Speed and Course
-        print("Speed: {0}".format(data[7]))
         # self.RMCdata['speed'] = float(data[7])
         # self.RMCdata['course'] = float(data[8])
+        self.speed = float(data[7])
 
         #Date
         self.RMCdata['date'] = str(2000 + int(data[9][4:6])) + '-' + data[9][2:4] + '-' + data[9][0:2]
@@ -88,10 +90,9 @@ class GPS():
         self.oldRXLength = self.currentRXLength
         self.currentRXLength = self.uart.any()
 
-        # Don't print nothing
         if(self.currentRXLength == 0):
             self.RMCdata = {}
-            return self.RMCdata
+            return [self.RMCdata, None]
 
         else:
             data = self.uart.read(self.currentRXLength)
@@ -103,4 +104,4 @@ class GPS():
                 #TODO: remove print
                 print(e)
                 defaultLogger.warning(str(e))
-            return self.RMCdata
+            return [self.RMCdata, self.speed]
