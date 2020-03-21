@@ -52,7 +52,7 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
 
     elif status == 200:
         # should handle requests prior to redirection
-        return station_connected(station, host, wdt, wifiLogger)
+        return station_connected(station, host, gdt, wifiLogger)
 
     # Redirection
     elif location and 300 <= status <= 309:
