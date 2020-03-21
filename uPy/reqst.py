@@ -172,7 +172,7 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
         # Is IPv4
         print("DNS Lookup [Skipped]")
         # socket settings
-        ai = [(2,1,0,(host,port))]
+        ai = [2,1,0,(host,port)]
 
     print(str(ai))
     s = usocket.socket(ai[0], ai[1], ai[2])
@@ -279,7 +279,7 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         # Is IPv4
         print("DNS Lookup [Skipped]")
         # socket settings
-        ai = [(2,1,0,(host,port))]
+        ai = [2,1,0,(host,port)]
     
     s = usocket.socket(ai[0], ai[1], ai[2])
     # set timeout
