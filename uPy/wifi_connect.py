@@ -50,6 +50,13 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
         print("Internet Access [OK]")
         return True
 
+    # Redirection Location but Status Code is 200
+    elif status == 200 and location is not None:
+        # should handle requests prior to redirection
+        return station_connected(station, location, gdt, wifiLogger)
+
+    # Status Code 200 but not connected to internet yet
+    # Make another request to get redirection information
     elif status == 200:
         # should handle requests prior to redirection
         return station_connected(station, host, gdt, wifiLogger)

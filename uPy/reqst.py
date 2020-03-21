@@ -46,6 +46,8 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     # timer = Timer(0)
     # TODO: Uncomment this for solution
     #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
+    location = None
+
     ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
     #TODO: Uncomment this for solution
     #timer.deinit()
@@ -97,16 +99,15 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
             if l.startswith(b"Transfer-Encoding:"):
                 if b"chunked" in l:
                     raise ValueError("Unsupported " + l)
-            elif l.startswith(b"Location:") and not 200 <= status <= 299:
+            elif l.startswith(b"Location:") # and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
                 #print("Location [{}]".format(location))
                 # close socket (should prevent ENOMEM error)
-                s.close()
-                del s
-                gc.collect()
+                # s.close()
+                # del s
+                # gc.collect()
                 print("Redirection [{}]".format(location))
                 # need to get the method from the redirection
-                return [status,location,None]
     except (OSError, TypeError) as err:
         # if not s:
         #     s.close()
@@ -117,7 +118,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     s.close()
     del s
     gc.collect()
-    return [status,None,body.decode("utf-8")]
+    return [status, location, body.decode("utf-8")]
 
 def splash_breaking_a(b_html):
     # read all bytes from socket
