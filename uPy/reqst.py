@@ -225,7 +225,8 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
                 gc.collect()
                 print("L2 Redirection")
                 # need to get the method from the redirection
-                return test_dns_internet(location)
+                res = test_dns_internet(location)[0:1]
+                return [res[0], res[-1]]
     except OSError as err:
         print(str(err))
         raise
