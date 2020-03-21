@@ -13,6 +13,7 @@
 from network import WLAN
 from usocket import getaddrinfo
 from machine import Timer, reset
+from gc import collect
 from gdt import GDT
 import logging
 import reqst
@@ -85,6 +86,12 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
             #     if status == 200:
             #         return True
             # -----------------------------
+
+            print("Splashpage Not Broken Unless Implemented Above...")
+            print("Splashpage [Failed]")
+            del splashpage
+            collect()
+
             #TODO: When You know you broke the page and allow DATA SENDING
             # return True
             return False
