@@ -56,13 +56,13 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
 
     # Redirection
     elif location and 300 <= status <= 309:
-        wdt.feed()
+        gdt.feed()
         print("Fed WDT before requesting splash page")
 
-        [status,splashpage] = reqst.request_splash_page(location)
+        [status,splashpage] = reqst.get_splash_page(location)
         # splashpage received
 
-        wdt.feed()
+        gdt.feed()
         print("Fed WDT after splash page received")
 
         print(splashpage)
