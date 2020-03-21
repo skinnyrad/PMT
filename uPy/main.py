@@ -12,7 +12,7 @@
 
 from gps import GPS
 import logging
-from machine import SDCard, WDT
+from machine import SDCard
 from network import WLAN, STA_IF
 from os import remove
 from post import *
@@ -20,6 +20,7 @@ from utime import sleep
 from uos import mount
 from wifi_connect import *
 from gc import collect
+from gdt import GDT
 
 import encry 
 # import logging
@@ -34,6 +35,11 @@ ap_blacklist = [b'xfinitywifi', b'CableWiFi']
 
 ## Run python script within REPL 
 # execfile('<filename>')
+
+# if the SD card does not mount reset
+# manually remove and reinsert SD card before reset to fix
+# TODO: "Figure this out Ben you big dummy" - Ben
+# sd_wdt = WDT(timeout=((5)*1000))
 
 # Create a station object to store our connection
 station = WLAN(STA_IF)
@@ -86,7 +92,6 @@ try:
     post_url = pmt_config['post_url']
     gps_interval = pmt_config['gps_interval']
     enc_key = pmt_config['encryption_key']
-    operation_mode = pmt_config['operation_mode']
 except KeyError as e:
     print(e)
     raise
@@ -96,10 +101,11 @@ posted = False
 #setup core WDT for partial reset (temporary)
 #TODO change out with RWDT in esp32/panic.c
 collect()
-wdt = WDT(timeout=((20+gps_interval)*1000))
+# wdt = WDT(timeout=((5+gps_interval)*1000))
+gdt = GDT(5+gps_interval, station)
 
 while True:
-    GPSdata = gps.get_RMCdata(defaultLogger)
+    [GPSdata, speed] = gps.get_RMCdata(defaultLogger)
     if not (GPSdata == {}):
         b = []
         lat_pre = float(GPSdata['latitude'])
@@ -107,7 +113,7 @@ while True:
         d_post = {}
         b.append(GPSdata)
         if (float(GPSdata['latitude']) > lat_pre+0.00007 or float(GPSdata['latitude']) < lat_pre-0.00007) and (float(GPSdata['longitude']) > lon_pre+0.00007 or float(GPSdata['longitude']) < lon_pre-0.00007):
-            b.append(d)
+            b.append()
             lat_pre = float(GPSdata['latitude'])
             lon_pre = float(GPSdata['longitude'])
         else:
@@ -118,10 +124,6 @@ while True:
             data=','.join(list(v.values()))+','
         #TODO: remove print
         print(data)
-        with open(unsent, "w+") as file_ptr:
-            file_ptr.write(data)
-        with open(archive, "w+") as file_ptr:
-            file_ptr.write(data)
         archiveLogger.write(data)
         unsentLogger.write(data)
         defaultLogger.info(data)
@@ -131,25 +133,30 @@ while True:
         defaultLogger.info("No GPS data.")
         data = ""
 
-    if operation_mode == "operational":
-        if station.isconnected():
-            if data != "":
-                with open(unsent, "r") as file_ptr:
-                    rawData = file_ptr.read()
-                    enc_data = encry.encrypt(enc_key, rawData)
-                    posted = post_data(enc_data, post_url, defaultLogger)
+    if station.isconnected():
+        if data != "":
+            with open(unsent, "r") as file_ptr:
+                rawData = file_ptr.read()
+                enc_data = encry.encrypt(enc_key, rawData)
+                posted = post_data(enc_data, post_url, station, defaultLogger)
 
-                    msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(apSSID), posted)
-                    wifiLogger.write(msg)
+                msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(apSSID), posted)
+                wifiLogger.write(msg)
 
-                    del rawData
-                    del enc_data
-                    collect()
-                remove(unsent)
+                del rawData
+                del enc_data
+                collect()
+            remove(unsent)
 
-        else:
-            # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
-            nets = station.scan()
+    if (speed is not None) and (speed <= 10.00):
+        if not station.isconnected():
+            try:
+                # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
+                nets = station.scan()
+            except RuntimeError as e:
+                #TODO: remove print
+                print("Warning: {0}".format(str(e)))
+                defaultLogger.warning(str(e)) 
             # get only open nets
             openNets = [n for n in nets if n[4] == 0]
 
@@ -164,7 +171,7 @@ while True:
                     while not station.isconnected():
                         sleep(0.5)
                     if station.isconnected():
-                        station_connected(station, wifiLogger)
+                        station_connected(station, post_url, gdt, wifiLogger)
                         sleep(1)
                     if station.isconnected():
                         break
@@ -175,5 +182,5 @@ while True:
     sleep(gps_interval)
 
     #reset WDT to avoid Software Reset 0xc
-    wdt.feed()
-    print("Fed WDT")
+    gdt.feed()
+    print("Fed GDT in FSM")

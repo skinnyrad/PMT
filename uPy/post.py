@@ -23,7 +23,7 @@ def handlerTimer(timer):
     #Resets the device in a manner similar to pushing the external RESET button.
     reset()
 
-def post_data(post_data, post_url, logger: Logger) -> bool:
+def post_data(post_data, post_url, station, logger: Logger) -> bool:
     try:
         # init harware timer
         timer = Timer(0)
@@ -46,4 +46,15 @@ def post_data(post_data, post_url, logger: Logger) -> bool:
         #TODO: remove print
         print("Warning: {0}".format(str(e)))
         logger.warning(str(e))
+        if str(e) == "[Errno 113] EHOSTUNREACH":
+            """
+                station.active(False) seems to flush wifi module
+
+                board output:
+                    I (35596) wifi: flush txq
+                    I (35596) wifi: stop sw txq
+                    I (35596) wifi: lmac stop hw txq
+            """
+            station.active(False)
+            station.active(True)
         return False

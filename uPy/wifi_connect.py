@@ -13,6 +13,7 @@
 from network import WLAN
 from usocket import getaddrinfo
 from machine import Timer, reset
+from gdt import GDT
 import logging
 import reqst
 
@@ -30,21 +31,40 @@ def splash_breaking_a(b_html):
     print(a)
     return a
 
-def station_connected(station: WLAN, wifiLogger: Logger):
+def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger):
     #TODO: remove print
     print("Connected [Testing Access]")
     wifiLogger.info("Connected [Testing Access]")
 
+    gdt.feed()
+    print("Fed GDT before DNS testing")
+
     # test DNS -> GET Request and Handles Redirection
-    [status, location] = reqst.test_dns_internet("https://www.example.com")
+    [status, location, body] = reqst.test_dns_internet(host)
+
+    gdt.feed()
+    print("Fed GDT after DNS testing")
+
     # NO SPLASH PAGE
-    if status == 200:
+    if status == 200 and body == "OK":
+        print("Internet Access [OK]")
         return True
+
+    elif status == 200:
+        # should handle requests prior to redirection
+        return station_connected(station, host, gdt, wifiLogger)
 
     # Redirection
     elif location and 300 <= status <= 309:
-        [status,splashpage] = reqst.request_splash_page(location)
+        gdt.feed()
+        print("Fed WDT before requesting splash page")
+
+        [status,splashpage] = reqst.get_splash_page(location)
         # splashpage received
+
+        gdt.feed()
+        print("Fed WDT after splash page received")
+
         print(splashpage)
         if status == 200:
             print("Splashpage [OK]")
@@ -61,6 +81,32 @@ def station_connected(station: WLAN, wifiLogger: Logger):
             #TODO: When You know you broke the page and allow DATA SENDING
             # return True
             return False
+            
+        elif 500 <= status <= 599:
+            """
+                station.active(False) seems to flush wifi module
+
+                board output:
+                    I (35596) wifi: flush txq
+                    I (35596) wifi: stop sw txq
+                    I (35596) wifi: lmac stop hw txq
+            """
+            station.active(False)
+            station.active(True)
+            return False
         else:
             print("Splashpage [Failed]")
             return False
+
+    elif 500 <= status <= 599:
+        """
+            station.active(False) seems to flush wifi module
+
+            board output:
+                I (35596) wifi: flush txq
+                I (35596) wifi: stop sw txq
+                I (35596) wifi: lmac stop hw txq
+        """
+        station.active(False)
+        station.active(True)
+        return False
