@@ -1,0 +1,39 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP AZ2940
+D Positive 7A 35V Low Dropout Fast Response Linear Regulator, Fixed Output 3.3V, TO-220/TO-263
+K Voltage Regulator 7A Positive Fixed
+F https://www.analog.com/media/en/technical-documentation/data-sheets/158457a.pdf
+$ENDCMP
+#
+$CMP ESP32_Pico_D4
+D Generic connector, double row, 02x20, counter clockwise pin numbering scheme (similar to DIP packge numbering), script generated (kicad-library-utils/schlib/autogen/connector/)
+K connector
+F ~
+$ENDCMP
+#
+$CMP LT1584-3.38
+D Positive 7A 35V Low Dropout Fast Response Linear Regulator, Fixed Output 3.38V, TO-220/TO-263
+K Voltage Regulator 7A Positive Fixed
+F https://www.analog.com/media/en/technical-documentation/data-sheets/158457a.pdf
+$ENDCMP
+#
+$CMP LT1584-3.45
+D Positive 7A 35V Low Dropout Fast Response Linear Regulator, Fixed Output 3.45V, TO-220/TO-263
+K Voltage Regulator 7A Positive Fixed
+F https://www.analog.com/media/en/technical-documentation/data-sheets/158457a.pdf
+$ENDCMP
+#
+$CMP LT1584-3.6
+D Positive 7A 35V Low Dropout Fast Response Linear Regulator, Fixed Output 3.6V, TO-220/TO-263
+K Voltage Regulator 7A Positive Fixed
+F https://www.analog.com/media/en/technical-documentation/data-sheets/158457a.pdf
+$ENDCMP
+#
+$CMP Screw_Terminals
+D Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)
+K connector
+F ~
+$ENDCMP
+#
+#End Doc Library
