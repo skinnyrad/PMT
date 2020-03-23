@@ -1,4 +1,5 @@
 The following is a list of where the modified file resides/should be placed if it is not already
 
-modnetwork.c:
-/home/user/Documents/micropython/micropython/ports/esp32
+./rtcwatchdog
+	Location: copy directory to ~/Documents/micropython/pmtmodules/
+	Description: custom module enabling System Reset through Real Time Clock WDT
