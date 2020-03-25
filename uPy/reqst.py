@@ -99,7 +99,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
             if l.startswith(b"Transfer-Encoding:"):
                 if b"chunked" in l:
                     raise ValueError("Unsupported " + l)
-            elif l.startswith(b"Location:") # and not 200 <= status <= 299:
+            elif l.startswith(b"Location:"): # and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
                 #print("Location [{}]".format(location))
                 # close socket (should prevent ENOMEM error)
