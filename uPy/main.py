@@ -96,8 +96,6 @@ except KeyError as e:
     print(e)
     raise
 
-print(post_url)
-
 posted = False
 
 #setup core WDT for partial reset (temporary)
