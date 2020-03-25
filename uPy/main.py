@@ -12,12 +12,12 @@
 
 from gps import GPS
 import logging
-from machine import SDCard
+from machine import reset, SDCard
 from network import WLAN, STA_IF
 from os import remove
 from post import *
 from utime import sleep
-from uos import mount
+from uos import mount, umount
 from wifi_connect import *
 from gc import collect
 from gdt import GDT
@@ -47,8 +47,26 @@ station = WLAN(STA_IF)
 # activate station
 station.active(True)
 
+def sd_gdt_func(timer):
+    print("SD card did not mount correctly")
+    # TODO: add LED sigal from board to signify this
+    try:
+        umount("/sdcard")
+    except OSError as e:
+        # TODO: add LED signal from board to signify this
+        print("Reinsert SD Card in SD Card reader")
+        # TODO: remove sleep once LED signal is done
+        # sleep gives time to read comment before reseting the board
+        sleep(3)
+    reset()
+
 # mount SD card
+sd_gdt = GDT(2, station, func=sd_gdt_func)
 mount(SDCard(slot=3), "/sdcard")
+sd_gdt.deinit_timer()
+del sd_gdt
+collect()
+
 config_file = "/sdcard/pmt.conf"
 default = "/sdcard/pmt.log"
 wifi = "/sdcard/wifi.log"
