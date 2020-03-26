@@ -116,7 +116,7 @@ except KeyError as e:
 posted = False
 
 #setup core WDT for partial reset (temporary)
-#TODO change out with RWDT in esp32/panic.c
+#TODO: change out with RWDT in esp32/panic.c
 collect()
 # wdt = WDT(timeout=((5+gps_interval)*1000))
 gdt = GDT(5+gps_interval, station)

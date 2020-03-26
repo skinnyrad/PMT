@@ -46,6 +46,8 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     # timer = Timer(0)
     # TODO: Uncomment this for solution
     #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
+    location = None
+
     ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
     #TODO: Uncomment this for solution
     #timer.deinit()
@@ -97,27 +99,25 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
             if l.startswith(b"Transfer-Encoding:"):
                 if b"chunked" in l:
                     raise ValueError("Unsupported " + l)
-            elif l.startswith(b"Location:") and not 200 <= status <= 299:
+            elif l.startswith(b"Location:"): # and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
                 #print("Location [{}]".format(location))
                 # close socket (should prevent ENOMEM error)
-                s.close()
-                del s
-                gc.collect()
+                # s.close()
+                # del s
+                # gc.collect()
                 print("Redirection [{}]".format(location))
                 # need to get the method from the redirection
-                return [status,location,None]
-    except (OSError, TypeError) as err:
-        # if not s:
-        #     s.close()
-        raise
-    
+    except (OSError, TypeError) as e:
+        #TODO: remove print
+        print("Warning: {0}".format(str(e)))
+
     print("Status_Code [{}]".format(status))
     body = s.read()
     s.close()
     del s
     gc.collect()
-    return [status,None,body.decode("utf-8")]
+    return [status, location, body.decode("utf-8")]
 
 def splash_breaking_a(b_html):
     # read all bytes from socket
@@ -161,7 +161,7 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
         # Is IPv4
         print("DNS Lookup [Skipped]")
         # socket settings
-        ai = [(2,1,0,(host,port))]
+        ai = [2,1,0,(host,port)]
 
     print(str(ai))
     s = usocket.socket(ai[0], ai[1], ai[2])
@@ -214,7 +214,8 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
                 gc.collect()
                 print("L2 Redirection")
                 # need to get the method from the redirection
-                return test_dns_internet(location)
+                res = test_dns_internet(location)[0:1]
+                return [res[0], res[-1]]
     except OSError as err:
         print(str(err))
         raise
@@ -267,7 +268,7 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         # Is IPv4
         print("DNS Lookup [Skipped]")
         # socket settings
-        ai = [(2,1,0,(host,port))]
+        ai = [2,1,0,(host,port)]
     
     s = usocket.socket(ai[0], ai[1], ai[2])
     # set timeout
