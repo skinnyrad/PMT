@@ -89,7 +89,7 @@ with open(config_file, 'r') as fp:
     pmt_config = eval(fp.read())
 
 try:
-    post_url = "{0}/api/postEnc.php".format(pmt_config['post_url'] if pmt_config['post_url'][-1] != "/" else pmt_config['post_url'][:-1])
+    post_url = "{0}/api/post.php".format(pmt_config['post_url'] if pmt_config['post_url'][-1] != "/" else pmt_config['post_url'][:-1])
     gps_interval = pmt_config['gps_interval']
     enc_key = pmt_config['encryption_key']
 except KeyError as e:
