@@ -111,17 +111,6 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     except (OSError, TypeError) as e:
         #TODO: remove print
         print("Warning: {0}".format(str(e)))
-        logger.warning(str(e))
-        """
-            station.active(False) seems to flush wifi module
-
-            board output:
-                I (35596) wifi: flush txq
-                I (35596) wifi: stop sw txq
-                I (35596) wifi: lmac stop hw txq
-        """
-        station.active(False)
-        station.active(True)
 
     print("Status_Code [{}]".format(status))
     body = s.read()
