@@ -12,18 +12,17 @@
 
 from gps import GPS
 import logging
-from machine import SDCard
+from machine import reset, SDCard
 from network import WLAN, STA_IF
 from os import remove
 from post import *
 from utime import sleep
-from uos import mount
+from uos import mount, umount
 from wifi_connect import *
 from gc import collect
 from gdt import GDT
 
-import encry 
-# import logging
+# import encry
 
 ap_blacklist = [b'xfinitywifi', b'CableWiFi']
 
@@ -47,8 +46,26 @@ station = WLAN(STA_IF)
 # activate station
 station.active(True)
 
+def sd_gdt_func(timer):
+    print("SD card did not mount correctly")
+    # TODO: add LED sigal from board to signify this
+    try:
+        umount("/sdcard")
+    except OSError as e:
+        # TODO: add LED signal from board to signify this
+        print("Reinsert SD Card in SD Card reader")
+        # TODO: remove sleep once LED signal is done
+        # sleep gives time to read comment before reseting the board
+        sleep(3)
+    reset()
+
 # mount SD card
+sd_gdt = GDT(2, station, func=sd_gdt_func)
 mount(SDCard(slot=3), "/sdcard")
+sd_gdt.deinit_timer()
+del sd_gdt
+collect()
+
 config_file = "/sdcard/pmt.conf"
 default = "/sdcard/pmt.log"
 wifi = "/sdcard/wifi.log"
@@ -89,7 +106,7 @@ with open(config_file, 'r') as fp:
     pmt_config = eval(fp.read())
 
 try:
-    post_url = pmt_config['post_url']
+    post_url = "{0}/api/post.php".format(pmt_config['post_url'] if pmt_config['post_url'][-1] != "/" else pmt_config['post_url'][:-1])
     gps_interval = pmt_config['gps_interval']
     enc_key = pmt_config['encryption_key']
 except KeyError as e:
@@ -99,7 +116,7 @@ except KeyError as e:
 posted = False
 
 #setup core WDT for partial reset (temporary)
-#TODO change out with RWDT in esp32/panic.c
+#TODO: change out with RWDT in esp32/panic.c
 collect()
 # wdt = WDT(timeout=((5+gps_interval)*1000))
 gdt = GDT(5+gps_interval, station)
@@ -136,17 +153,18 @@ while True:
     if station.isconnected():
         if data != "":
             with open(unsent, "r") as file_ptr:
-                rawData = file_ptr.read()
-                enc_data = encry.encrypt(enc_key, rawData)
-                posted = post_data(enc_data, post_url, station, defaultLogger)
+                raw_data = file_ptr.read()
+                # enc_data = encry.encrypt(enc_key, rawData)
+                posted = post_data(raw_data, post_url, station, defaultLogger)
 
                 msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(apSSID), posted)
                 wifiLogger.write(msg)
 
-                del rawData
-                del enc_data
+                del raw_data
+                # del enc_data
                 collect()
-            remove(unsent)
+                if posted:
+                    remove(unsent)
 
     if (speed is not None) and (speed <= 10.00):
         if not station.isconnected():

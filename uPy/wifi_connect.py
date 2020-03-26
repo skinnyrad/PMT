@@ -13,6 +13,7 @@
 from network import WLAN
 from usocket import getaddrinfo
 from machine import Timer, reset
+from gc import collect
 from gdt import GDT
 import logging
 import reqst
@@ -50,6 +51,13 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
         print("Internet Access [OK]")
         return True
 
+    # Redirection Location but Status Code is 200
+    elif status == 200 and location is not None:
+        # should handle requests prior to redirection
+        return station_connected(station, location, gdt, wifiLogger)
+
+    # Status Code 200 but not connected to internet yet
+    # Make another request to get redirection information
     elif status == 200:
         # should handle requests prior to redirection
         return station_connected(station, host, gdt, wifiLogger)
@@ -57,13 +65,13 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
     # Redirection
     elif location and 300 <= status <= 309:
         gdt.feed()
-        print("Fed WDT before requesting splash page")
+        print("Fed GDT before requesting splash page")
 
         [status,splashpage] = reqst.get_splash_page(location)
         # splashpage received
 
         gdt.feed()
-        print("Fed WDT after splash page received")
+        print("Fed GDT after splash page received")
 
         print(splashpage)
         if status == 200:
@@ -78,6 +86,12 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
             #     if status == 200:
             #         return True
             # -----------------------------
+
+            print("Splashpage Not Broken Unless Implemented Above...")
+            print("Splashpage [Failed]")
+            del splashpage
+            collect()
+
             #TODO: When You know you broke the page and allow DATA SENDING
             # return True
             return False
@@ -110,3 +124,8 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
         station.active(False)
         station.active(True)
         return False
+
+    # any error code not caught above
+    else:
+            print("Splashpage [Failed]")
+            return False

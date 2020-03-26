@@ -1,5 +1,6 @@
-from machine import reset, SDCard, Timer
+from machine import SDCard, Timer
 from uos import umount
+from rtcwatchdog import start
 
 class GDT():
     timer = Timer(0)
@@ -44,4 +45,4 @@ class GDT():
     def timer_exp_func(self, timer):
         self.station.active(False)
         umount("/sdcard")
-        reset()
+        start(0)
