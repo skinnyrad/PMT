@@ -12,6 +12,12 @@ K connector
 F ~
 $ENDCMP
 #
+$CMP LED_RGB
+D RGB LED, red/green/blue/anode
+K LED RGB diode
+F ~
+$ENDCMP
+#
 $CMP LT1584-3.38
 D Positive 7A 35V Low Dropout Fast Response Linear Regulator, Fixed Output 3.38V, TO-220/TO-263
 K Voltage Regulator 7A Positive Fixed
