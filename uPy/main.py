@@ -163,7 +163,8 @@ while True:
                 del raw_data
                 # del enc_data
                 collect()
-            remove(unsent)
+                if posted:
+                    remove(unsent)
 
     if (speed is not None) and (speed <= 10.00):
         if not station.isconnected():
