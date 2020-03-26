@@ -22,8 +22,7 @@ from wifi_connect import *
 from gc import collect
 from gdt import GDT
 
-import encry 
-# import logging
+# import encry
 
 ap_blacklist = [b'xfinitywifi', b'CableWiFi']
 
@@ -136,15 +135,15 @@ while True:
     if station.isconnected():
         if data != "":
             with open(unsent, "r") as file_ptr:
-                rawData = file_ptr.read()
-                enc_data = encry.encrypt(enc_key, rawData)
-                posted = post_data(enc_data, post_url, station, defaultLogger)
+                raw_data = file_ptr.read()
+                # enc_data = encry.encrypt(enc_key, rawData)
+                posted = post_data(raw_data, post_url, station, defaultLogger)
 
                 msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(apSSID), posted)
                 wifiLogger.write(msg)
 
-                del rawData
-                del enc_data
+                del raw_data
+                # del enc_data
                 collect()
             remove(unsent)
 

@@ -62,7 +62,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
         s.connect(ai[-1])
         if proto == "https:":
             s = ussl.wrap_socket(s, server_hostname=host)
-        s.write(b"%s / HTTP/1.0\r\n" % (method))
+        s.write(b"%s /api/ HTTP/1.0\r\n" % (method))
         if not "Host" in headers:
             s.write(b"Host: %s\r\n" % host)
         # Iterate over keys to avoid tuple alloc
