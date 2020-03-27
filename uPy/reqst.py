@@ -64,7 +64,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
         s.connect(ai[-1])
         if proto == "https:":
             s = ussl.wrap_socket(s, server_hostname=host)
-        s.write(b"%s / HTTP/1.0\r\n" % (method))
+        s.write(b"%s /api/ HTTP/1.0\r\n" % (method))
         if not "Host" in headers:
             s.write(b"Host: %s\r\n" % host)
         # Iterate over keys to avoid tuple alloc
@@ -99,7 +99,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
             if l.startswith(b"Transfer-Encoding:"):
                 if b"chunked" in l:
                     raise ValueError("Unsupported " + l)
-            elif l.startswith(b"Location:") # and not 200 <= status <= 299:
+            elif l.startswith(b"Location:"): # and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
                 #print("Location [{}]".format(location))
                 # close socket (should prevent ENOMEM error)
@@ -111,17 +111,6 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     except (OSError, TypeError) as e:
         #TODO: remove print
         print("Warning: {0}".format(str(e)))
-        logger.warning(str(e))
-        """
-            station.active(False) seems to flush wifi module
-
-            board output:
-                I (35596) wifi: flush txq
-                I (35596) wifi: stop sw txq
-                I (35596) wifi: lmac stop hw txq
-        """
-        station.active(False)
-        station.active(True)
 
     print("Status_Code [{}]".format(status))
     body = s.read()

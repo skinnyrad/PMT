@@ -124,3 +124,8 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
         station.active(False)
         station.active(True)
         return False
+
+    # any error code not caught above
+    else:
+            print("Splashpage [Failed]")
+            return False

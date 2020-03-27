@@ -60,25 +60,25 @@ NoConn ~ 5950 3650
 $Comp
 L power:GND #PWR0103
 U 1 1 5E5A3187
-P 5950 3950
-F 0 "#PWR0103" H 5950 3700 50  0001 C CNN
-F 1 "GND" V 5955 3822 50  0000 R CNN
-F 2 "" H 5950 3950 50  0001 C CNN
-F 3 "" H 5950 3950 50  0001 C CNN
-	1    5950 3950
+P 5950 4250
+F 0 "#PWR0103" H 5950 4000 50  0001 C CNN
+F 1 "GND" V 5955 4122 50  0000 R CNN
+F 2 "" H 5950 4250 50  0001 C CNN
+F 3 "" H 5950 4250 50  0001 C CNN
+	1    5950 4250
 	0    1    1    0   
 $EndComp
 Text GLabel 5950 4050 0    50   Output ~ 0
-GPS_TX
-Text GLabel 5950 4150 0    50   Input ~ 0
 GPS_RX
-Text GLabel 5950 4250 0    50   Input ~ 0
+Text GLabel 5950 4150 0    50   Input ~ 0
+GPS_TX
+Text GLabel 5950 3950 0    50   Input ~ 0
 3.3V
 $Comp
-L PMT_PCB:AZ2940 U1
+L PMT_PCB:AZ2940 VReg1
 U 1 1 5E5AD978
 P 7700 2950
-F 0 "U1" H 7700 3192 50  0000 C CNN
+F 0 "VReg1" H 7700 3192 50  0000 C CNN
 F 1 "AZ2940" H 7700 3101 50  0000 C CNN
 F 2 "Package_TO_SOT_THT:TO-220-3_Vertical" H 7700 3200 50  0001 C CIN
 F 3 "https://www.analog.com/media/en/technical-documentation/data-sheets/158457a.pdf" H 7700 2950 50  0001 C CNN
@@ -188,20 +188,14 @@ NoConn ~ 5000 4200
 NoConn ~ 5000 4100
 NoConn ~ 5000 4000
 NoConn ~ 5000 3900
-NoConn ~ 5000 3800
-NoConn ~ 5000 3700
-NoConn ~ 5000 3600
-NoConn ~ 5000 3500
-NoConn ~ 5000 3400
-NoConn ~ 5000 3200
 NoConn ~ 5000 2800
 NoConn ~ 5000 2700
 NoConn ~ 5000 2400
 $Comp
-L PMT_PCB:ESP32_Pico_D4 ESP32_Pico_D41
+L PMT_PCB:ESP32_Pico_D4 ESP32_Pico_D4
 U 1 1 5E5F3168
 P 4600 3350
-F 0 "ESP32_Pico_D41" H 4575 4565 50  0000 C CNN
+F 0 "ESP32_Pico_D4" H 4575 4565 50  0000 C CNN
 F 1 "ESP32_Pico_D4" H 4575 4474 50  0000 C CNN
 F 2 "PMT_PCB:ESP32_Pico_D4" H 4700 3400 50  0001 C CNN
 F 3 "~" H 4700 3400 50  0001 C CNN
@@ -291,10 +285,10 @@ F 3 "~" H 7700 2350 50  0001 C CNN
 	1    7700 2350
 	1    0    0    -1  
 $EndComp
-Text GLabel 7500 2100 0    50   Output ~ 0
+Text GLabel 6400 1750 0    50   Output ~ 0
 3.7-12Vin
 Text GLabel 7500 2350 0    50   Output ~ 0
-3.7-12Vin
+Screw_Term_PWR
 $Comp
 L power:GND #PWR0107
 U 1 1 5E77260F
@@ -317,4 +311,123 @@ F 3 "" H 7500 2450 50  0001 C CNN
 	1    7500 2450
 	0    1    1    0   
 $EndComp
+Text GLabel 5000 3400 2    50   Output ~ 0
+Red1
+Text GLabel 5000 3500 2    50   Output ~ 0
+Green1
+Text GLabel 5000 3600 2    50   Output ~ 0
+Blue1
+Text GLabel 5000 3700 2    50   Output ~ 0
+Red2
+Text GLabel 5000 3800 2    50   Output ~ 0
+Green2
+Text GLabel 5000 3200 2    50   Output ~ 0
+Blue2
+Text GLabel 7850 4350 2    50   Input ~ 0
+Red1
+Text GLabel 7850 4150 2    50   Input ~ 0
+Green1
+Text GLabel 7850 3950 2    50   Input ~ 0
+Blue1
+Text GLabel 8600 3950 0    50   Input ~ 0
+Red2
+Text GLabel 8600 4150 0    50   Input ~ 0
+Green2
+Text GLabel 8600 4350 0    50   Input ~ 0
+Blue2
+$Comp
+L Device:R_US R1
+U 1 1 5E7B3BB6
+P 7300 4150
+F 0 "R1" V 7505 4150 50  0000 C CNN
+F 1 "100 ohm" V 7414 4150 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 7340 4140 50  0001 C CNN
+F 3 "~" H 7300 4150 50  0001 C CNN
+	1    7300 4150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R_US R2
+U 1 1 5E7B4702
+P 9150 4150
+F 0 "R2" V 8945 4150 50  0000 C CNN
+F 1 "100 ohm" V 9036 4150 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 9190 4140 50  0001 C CNN
+F 3 "~" H 9150 4150 50  0001 C CNN
+	1    9150 4150
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0111
+U 1 1 5E7B55E3
+P 7150 4150
+F 0 "#PWR0111" H 7150 3900 50  0001 C CNN
+F 1 "GND" V 7155 4022 50  0000 R CNN
+F 2 "" H 7150 4150 50  0001 C CNN
+F 3 "" H 7150 4150 50  0001 C CNN
+	1    7150 4150
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0112
+U 1 1 5E7B686F
+P 9300 4150
+F 0 "#PWR0112" H 9300 3900 50  0001 C CNN
+F 1 "GND" V 9305 4022 50  0000 R CNN
+F 2 "" H 9300 4150 50  0001 C CNN
+F 3 "" H 9300 4150 50  0001 C CNN
+	1    9300 4150
+	0    -1   -1   0   
+$EndComp
+Wire Notes Line
+	6850 3600 9700 3600
+Wire Notes Line
+	9700 3650 9700 4700
+Wire Notes Line
+	9700 4700 6850 4700
+Wire Notes Line
+	6850 4650 6900 4650
+Wire Notes Line
+	6900 4650 6900 4700
+Wire Notes Line
+	6850 3650 6850 4700
+$Comp
+L PMT_PCB:LED_RGB Debug1
+U 1 1 5E7DF5FA
+P 7650 4150
+F 0 "Debug1" H 7650 3683 50  0000 C CNN
+F 1 "LED_RGB" H 7650 3774 50  0000 C CNN
+F 2 "LED_THT:LED_D5.0mm-4_RGB" H 7650 4100 50  0001 C CNN
+F 3 "~" H 7650 4100 50  0001 C CNN
+	1    7650 4150
+	-1   0    0    1   
+$EndComp
+$Comp
+L PMT_PCB:LED_RGB Debug2
+U 1 1 5E7E1917
+P 8800 4150
+F 0 "Debug2" H 8800 4647 50  0000 C CNN
+F 1 "LED_RGB" H 8800 4556 50  0000 C CNN
+F 2 "LED_THT:LED_D5.0mm-4_RGB" H 8800 4100 50  0001 C CNN
+F 3 "~" H 8800 4100 50  0001 C CNN
+	1    8800 4150
+	1    0    0    -1  
+$EndComp
+$Comp
+L PMT_PCB:Slide_Switch U1
+U 1 1 5E7E0CE9
+P 6700 1650
+F 0 "U1" H 6700 1892 50  0000 C CNN
+F 1 "Slide_Switch" H 6700 1801 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 6700 1350 50  0001 C CNN
+F 3 "https://datasheets.maximintegrated.com/en/ds/DG417-DG419.pdf" H 6700 1650 50  0001 C CNN
+	1    6700 1650
+	1    0    0    -1  
+$EndComp
+Text GLabel 7000 1650 2    50   Input ~ 0
+LIPO_PWR
+Text GLabel 7000 1850 2    50   Input ~ 0
+Screw_Term_PWR
+Text GLabel 7500 2100 0    50   Output ~ 0
+LIPO_PWR
 $EndSCHEMATC

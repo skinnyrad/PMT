@@ -1,5 +1,11 @@
 EESchema-DOCLIB  Version 2.0
 #
+$CMP ADG419BR
+D Single SPDT Monolithic LC²MOS Analog Switch, 25Ohm Ron, SOIC-8
+K CMOS Analog Switch
+F https://www.analog.com/media/en/technical-documentation/data-sheets/ADG419.pdf
+$ENDCMP
+#
 $CMP AZ2940
 D Positive 7A 35V Low Dropout Fast Response Linear Regulator, Fixed Output 3.3V, TO-220/TO-263
 K Voltage Regulator 7A Positive Fixed
@@ -9,6 +15,12 @@ $ENDCMP
 $CMP ESP32_Pico_D4
 D Generic connector, double row, 02x20, counter clockwise pin numbering scheme (similar to DIP packge numbering), script generated (kicad-library-utils/schlib/autogen/connector/)
 K connector
+F ~
+$ENDCMP
+#
+$CMP LED_RGB
+D RGB LED, red/green/blue/anode
+K LED RGB diode
 F ~
 $ENDCMP
 #
@@ -30,10 +42,22 @@ K Voltage Regulator 7A Positive Fixed
 F https://www.analog.com/media/en/technical-documentation/data-sheets/158457a.pdf
 $ENDCMP
 #
+$CMP MAX319xSA
+D Single SPDT Monolithic CMOS Analog Switch, 20Ohm Ron, SOIC-8
+K CMOS Analog Switch
+F https://datasheets.maximintegrated.com/en/ds/MAX317-MAX319.pdf
+$ENDCMP
+#
 $CMP Screw_Terminals
 D Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)
 K connector
 F ~
+$ENDCMP
+#
+$CMP Slide_Switch
+D Single SPDT Monolithic CMOS Analog Switch, 20Ohm Ron, SOIC-8
+K CMOS Analog Switch
+F https://datasheets.maximintegrated.com/en/ds/DG417-DG419.pdf
 $ENDCMP
 #
 #End Doc Library
