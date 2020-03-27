@@ -285,10 +285,10 @@ F 3 "~" H 7700 2350 50  0001 C CNN
 	1    7700 2350
 	1    0    0    -1  
 $EndComp
-Text GLabel 7500 2100 0    50   Output ~ 0
+Text GLabel 6400 1750 0    50   Output ~ 0
 3.7-12Vin
 Text GLabel 7500 2350 0    50   Output ~ 0
-3.7-12Vin
+Screw_Term_PWR
 $Comp
 L power:GND #PWR0107
 U 1 1 5E77260F
@@ -413,4 +413,21 @@ F 3 "~" H 8800 4100 50  0001 C CNN
 	1    8800 4150
 	1    0    0    -1  
 $EndComp
+$Comp
+L PMT_PCB:Slide_Switch U1
+U 1 1 5E7E0CE9
+P 6700 1650
+F 0 "U1" H 6700 1892 50  0000 C CNN
+F 1 "Slide_Switch" H 6700 1801 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 6700 1350 50  0001 C CNN
+F 3 "https://datasheets.maximintegrated.com/en/ds/DG417-DG419.pdf" H 6700 1650 50  0001 C CNN
+	1    6700 1650
+	1    0    0    -1  
+$EndComp
+Text GLabel 7000 1650 2    50   Input ~ 0
+LIPO_PWR
+Text GLabel 7000 1850 2    50   Input ~ 0
+Screw_Term_PWR
+Text GLabel 7500 2100 0    50   Output ~ 0
+LIPO_PWR
 $EndSCHEMATC
