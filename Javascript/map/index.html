@@ -17,10 +17,10 @@
 
   <script>
     // PROMPT Client for Private Key before whole page loads
-    do{
-        var key = prompt("Please enter your KEY","1234567890abcdef");
-      }
-    while(key == null || key == "");
+    // do{
+    //     var key = prompt("Please enter your HOST","1234567890abcdef");
+    //   }
+    // while(key == null || key == "");
   </script>
 
   <!-- ENCRYPTION JS Includes-->
@@ -42,7 +42,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 
-<body onload="initialize_map();decrypt(key);"></body>
+<body onload="initialize_map();"></body>
   <!-- DOM Element used for Popup of cliecked data point -->
   <div id="popup" class="ol-popup">
     <a href="#" id="popup-closer" class="ol-popup-closer"></a>
@@ -65,6 +65,7 @@
           </div>
         </li> -->
         <a data-target="upload-modal" class="waves-effect waves-light btn modal-trigger red"><i class="material-icons left">cloud_upload</i>Upload</a>
+        <a data-target="configs-modal" class="waves-effect waves-light btn modal-trigger red"><i class="material-icons left">settings_applications</i>Configs</a>
         <a id='maptrigger' class='dropdown-trigger btn orange' data-target='dropdown1'>MAP LOOK</a>
         <!-- Modal Trigger -->
         <li onclick="buildKml();"><a>Download KML</a</li>
@@ -117,6 +118,17 @@
 
       <input id="upload-file" type="file" />
       <div id="editor"></div>
+    </div>
+    <div class="modal-footer">
+      <a onclick="handleFileUpload();" class="modal-close waves-effect">Upload</a>
+      <a href="#" class="modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+  </div>
+
+  <div id="configs-modal" class="modal">
+    <div class="modal-content red-text">
+      <h4>PMT Configs</h4>
+      <input id="host-config" type="text" placeholder="HOST" />
     </div>
     <div class="modal-footer">
       <a onclick="handleFileUpload();" class="modal-close waves-effect">Upload</a>
