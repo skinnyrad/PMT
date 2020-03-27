@@ -87,8 +87,8 @@ function buildKml(){
             
             // export kml to file
             var pom = document.createElement('a');
-            var today = new Date();
-            var date = today.getMonth()+'_'+today.getDate()+'_'+today.getFullYear();
+            var today = new Date(Date.now()).toLocaleString().split(',')[0].split('/');
+            var date = today[0]+'_'+today[1]+'_'+today[2];
             var filename = "PMT_Data_"+date+".kml";
             var pom = document.createElement('a');
             var bb = new Blob([outer_xml], {type: 'text/plain'});
@@ -104,7 +104,7 @@ function buildKml(){
 
         }   
     };
-    xhttp.open("GET", url, true);
+    xhttp.open("GET", host_conf, true);
     xhttp.send();
 }
 
