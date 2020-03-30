@@ -6,7 +6,9 @@ var mapLat = 34.724600;
 var mapLng = -86.639590;
 var mapDefaultZoom = 5;
 var latLonDecimals = 7;
-var url = "https://pmtlogger.000webhostapp.com/api/getJSON.php";
+
+// var url = "https://pmtlogger.000webhostapp.com/api/getJSON.php";
+var host_conf = "None";
 var url_encryption = "https://pmtlogger.000webhostapp.com/api/getEnc.php";
 var data = null;
 
@@ -85,8 +87,8 @@ function buildKml(){
             
             // export kml to file
             var pom = document.createElement('a');
-            var today = new Date();
-            var date = today.getMonth()+'_'+today.getDate()+'_'+today.getFullYear();
+            var today = new Date(Date.now()).toLocaleString().split(',')[0].split('/');
+            var date = today[0]+'_'+today[1]+'_'+today[2];
             var filename = "PMT_Data_"+date+".kml";
             var pom = document.createElement('a');
             var bb = new Blob([outer_xml], {type: 'text/plain'});
@@ -102,7 +104,7 @@ function buildKml(){
 
         }   
     };
-    xhttp.open("GET", url, true);
+    xhttp.open("GET", host_conf, true);
     xhttp.send();
 }
 
@@ -225,8 +227,10 @@ function add_data_points(data,color) {
     var id = 1;
     data.forEach(d => {
         $('#table-data').append("<tr onclick='zoomTo("+d.Latitude+","+d.Longitude+");'><td>"+id+"</td><td>"+
-            d.Latitude.toFixed(latLonDecimals)+"</td><td>"+
-            d.Longitude.toFixed(latLonDecimals)+"</td><td>"+
+            // d.Latitude.toFixed(latLonDecimals)+"</td><td>"+
+            // d.Longitude.toFixed(latLonDecimals)+"</td><td>"+
+            d.Latitude+"</td><td>"+
+            d.Longitude+"</td><td>"+
             d.Date+" "+
             d.Time+"</td></tr>");
         d.id = id++;
@@ -362,6 +366,24 @@ function initialize_map() {
     });
 
     initComponents();
+    var host = prompt("Please enter your HOST","https://pmtlogger.000webhostapp.com");
+    var url = host+"/api/getJSON.php";
+    host_conf = url;
+
+    // GET data points
+    $.ajax(
+        {
+            url: url,
+            //context: document.body
+            success: function(result) {
+                let inCSV = JSON.parse(result);
+                add_data_points(inCSV,'red');
+            },
+            error: function (err) {
+                console.alert(err);
+            }
+        });
+    
 }
 
 function add_map_point(props, color) {
