@@ -43,18 +43,18 @@ def parse_forms(html):
                 continue
             else:
                 state=1
-                print("Tag Detected: <")
+                #print("Tag Detected: <")
                 
         # STATE 1 in a tag
         if(state==1):
             # find postion of b'>' starting after b'<' 
             endpos=html.find('>', i, len(html)-1 )
-            print("endpos={0}".format(endpos))
+            #print("endpos={0}".format(endpos))
 
            # '>' not found in html. tag starts but does not terminate
             if(endpos==-1):
                 print("\tError: Tag does not terminate. No >")
-                print(html[i:len(html)]) #print out the rest of the html for debugging
+                #print(html[i:len(html)]) #print out the rest of the html for debugging
                 return []
             
             # complete tag found '<' and '>'
@@ -66,13 +66,14 @@ def parse_forms(html):
                 if(len(tag) < 1):
                     print("\tError: Zero length after split. Skipping")
                     continue
-
-                print("tag={0}".format(tag))
+                
+                #print out the complete tag < ... >
+                #print("tag={0}".format(tag))
                 tag=tag.lstrip('<')
                 tag=tag.rstrip('>')
                 tag=tag.strip() #beg end whitespace
                 
-                #time to split up elements withing the tag
+                #time to split up elements within the tag
                 #cannot just split by spaces values can have spaces between quotes
                 j=0
                 tag_state = 0
@@ -89,7 +90,7 @@ def parse_forms(html):
                         
                         tag=tag[j+1:len(tag)]
                         ret=ret.strip()
-                        print("type={0}\ttag={1}".format(ret,tag))
+                        #print("type={0}\ttag={1}".format(ret,tag))
                         tag_list.append(ret)
                         
                         tag_state=1
@@ -103,7 +104,7 @@ def parse_forms(html):
                         key = tag[0:j]
                         tag = tag[j+1:len(tag)]
                         key = key.strip(' ')
-                        print("key={0}\ttag={1}".format(key,tag))
+                        #print("key={0}\ttag={1}".format(key,tag))
                         tag_list.append(key)
                     
                         #key found, pull "value"
@@ -118,14 +119,13 @@ def parse_forms(html):
                         tag_list.append(val)
 
                 tag = tag_list
-                print("\tTag split:{0}\n".format(tag))
+                #print("\tTag split:{0}\n".format(tag))
                 
                 #From here on we have a list of the contents of a tag.
                 #Decide how to handle it
 
                 #form tag: beginning of form
                 if(tag[0]=="form"):
-                    print("\ttagType= form")
 
                     #Error: new form but old one not finished:
                     if(formOpen):
@@ -136,6 +136,7 @@ def parse_forms(html):
                     # Create a new dictionary to store info
                     tagDict = {}
                     tagDict["tag_type"]=tag[0]
+                    print("tagDict[tag_type]= form")
 
                     # insert key="value" pairs
                     i=1
@@ -154,7 +155,7 @@ def parse_forms(html):
 
                 # /form tag : end of form
                 elif(tag[0]=="/form"):
-                    print("\ttagType=/form")
+                    print("\ttag_type=/form")
                     formOpen=0 #close out the form
 
 
@@ -163,7 +164,7 @@ def parse_forms(html):
                     # Create a new dictionary to store info
                     tagDict={}
                     tagDict["tag_type"]=tag[0]
-                    print("\ttagDict[\"type\"]={0}".format(tag[0]))
+                    print("\ttagDict[\"tag_type\"]={0}".format(tag[0]))
 
                     # insert key="value" pairs
                     i=1
