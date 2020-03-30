@@ -14,10 +14,10 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L Connector_Generic:Conn_01x08 Accelerometer
+L Connector_Generic:Conn_01x08 Accelerometer1
 U 1 1 5E5861BF
 P 6150 3350
-F 0 "Accelerometer" H 6230 3342 50  0000 L CNN
+F 0 "Accelerometer1" H 6230 3342 50  0000 L CNN
 F 1 "Conn_01x08" H 6230 3251 50  0000 L CNN
 F 2 "PMT_PCB:Accelerometer_Breakout" H 6150 3350 50  0001 C CNN
 F 3 "~" H 6150 3350 50  0001 C CNN
@@ -75,10 +75,10 @@ GPS_TX
 Text GLabel 5950 3950 0    50   Input ~ 0
 3.3V
 $Comp
-L PMT_PCB:AZ2940 VReg
+L PMT_PCB:AZ2940 VReg1
 U 1 1 5E5AD978
 P 7700 2950
-F 0 "VReg" H 7700 3192 50  0000 C CNN
+F 0 "VReg1" H 7700 3192 50  0000 C CNN
 F 1 "AZ2940" H 7700 3101 50  0000 C CNN
 F 2 "Package_TO_SOT_THT:TO-220-3_Vertical" H 7700 3200 50  0001 C CIN
 F 3 "https://www.analog.com/media/en/technical-documentation/data-sheets/158457a.pdf" H 7700 2950 50  0001 C CNN
@@ -203,10 +203,10 @@ F 3 "~" H 4700 3400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector_Generic:Conn_01x04 GPS
+L Connector_Generic:Conn_01x04 GPS1
 U 1 1 5E5FA209
 P 6150 4050
-F 0 "GPS" H 6230 4042 50  0000 L CNN
+F 0 "GPS1" H 6230 4042 50  0000 L CNN
 F 1 "Conn_01x04" H 6230 3951 50  0000 L CNN
 F 2 "PMT_PCB:GPS" H 6150 4050 50  0001 C CNN
 F 3 "~" H 6150 4050 50  0001 C CNN
@@ -231,10 +231,10 @@ $EndComp
 Text GLabel 7050 2950 0    50   Input ~ 0
 3.7-12Vin
 $Comp
-L Connector_Generic:Conn_01x07 SD_Card
+L Connector_Generic:Conn_01x07 SD_Card1
 U 1 1 5E57A931
 P 6150 2400
-F 0 "SD_Card" H 6230 2442 50  0000 L CNN
+F 0 "SD_Card1" H 6230 2442 50  0000 L CNN
 F 1 "Conn_01x07" H 6230 2351 50  0000 L CNN
 F 2 "PMT_PCB:SD_Card_Breakout" H 6150 2400 50  0001 C CNN
 F 3 "~" H 6150 2400 50  0001 C CNN
@@ -264,10 +264,10 @@ SD_DI
 Text GLabel 5950 2100 0    50   Input ~ 0
 SD_CS
 $Comp
-L Connector_Generic:Conn_01x02 LIPO_BAT
+L Connector_Generic:Conn_01x02 LIPO_BAT1
 U 1 1 5E770859
 P 7700 2100
-F 0 "LIPO_BAT" H 7780 2092 50  0000 L CNN
+F 0 "LIPO_BAT1" H 7780 2092 50  0000 L CNN
 F 1 "Conn_01x02" H 7780 2001 50  0000 L CNN
 F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 7700 2100 50  0001 C CNN
 F 3 "~" H 7700 2100 50  0001 C CNN
@@ -285,10 +285,10 @@ F 3 "~" H 7700 2350 50  0001 C CNN
 	1    7700 2350
 	1    0    0    -1  
 $EndComp
-Text GLabel 7500 2100 0    50   Output ~ 0
+Text GLabel 6400 1750 0    50   Output ~ 0
 3.7-12Vin
 Text GLabel 7500 2350 0    50   Output ~ 0
-3.7-12Vin
+Screw_Term_PWR
 $Comp
 L power:GND #PWR0107
 U 1 1 5E77260F
@@ -413,4 +413,21 @@ F 3 "~" H 8800 4100 50  0001 C CNN
 	1    8800 4150
 	1    0    0    -1  
 $EndComp
+$Comp
+L PMT_PCB:Slide_Switch U?
+U 1 1 5E7E0CE9
+P 6700 1650
+F 0 "U?" H 6700 1892 50  0000 C CNN
+F 1 "Slide_Switch" H 6700 1801 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 6700 1350 50  0001 C CNN
+F 3 "https://datasheets.maximintegrated.com/en/ds/DG417-DG419.pdf" H 6700 1650 50  0001 C CNN
+	1    6700 1650
+	1    0    0    -1  
+$EndComp
+Text GLabel 7000 1650 2    50   Input ~ 0
+LIPO_PWR
+Text GLabel 7000 1850 2    50   Input ~ 0
+Screw_Term_PWR
+Text GLabel 7500 2100 0    50   Output ~ 0
+LIPO_PWR
 $EndSCHEMATC
