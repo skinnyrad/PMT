@@ -120,7 +120,6 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     return [status, location, body.decode("utf-8")]
 
 
-
 def request_splash_page(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
     # Get stuff from URL
     proto, dummy, host, path, port = breakdown_url(url)
