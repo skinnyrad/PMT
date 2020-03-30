@@ -12,7 +12,14 @@
 #   Structure of return value:
 #       return value will be a list
 
-def parse_forms(html):
+def get_all_tags(html):
+    tags = []
+    
+
+
+
+
+def legacy_parse_forms(html):
     currentForm = -1
     forms = []
     formOpen = 0 #indicates if <form ...> seen but </form> not seen yet

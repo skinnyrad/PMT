@@ -82,7 +82,7 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
             print("Splashpage Breaking...")
 
             # break with form resubmission
-            forms = parse_forms(splashpage)
+            forms = legacy_parse_forms(splashpage)
             collect()
             print(forms)
 
