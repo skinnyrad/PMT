@@ -74,6 +74,7 @@ unsent = "/sdcard/buffer.log"
 blacklist = "/sdcard/blacklist.log"
 current_ap = "/sdcard/SSID.log"
 
+# create file for initial read
 with open(blacklist, "a+"):
     pass
 
@@ -215,6 +216,10 @@ while True:
                             break
     elif (speed is not None) and (speed > 10.00):
         remove(blacklist)
+
+        # re-create file for initial read
+        with open(blacklist, "a+"):
+            pass
 
     sleep(gps_interval)
 
