@@ -1,9 +1,19 @@
-# uRequest extension
-# + Socket timeout
-# + HTTP Redirection
-# + Tag Parsing
-# David Tougaw & Ben Compton
-
+# ---------------------------------------
+#  _____  __  __ _______        __   ___  
+# |  __ \|  \/  |__   __|      /_ | / _ \ 
+# | |__) | \  / |  | |    __   _| || | | |
+# |  ___/| |\/| |  | |    \ \ / / || | | |
+# | |    | |  | |  | |     \ V /| || |_| |
+# |_|    |_|  |_|  |_|      \_/ |_(_)___/ 
+# ----------------------------------------
+#  Version 1.0
+#  microPython Firmware esp32spiram-idf3-20191220-v1.12
+#  Filename : main.py
+#
+#  uRequest extension
+#  + Socket timeout
+#  + HTTP Redirection
+#  + Tag Parsing
 
 import usocket
 # garbage collector

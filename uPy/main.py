@@ -24,7 +24,7 @@ from gdt import GDT
 
 # import encry
 
-ap_blacklist = [b'xfinitywifi', b'CableWiFi']
+ap_blacklist = ["xfinitywifi", "CableWiFi"]
 
 # HELPFUL 
 
@@ -71,7 +71,13 @@ default = "/sdcard/pmt.log"
 wifi = "/sdcard/wifi.log"
 archive = "/sdcard/data.log"
 unsent = "/sdcard/buffer.log"
+blacklist = "/sdcard/blacklist.log"
+current_ap = "/sdcard/SSID.log"
 unsent_buffer_ptr = "/sdcard/buffer_pointer.log"
+
+# create file for initial read
+with open(blacklist, "a+"):
+    pass
 
 defaultLogger = logging.getLogger("Default_Logger", default)
 defaultLogger.setLevel(logging.DEBUG)
@@ -84,6 +90,12 @@ archiveLogger.setLevel(logging.DEBUG)
 
 unsentLogger = logging.getLogger("Unsent", unsent)
 unsentLogger.setLevel(logging.DEBUG)
+
+blacklistLogger = logging.getLogger("Blacklist", blacklist)
+blacklistLogger.setLevel(logging.DEBUG)
+
+apLogger = logging.getLogger("Current_SSID", current_ap)
+apLogger.setLevel(logging.DEBUG)
 
 pointerLogger = logging.getLogger("BufferPointer", unsent_buffer_ptr)
 pointerLogger.setLevel(logging.DEBUG)
@@ -126,7 +138,7 @@ posted = False
 #TODO: change out with RWDT in esp32/panic.c
 collect()
 # wdt = WDT(timeout=((5+gps_interval)*1000))
-gdt = GDT(5+gps_interval, station)
+gdt = GDT(5+gps_interval, station, logger=blacklistLogger)
 
 while True:
     [GPSdata, speed] = gps.get_RMCdata(defaultLogger)
@@ -197,6 +209,11 @@ while True:
             del data_points
             collect()
 
+    with open(blacklist, 'r') as fp:
+        ap_list = fp.read()
+        ap_list = ap_list.split("\n")
+        ap_blacklist = ap_blacklist + list(set(ap_list[:-1]) - set(ap_blacklist))
+
     if (speed is not None) and (speed <= 10.00):
         if not station.isconnected():
             try:
@@ -210,9 +227,10 @@ while True:
             openNets = [n for n in nets if n[4] == 0]
 
             for onet in openNets:
-                if onet[0] not in ap_blacklist:
+                if onet[0].decode("utf-8") not in ap_blacklist:
                     # Try to connect to WiFi access point
                     apSSID = onet[0]
+                    apLogger.overwrite(apSSID.decode("utf-8"))
                     #TODO: remove print
                     print ("Connecting to {0} ...\n".format(str(onet[0],"utf-8")))
                     wifiLogger.info("Connecting to {0} ...\n".format(str(onet[0],"utf-8")))
@@ -220,14 +238,20 @@ while True:
                     while not station.isconnected():
                         sleep(0.5)
                     if station.isconnected():
-                        station_connected(station, post_url, gdt, wifiLogger)
-                        sleep(1)
-                    if station.isconnected():
-                        break
-                    else:
-                        #TODO: remove print
-                        print("Unable to Connect")
-                        wifiLogger.warning("Unable to Connect")
+                        connected = station_connected(station, post_url, gdt, wifiLogger)
+                        if not connected:
+                            blacklistLogger.write_line(apSSID.decode("utf-8"))
+                            #TODO: remove print
+                            print("Unable to Connect")
+                            wifiLogger.warning("Unable to Connect")
+                            break
+    elif (speed is not None) and (speed > 10.00):
+        remove(blacklist)
+
+        # re-create file for initial read
+        with open(blacklist, "a+"):
+            pass
+
     sleep(gps_interval)
 
     #reset WDT to avoid Software Reset 0xc
