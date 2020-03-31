@@ -129,11 +129,11 @@ def get_forms(html):
                 print("tagDict[tag_type]= form")
 
                 # insert key="value" pairs
-                i=1
+                j=1
                 while(i<len(tag)):
-                    key=tag[i]
-                    val=tag[i+1]
-                    i+=2
+                    key=tag[j]
+                    val=tag[j+1]
+                    j+=2
                     tagDict[key] = val
                     print("\ttagDict[{0}]={1}".format(key,val))
                 
@@ -157,11 +157,11 @@ def get_forms(html):
                 print("\ttagDict[\"tag_type\"]={0}".format(tag[0]))
 
                 # insert key="value" pairs
-                i=1
-                while(i<len(tag)):
-                    key=tag[i]
-                    val=tag[i+1]
-                    i+=2
+                j=1
+                while(j<len(tag)):
+                    key=tag[j]
+                    val=tag[j+1]
+                    j=2
                     tagDict[key]=val
                     print("\ttagDict[\"{0}\"]={1}".format(key,val))
                 
