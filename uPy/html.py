@@ -1,22 +1,26 @@
-# Simple HTML parser for PMT to use
-# Curran Hyde
+# ---------------------------------------
+#  _____  __  __ _______        __   ___  
+# |  __ \|  \/  |__   __|      /_ | / _ \ 
+# | |__) | \  / |  | |    __   _| || | | |
+# |  ___/| |\/| |  | |    \ \ / / || | | |
+# | |    | |  | |  | |     \ V /| || |_| |
+# |_|    |_|  |_|  |_|      \_/ |_(_)___/ 
+# ----------------------------------------
 #
 #   Returns a list of dictionaries. Each dictionary is a form:
 #       
-#       Pick a form by indexing into the list. Each form is a dictionary.
+#   Pick a form by indexing into the list. Each form is a dictionary.
 #      
-#       Dictionary key value pairs are keys and values within that tag line:
-#            ex from html: name="formname" method="POST"
-#            becomes:   dict["name"] -> "formname"
-#                       dict["method"] -> "POST"
-#   Structure of return value:
-#       return value will be a list
+#   Dictionary key value pairs are keys and values within that tag line:
+#        ex from html: name="formname" method="POST"
+#        becomes:   dict["name"] -> "formname"
+#                   dict["method"] -> "POST"
 
 def get_forms(html):
     # NEEDS TESTING
     currentForm = -1
     forms = []
-    formOpen = 0 #indicates if <form ...> seen but </form> not seen yet
+    formOpen = False #indicates if <form ...> seen but </form> not seen yet
 
     #int to str
     html = html.decode('utf-8')
@@ -169,8 +173,11 @@ def get_forms(html):
                         form["inside"]=inside_list   #put back
                         forms[currentForm]=form      #put back
             
-            # get next form
-            i = html.find('<form', 0, len(html)-1)
+            #end of this tag, what to get next?
+            if formOpen: # this form has not closed yet
+                i = html.find('<', i, len(html)-1)
+            else: #end of form, look for next one
+                i = html.find('<form', i, len(html)-1)
 
     return forms
 
