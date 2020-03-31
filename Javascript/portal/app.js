@@ -7,8 +7,11 @@ var mapLng = -86.639590;
 var mapDefaultZoom = 5;
 var latLonDecimals = 7;
 
+var GPS_INTERVAL = 10;
+
 // var url = "https://pmtlogger.000webhostapp.com/api/getJSON.php";
 var host_conf = "None";
+var host_json_path = "/api/getJSON.php";
 var url_encryption = "https://pmtlogger.000webhostapp.com/api/getEnc.php";
 var data = null;
 
@@ -252,7 +255,7 @@ function add_data_points(data,color) {
     map.addLayer(vectorLayer); 
 }
 
-// Inits MAP
+// Inits MAP and get points
 function initialize_map() {
 
     defaultLayer = new ol.layer.Tile({
@@ -366,24 +369,74 @@ function initialize_map() {
     });
 
     initComponents();
-    var host = prompt("Please enter your HOST","https://pmtlogger.000webhostapp.com");
-    var url = host+"/api/getJSON.php";
-    host_conf = url;
 
-    // GET data points
-    $.ajax(
-        {
-            url: url,
-            //context: document.body
-            success: function(result) {
-                let inCSV = JSON.parse(result);
-                add_data_points(inCSV,'red');
-            },
-            error: function (err) {
-                console.alert(err);
-            }
-        });
-    
+    //var host = prompt("Please enter your HOST","https://pmtlogger.000webhostapp.com");
+    // read configs
+    if(localStorage.getItem('host') != null)
+    {
+        var url = localStorage.getItem('host')+"/api/getJSON.php";
+        host_conf = url;
+
+        // GET data points
+        M.toast({html: 'Loading...', classes: 'rounded red'});
+        $.ajax(
+            {
+                url: url,
+                //context: document.body
+                success: function(result) {
+                    let inCSV = JSON.parse(result);
+                    add_data_points(inCSV,'red');
+                },
+                error: function (err) {
+                    M.toast({html: 'Error! Check Configs', classes: 'rounded red'});
+                }
+            });
+    }
+    else
+        M.toast({html: 'Error! Check Configs', classes: 'rounded red'});
+}
+
+function saveConfigs(){
+    // HOST
+    let c_host= $('#host-config')[0].value;
+    localStorage.setItem("host", c_host);
+    M.toast({html: 'Saved!', classes: 'rounded green'});
+    $('#configs-modal').modal('close');
+    // reload page to set configs
+    if(localStorage.getItem('reload')=='true')
+        location.reload();
+}
+
+function loadConfigs (){
+    $('#host-config')[0].value = localStorage.getItem('host');
+    localStorage.setItem("reload", true);
+}
+function generateConfFile(){
+    let hst = $('#host-config')[0].value;
+    if(hst!==null && hst!=="")
+    {
+        let pmt_conf = {"host":hst,"gps_interval":GPS_INTERVAL};
+        let text_json = JSON.stringify(pmt_conf, null, "\t"); // stringify with tabs inserted at each level
+
+        // export conf to file
+        var pom = document.createElement('a');
+        var filename = "pmt.conf";
+        var pom = document.createElement('a');
+        var bb = new Blob([text_json], {type: 'text/plain'});
+
+        pom.setAttribute('href', window.URL.createObjectURL(bb));
+        pom.setAttribute('download', filename);
+
+        pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
+        pom.draggable = true; 
+        pom.classList.add('dragout');
+        pom.click();
+
+        
+        M.toast({html: 'pmt.conf Generated!', classes: 'rounded green'});
+    }
+    else
+        M.toast({html: 'HOST not set!', classes: 'rounded red'});
 }
 
 function add_map_point(props, color) {
@@ -425,6 +478,12 @@ function initComponents(){
     });
     $(document).ready(function(){
         $('.modal').modal();
+        
+        // setup stuf
+        localStorage.setItem("reload", false);
+        // prompt user modal (feel in data)
+        if(localStorage.getItem('host')== "")
+            $('#configs-modal').modal('open');
     });
 }
 

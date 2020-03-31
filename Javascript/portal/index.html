@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>PMT Data (Beta 2.0)</title>
+  <title>PMT Portal</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
   <!-- App.js & style.css Include -->
@@ -66,7 +66,7 @@
         </li> -->
         <a class="waves-effect waves-light btn red" href="javascript:buildKml();"><i class="material-icons left">get_app</i>Download KML</a>
         <a data-target="upload-modal" class="waves-effect waves-light btn modal-trigger red"><i class="material-icons left">cloud_upload</i>Upload</a>
-        <a data-target="configs-modal" class="waves-effect waves-light btn modal-trigger red"><i class="material-icons left">settings_applications</i>Configs</a>
+        <a data-target="configs-modal" class="waves-effect waves-light btn modal-trigger red" onclick="loadConfigs();"><i class="material-icons left">settings_applications</i>Configs</a>
         <a id='maptrigger' class='dropdown-trigger btn orange' data-target='dropdown1'>MAP LOOK</a>
         <!-- Modal Trigger -->
         <!-- <li onclick="buildKml();"><a>Download KML</a</li> -->
@@ -77,7 +77,7 @@
   <!-- MOBILE SIDE BAR -->
   <ul id="nav-mobile" class="sidenav sidenav-fixed" style=" width: 350px;">
     <li class="logo"><img src="res/logo_v1_map.png" alt="Smiley face" height="" width="42"></li>
-    <h3 class="header">PMT Data v2.0</h3>
+    <h3 class="header">PMT Portal</h3>
 
     <table class="centered striped red white-text">
       <thead>
@@ -129,12 +129,20 @@
   <div id="configs-modal" class="modal">
     <div class="modal-content red-text">
       <h4>PMT Configs</h4>
-      <input id="host-config" type="text" placeholder="HOST" />
-    </div>
-    <div class="modal-footer">
-      <a onclick="handleFileUpload();" class="modal-close waves-effect">Upload</a>
-      <a href="#" class="modal-close waves-effect waves-green btn-flat">Close</a>
-    </div>
+      <form class="col s12" onsubmit="saveConfigs();">
+        <div class="row">
+          <div class="input-field col s12">
+            <label for="host-config">HOST</label>
+            <input id="host-config" value="javascript:localStorage.getItem('host')" type="text" class="validate" autocomplete="off" required="" aria-required="true" pattern='^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?'/>
+            <span class="helper-text" data-error="Wrong" data-success="Looks Good! Remember to SAVE.">Don't forget HTTP or HTTPS</span>
+          </div>
+        </div>  
+        <div class="modal-footer">
+          <a class="btn green left waves-effect" onclick="generateConfFile();"><i class="material-icons left">get_app</i>Generate pmt.conf</a>
+          <button type="submit" class="btn red waves-effect">Save</button>
+          <a href="#" class="modal-close waves-effect waves-green btn-flat">Close</a>
+        </div>
+      </form> 
   </div>
     
 </body>
