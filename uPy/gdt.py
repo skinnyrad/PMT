@@ -1,6 +1,6 @@
-from machine import reset, SDCard, Timer
+from machine import SDCard, Timer
 from uos import umount
-# from rtcwatchdog import start
+from rtcwatchdog import start
 
 class GDT():
     timer = Timer(0)
@@ -53,5 +53,4 @@ class GDT():
             with open("/sdcard/SSID.log", "r") as fp:
                 self.logger.write_line(fp.read())
         umount("/sdcard")
-        # start(0)
-        reset()
+        start(0)
