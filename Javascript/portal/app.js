@@ -374,7 +374,7 @@ function initialize_map() {
     // read configs
     if(localStorage.getItem('host') != null)
     {
-        var url = localStorage.getItem('host')+"/api/getJSON.php";
+        var url = localStorage.getItem('host')+host_json_path;
         host_conf = url;
 
         // GET data points
