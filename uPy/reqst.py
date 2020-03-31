@@ -1,9 +1,19 @@
-# uRequest extension
-# + Socket timeout
-# + HTTP Redirection
-# + Tag Parsing
-# David Tougaw & Ben Compton
-
+# ---------------------------------------
+#  _____  __  __ _______        __   ___  
+# |  __ \|  \/  |__   __|      /_ | / _ \ 
+# | |__) | \  / |  | |    __   _| || | | |
+# |  ___/| |\/| |  | |    \ \ / / || | | |
+# | |    | |  | |  | |     \ V /| || |_| |
+# |_|    |_|  |_|  |_|      \_/ |_(_)___/ 
+# ----------------------------------------
+#  Version 1.0
+#  microPython Firmware esp32spiram-idf3-20191220-v1.12
+#  Filename : main.py
+#
+#  uRequest extension
+#  + Socket timeout
+#  + HTTP Redirection
+#  + Tag Parsing
 
 import usocket
 # garbage collector
@@ -119,19 +129,6 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     gc.collect()
     return [status, location, body.decode("utf-8")]
 
-def splash_breaking_a(b_html):
-    # read all bytes from socket
-    print("<a> search...")
-    # parse socket bytes
-    a = []
-    while b_html.find(b'<a') != -1:
-        beg = b_html.find(b'<a')
-        end = b_html.find(b'</a>')+4
-        a.append(b_html[beg:end])
-        b_html = b_html[end+1:]
-    
-    #print(a)
-    return a
 
 def request_splash_page(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
     # Get stuff from URL
@@ -224,17 +221,6 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
 
     page = s.read()
     s.close()
-
-    #-------DUNKIN-------
-    # a = splash_breaking_a(page)
-    # for v in a:
-    #     print (str(v).split("\"")[1])   
-    #     [status, _ ] = get(str(v).split("\"")[1])
-    #     if status == 200:
-    #         return [status, _ ]
-    #--------------------
-
-
     del s
     gc.collect()
     return [status,page]

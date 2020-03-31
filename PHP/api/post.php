@@ -52,7 +52,7 @@ if ($handle === false)
     $handle = fopen($filepath, 'w+');
 }
     
-if ($handle)
+if ($handle && $rawBody !== '')
 {
     // seek to the end
     fseek($handle, 0, SEEK_END);
