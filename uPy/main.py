@@ -158,7 +158,7 @@ while True:
             total_bytes_read = fp.read()
             total_bytes_read = int(total_bytes_read) if total_bytes_read != '' else 0
 
-        with open(unsent, "r") as file_ptr:
+        with open(unsent, 'r') as fp:
             for i in range(15):
                 file_ptr.seek(total_bytes_read)
                 size = file_ptr.read(2)
