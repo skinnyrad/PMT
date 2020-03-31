@@ -45,6 +45,10 @@ class Logger:
         with open(self.logname, "a+") as fp:
             fp.write(msg)
 
+    def overwrite(self, msg):
+        with open(self.logname, "w+") as fp:
+            fp.write(msg)
+
     def debug(self, msg):
         self.log(DEBUG, msg)
 

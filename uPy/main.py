@@ -71,6 +71,7 @@ default = "/sdcard/pmt.log"
 wifi = "/sdcard/wifi.log"
 archive = "/sdcard/data.log"
 unsent = "/sdcard/buffer.log"
+unsent_buffer_ptr = "/sdcard/buffer_pointer.log"
 
 defaultLogger = logging.getLogger("Default_Logger", default)
 defaultLogger.setLevel(logging.DEBUG)
@@ -83,6 +84,9 @@ archiveLogger.setLevel(logging.DEBUG)
 
 unsentLogger = logging.getLogger("Unsent", unsent)
 unsentLogger.setLevel(logging.DEBUG)
+
+pointerLogger = logging.getLogger("BufferPointer", unsent_buffer_ptr)
+pointerLogger.setLevel(logging.DEBUG)
 
 # SD Card PINOUT:
 #    MISO    PIN 2
@@ -113,6 +117,9 @@ except KeyError as e:
     print(e)
     raise
 
+with open(unsent_buffer_ptr, 'a+') as fp:
+    total_bytes_read = int(fp.read()) if fp.read() != '' else 0
+
 posted = False
 
 #setup core WDT for partial reset (temporary)
@@ -124,25 +131,12 @@ gdt = GDT(5+gps_interval, station)
 while True:
     [GPSdata, speed] = gps.get_RMCdata(defaultLogger)
     if not (GPSdata == {}):
-        b = []
-        lat_pre = float(GPSdata['latitude'])
-        lon_pre = float(GPSdata['longitude'])
-        d_post = {}
-        b.append(GPSdata)
-        if (float(GPSdata['latitude']) > lat_pre+0.00007 or float(GPSdata['latitude']) < lat_pre-0.00007) and (float(GPSdata['longitude']) > lon_pre+0.00007 or float(GPSdata['longitude']) < lon_pre-0.00007):
-            b.append()
-            lat_pre = float(GPSdata['latitude'])
-            lon_pre = float(GPSdata['longitude'])
-        else:
-            d_post = GPSdata
-        if d_post != {}:
-            b.append(d_post)
-        for v in b:
-            data=','.join(list(v.values()))+','
+        data=','.join(list(GPSdata.values()))+','
+
         #TODO: remove print
         print(data)
         archiveLogger.write(data)
-        unsentLogger.write(data)
+        unsentLogger.write("{0}{1}".format(len(data), data))
         defaultLogger.info(data)
     else:
         #TODO: remove print
@@ -151,20 +145,57 @@ while True:
         data = ""
 
     if station.isconnected():
-        if data != "":
-            with open(unsent, "r") as file_ptr:
-                raw_data = file_ptr.read()
+        # enc_data = encry.encrypt(enc_key, rawData)
+        posted = post_data(data, post_url, station, defaultLogger)
+        
+        msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(apSSID), posted)
+        wifiLogger.write(msg)
+        # del enc_data
+        # collect()
+
+        data_points = ""
+        with open(unsent_buffer_ptr, 'r') as fp:
+            total_bytes_read = fp.read()
+            total_bytes_read = int(total_bytes_read) if total_bytes_read != '' else 0
+
+        with open(unsent, 'r') as fp:
+            for i in range(15):
+                file_ptr.seek(total_bytes_read)
+                size = file_ptr.read(2)
+                size = int(size) if size != '' else 0
+
+                if size == 0:
+                    remove(unsent)
+                    total_bytes_read = 0
+                    pointerLogger.overwrite(str(total_bytes_read))
+                    break
+                
+                raw_data = file_ptr.read(int(size))
+                total_bytes_read+=(2+size)
+
+                if data == raw_data:
+                    continue
+                else:
+                    data_points = "{0}{1}".format(data_points, raw_data)
+                    del raw_data
+                    collect()
+
+            gdt.feed()
+            print("Fed GDT after reading from buffer")
+
+            if data_points != "":
                 # enc_data = encry.encrypt(enc_key, rawData)
-                posted = post_data(raw_data, post_url, station, defaultLogger)
+                posted = post_data(data_points, post_url, station, defaultLogger)
 
                 msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(apSSID), posted)
                 wifiLogger.write(msg)
-
-                del raw_data
                 # del enc_data
-                collect()
-                if posted:
-                    remove(unsent)
+
+            if posted:
+                pointerLogger.overwrite(str(total_bytes_read))
+
+            del data_points
+            collect()
 
     if (speed is not None) and (speed <= 10.00):
         if not station.isconnected():
