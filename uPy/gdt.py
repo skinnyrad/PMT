@@ -1,3 +1,15 @@
+# ---------------------------------------
+#  _____  __  __ _______        __   ___  
+# |  __ \|  \/  |__   __|      /_ | / _ \ 
+# | |__) | \  / |  | |    __   _| || | | |
+# |  ___/| |\/| |  | |    \ \ / / || | | |
+# | |    | |  | |  | |     \ V /| || |_| |
+# |_|    |_|  |_|  |_|      \_/ |_(_)___/ 
+# ----------------------------------------
+#  Version 1.0
+#  microPython Firmware esp32spiram-idf3-20191220-v1.12
+#  Filename : gdt.py
+
 from machine import SDCard, Timer
 from uos import umount
 from rtcwatchdog import start
