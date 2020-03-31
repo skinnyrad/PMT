@@ -17,7 +17,7 @@ from gc import collect
 from gdt import GDT
 import logging
 import reqst
-from html import parse_forms
+from html import legacy_parse_forms
 
 def splash_breaking_a(b_html):
     # read all bytes from socket
