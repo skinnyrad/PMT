@@ -372,25 +372,28 @@ function initialize_map() {
 
     //var host = prompt("Please enter your HOST","https://pmtlogger.000webhostapp.com");
     // read configs
+    if(localStorage.getItem('host') != null)
+    {
+        var url = localStorage.getItem('host')+"/api/getJSON.php";
+        host_conf = url;
 
-    var url = localStorage.getItem('host')+"/api/getJSON.php";
-    host_conf = url;
-
-    // GET data points
-    M.toast({html: 'Loading...', classes: 'rounded red'});
-    $.ajax(
-        {
-            url: url,
-            //context: document.body
-            success: function(result) {
-                let inCSV = JSON.parse(result);
-                add_data_points(inCSV,'red');
-            },
-            error: function (err) {
-                M.toast({html: 'Error! Check Configs', classes: 'rounded red'});
-            }
-        });
-    
+        // GET data points
+        M.toast({html: 'Loading...', classes: 'rounded red'});
+        $.ajax(
+            {
+                url: url,
+                //context: document.body
+                success: function(result) {
+                    let inCSV = JSON.parse(result);
+                    add_data_points(inCSV,'red');
+                },
+                error: function (err) {
+                    M.toast({html: 'Error! Check Configs', classes: 'rounded red'});
+                }
+            });
+    }
+    else
+        M.toast({html: 'Error! Check Configs', classes: 'rounded red'});
 }
 
 function saveConfigs(){
@@ -415,7 +418,7 @@ function generateConfFile(){
         let pmt_conf = {"host":hst,"gps_interval":GPS_INTERVAL};
         let text_json = JSON.stringify(pmt_conf, null, "\t"); // stringify with tabs inserted at each level
 
-        // export kml to file
+        // export conf to file
         var pom = document.createElement('a');
         var filename = "pmt.conf";
         var pom = document.createElement('a');
