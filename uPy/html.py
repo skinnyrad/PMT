@@ -37,11 +37,11 @@ def get_tags(html_as_string, tag_type=None):
     
     # look for a specific tag
     if tag_type is not None:
-        print("DEBUG: Finding specific tag")
+        #Sprint("DEBUG: Finding specific tag")
         while ret_val[0] != "":
             # tags that don't make up objects. ex: <form ...> ... </form>
             ret_val = find_complete_string(html_as_string, "<{0}".format(tag_type), "</{0}>".format(tag_type), ret_val[2] ) #start search at end of last string
-            print("DEBUG: object search attempt= {0}".format(ret_val))
+            #print("DEBUG: object search attempt= {0}".format(ret_val))
 
             # tags that do make up objects. ex: <a ... > there is no </a>
             # start string found
@@ -49,13 +49,13 @@ def get_tags(html_as_string, tag_type=None):
                 if(ret_val[2] == -1): # end string was not found
                     ret_val = find_complete_string(html_as_string, "<{0}".format(tag_type), ">", ret_val[1] )
                     tag_list.append(ret_val[0])
-                    print("DEBUG: tag search attempt= {0}".format(ret_val))
+                    #print("DEBUG: tag search attempt= {0}".format(ret_val))
                 else: # end string was found
                     tag_list.append(ret_val[0])
 
     # look for all tags
     else:
-        print("DEBUG: Finding all tags")
+        #print("DEBUG: Finding all tags")
         while ret_val[0] != "":
             # tags that don't make up objects. ex: <form ...> ... </form>
             ret_val = find_complete_string(html_as_string, "<", ">", ret_val[2] )
@@ -85,11 +85,11 @@ def breakup_tag(tag):
     
     tag=tag[j+1:len(tag)]
     ret=ret.strip()
-    print("type={0}\ttag={1}".format(ret,tag))
+    #print("type={0}\ttag={1}".format(ret,tag))
     contents_list.append(ret)
         
     while len(tag)>0:
-        print()
+        #print()
 
         #searching for key/value pair
         j=tag.find('=', 0, len(tag))
@@ -99,7 +99,7 @@ def breakup_tag(tag):
         key = tag[0:j] #pull out key
         tag = tag[j+1:len(tag)]
         key = key.strip(' ')
-        print("key={0}\ttag={1}".format(key,tag))
+        #print("key={0}\ttag={1}".format(key,tag))
         contents_list.append(key)
     
         #key found, pull "value"
@@ -109,7 +109,7 @@ def breakup_tag(tag):
         j = tag.find('"', 0, len(tag)) #second quote
         val=tag[0:j].strip()
         tag = tag[j+1:len(tag)]
-        print("val={0}\ttag={1}".format(val,tag))
+        #print("val={0}\ttag={1}".format(val,tag))
         contents_list.append(val)
 
     return contents_list
@@ -131,7 +131,7 @@ def construct_form_from_tag_internals(tags):
             # Create a new dictionary to store info
             tagDict = {}
             tagDict["tag_type"]=tag_internals[0]
-            print("tagDict[tag_type]= form")
+            #print("tagDict[tag_type]= form")
 
             # insert key="value" pairs
             j=1
@@ -140,7 +140,7 @@ def construct_form_from_tag_internals(tags):
                 val=tag_internals[j+1]
                 j+=2
                 tagDict[key] = val
-                print("\ttagDict[{0}]={1}".format(key,val))
+                #print("\ttagDict[{0}]={1}".format(key,val))
             
             # other tags will be inside forms
             tagDict["inside"] = []
@@ -149,7 +149,7 @@ def construct_form_from_tag_internals(tags):
 
         # /form tag : end of form
         elif(tag_internals[0]=="/form"):
-            print("\ttag_type=/form")
+            #print("\ttag_type=/form")
             formOpen=False #close out the form
 
 
@@ -158,7 +158,7 @@ def construct_form_from_tag_internals(tags):
             # Create a new dictionary to store info
             tagDict={}
             tagDict["tag_type"]=tag_internals[0]
-            print("\ttagDict[\"tag_type\"]={0}".format(tag_internals[0]))
+            #print("\ttagDict[\"tag_type\"]={0}".format(tag_internals[0]))
 
             # insert key="value" pairs
             j=1
@@ -167,7 +167,7 @@ def construct_form_from_tag_internals(tags):
                 val=tag_internals[j+1]
                 j+=2
                 tagDict[key]=val
-                print("\ttagDict[\"{0}\"]={1}".format(key,val))
+                #print("\ttagDict[\"{0}\"]={1}".format(key,val))
             
             #append this tag into the form
             if(formOpen):
@@ -212,19 +212,22 @@ def get_forms(html):
     #break forms as strings into a list of tags: [form] = ["<form ...>", "<...>", "</form>"]
     all_forms = []
     for string in forms:
-        all_forms.append( get_tags(string) )
-    
+        print("Before pulling out tags: {0}".format(string))
+        ret = get_tags(string)
+        all_forms.append(ret)
+        print("After pulling out tags: {0}".format(ret))
+
     #debugging
-    print("Each form broken into a list of strings:")
+    print("\nEach form broken into a list of strings:")
     i=0
     while i < len(all_forms):
-        print( "form[{0}]=\n".format(i) )
+        print( "form[{0}]=".format(i) )
         for tag in all_forms[i]:
             print(tag)
         i+=1
 
     # split out each tag's internals
-    print("Splitting up tag internals:")
+    print("\nSplitting up tag internals:")
     i = 0
     while i < len(all_forms):
         tags = all_forms[i]
@@ -237,7 +240,7 @@ def get_forms(html):
             j+=1
         i+=1
     
-    
+
     parsed_forms = []
     for form in all_forms:
         parsed_forms.append(construct_form_from_tag_internals(form))
