@@ -17,7 +17,7 @@ from gc import collect
 from gdt import GDT
 import logging
 import reqst
-from html import legacy_parse_forms
+from html import get_forms
 
 def splash_breaking_a(b_html):
     # read all bytes from socket
@@ -82,7 +82,7 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
             print("Splashpage Breaking...")
 
             # break with form resubmission
-            forms = legacy_parse_forms(splashpage)
+            forms = get_forms(splashpage)
             collect()
             print(forms)
 
