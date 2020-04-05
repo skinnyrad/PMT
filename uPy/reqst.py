@@ -46,6 +46,7 @@ def handlerTimer(timer):
     #Resets the device in a manner similar to pushing the external RESET button.
     reset()
 
+# Initial check for open internet or splash page redirection
 def request_dns_internet(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
     # Get stuff from URL
     proto, dummy, host, path, port = breakdown_url(url)
@@ -57,6 +58,10 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     # TODO: Uncomment this for solution
     #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
     location = None
+
+    # Increase visibility to AP by making initial request over HTTP, not HTTPS
+    proto="http:"
+    port=80
 
     ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
     #TODO: Uncomment this for solution
