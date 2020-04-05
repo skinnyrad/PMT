@@ -60,8 +60,8 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     location = None
 
     # Increase visibility to AP by making initial request over HTTP, not HTTPS
-    proto="http:"
-    port=80
+    proto = "http:"
+    port = 80
 
     ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
     #TODO: Uncomment this for solution
