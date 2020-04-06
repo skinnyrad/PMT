@@ -49,7 +49,7 @@ def handlerTimer(timer):
 # Initial check for open internet or splash page redirection
 def request_dns_internet(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
     # Get stuff from URL
-    proto, dummy, host, path, port = breakdown_url(url)
+    _, dummy, host, _, _ = breakdown_url(url)
     # No need to check if Host is IP. It's first request we
     # do after connection
     # TODO: Uncomment if we decide it's needed
@@ -59,11 +59,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
     location = None
 
-    # Increase visibility to AP by making initial request over HTTP, not HTTPS
-    proto = "http:"
-    port = 80
-
-    ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
+    ai = usocket.getaddrinfo(host, 80, 0, usocket.SOCK_STREAM)
     #TODO: Uncomment this for solution
     #timer.deinit()
     if ai != []:
@@ -77,8 +73,8 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     s = usocket.socket(ai[0], ai[1], ai[2])
     try:
         s.connect(ai[-1])
-        if proto == "https:":
-            s = ussl.wrap_socket(s, server_hostname=host)
+        #if proto == "https:":
+        #    s = ussl.wrap_socket(s, server_hostname=host)
         s.write(b"%s /api/ HTTP/1.0\r\n" % (method))
         if not "Host" in headers:
             s.write(b"Host: %s\r\n" % host)
