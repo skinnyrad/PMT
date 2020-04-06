@@ -40,7 +40,6 @@ def get_tags(html_as_string, tag_type=None):
     
     # look for a specific tag
     if tag_type is not None:
-        #Sprint("DEBUG: Finding specific tag")
         while ret_val[0] != "":
             # tags that don't make up objects. ex: <form ...> ... </form>
             ret_val = find_complete_string(html_as_string, "<{0}".format(tag_type), "</{0}>".format(tag_type), ret_val[2] ) #start search at end of last string
