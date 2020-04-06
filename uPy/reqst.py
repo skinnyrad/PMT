@@ -8,7 +8,7 @@
 # ----------------------------------------
 #  Version 1.0
 #  microPython Firmware esp32spiram-idf3-20191220-v1.12
-#  Filename : main.py
+#  Filename : reqst.py
 #
 #  uRequest extension
 #  + Socket timeout
