@@ -17,6 +17,7 @@ from gc import collect
 from gdt import GDT
 import logging
 import reqst
+from html import get_forms
 
 def splash_breaking_a(b_html):
     # read all bytes from socket
@@ -79,6 +80,12 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
             print("Splashpage Length [{}]".format(len(splashpage)))
             
             print("Splashpage Breaking...")
+
+            # break with form resubmission
+            #forms = get_forms(splashpage)
+            #collect()
+            #print(forms)
+
             # <a> TAG Splash Page Breaking
             # a = splash_breaking_a(splashpage)
             # for v in a:
