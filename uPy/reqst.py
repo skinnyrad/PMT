@@ -130,6 +130,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     return [status, location, body.decode("utf-8")]
 
 
+
 def request_splash_page(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
     # Get stuff from URL
     proto, dummy, host, path, port = breakdown_url(url)
@@ -193,11 +194,13 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
         reason = ""
         if len(l) > 2:
             reason = l[2].rstrip()
+        headers = []
         while True:
             l = s.readline()
             if not l or l == b"\r\n":
                 break
             #print(l)
+            headers.append(l)
             if l.startswith(b"Transfer-Encoding:"):
                 if b"chunked" in l:
                     raise ValueError("Unsupported " + l)
@@ -215,6 +218,7 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
                 return [res[0], res[-1]]
     except OSError as err:
         print(str(err))
+        s.close()
         raise
     
     print("Status_Code [{}]".format(status))
@@ -223,7 +227,9 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
     s.close()
     del s
     gc.collect()
-    return [status,page]
+    return [status,page,headers]
+
+
 
 def request(method, url, data=None, json=None, headers={}, stream=None, timeout=0.5):
 
@@ -289,10 +295,12 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         reason = ""
         if len(l) > 2:
             reason = l[2].rstrip()
+        headers=[]
         while True:
             l = s.readline()
             if not l or l == b"\r\n":
                 break
+            headers.append(l)
             #print(l)
             if l.startswith(b"Transfer-Encoding:"):
                 if b"chunked" in l:
@@ -308,17 +316,17 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
                 # need to get the method from the redirection
                 return request_splash_page("GET",location)
     except OSError as err:
-        #s.close()
+        s.close()
         raise
 
     print("Status_Code [{}]".format(status))
     
     # No need to read
-    #page = s.read()
+    page = s.read()
     s.close()
     del s
     gc.collect()
-    return [status,None]
+    return [status,page,headers]
 
 
 def test_dns_internet(url, **kw):
