@@ -33,6 +33,88 @@ def splash_breaking_a(b_html):
     print(a)
     return a
 
+
+def form_response(form):
+    resp = ""
+    content = form["inside"]
+
+    if( len(content) > 0 ):
+        # key1=val1&key2=val2
+        for tag in content:
+            resp = "{0}{1}={2}&".format(resp, tag["name"], tag["value"])
+        
+        return resp[0:len(resp)] #remove final &, simpler code this way
+
+
+
+
+
+def break_sp(gdt, host, splashpage, location, recvd_headers):
+    gdt.feed()
+
+    # break with form resubmission
+    forms = get_forms(splashpage)
+    gdt.feed()
+    collect()
+    print(forms)
+
+    if(len(forms) > 0):
+        del splashpage
+        collect()
+
+        resp = form_response(forms[0])
+        print("reponse: {}".format(resp))
+
+        # new location specified
+        if "action" in forms[0]:
+            
+            if forms[0]["action"][0] == '/': # relative path
+                location = "{0}{1}".format(location, forms[0]["action"]) #append to location
+            
+            else: #absolute path
+                location = forms[0]["action"]
+
+        print("break_sp: Resubmitting form.\nLocation:{0}\n")
+        collect()
+        gdt.feed()
+        [status,page,headers] = reqst.post(location, data=resp, headers=recvd_headers, timeout=4000)
+        gdt.feed()
+        del resp
+        collect()
+
+    
+    # no forms, try following a-tags
+    #else:
+        # <a> TAG Splash Page Breaking
+        # a = splash_breaking_a(splashpage)
+        # for v in a:
+        #     [status, _ ] = reqst.get(v)
+        #     if status == 200:
+        #         return True
+        # -----------------------------
+
+    
+    # test DNS -> GET Request and Handles Redirection
+    [status, location, body] = reqst.test_dns_internet(host)
+    gdt.feed()
+
+    # NO SPLASH PAGE
+    if status == 200 and body == "OK":
+        print("Internet Access [OK]")
+        return ["", location, headers] #success
+
+    # Redirection
+    elif location and 300 <= status <= 309:
+        gdt.feed()
+        print("Fed GDT before requesting splash page")
+
+        [status,splashpage,headers] = reqst.get_splash_page(location)
+        # splashpage received
+    
+    return [status,splashpage,headers]
+
+
+
 def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger):
     #TODO: remove print
     print("Connected [Testing Access]")
@@ -68,7 +150,7 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
         gdt.feed()
         print("Fed GDT before requesting splash page")
 
-        [status,splashpage] = reqst.get_splash_page(location)
+        [status,splashpage,headers] = reqst.get_splash_page(location)
         # splashpage received
 
         gdt.feed()
@@ -81,18 +163,8 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
             
             print("Splashpage Breaking...")
 
-            # break with form resubmission
-            #forms = get_forms(splashpage)
-            #collect()
-            #print(forms)
-
-            # <a> TAG Splash Page Breaking
-            # a = splash_breaking_a(splashpage)
-            # for v in a:
-            #     [status, _ ] = reqst.get(v)
-            #     if status == 200:
-            #         return True
-            # -----------------------------
+            while splashpage != "":
+                [splashpage, location, headers] = break_sp(gdt, host, splashpage, location, headers)
 
             print("Splashpage Not Broken Unless Implemented Above...")
             print("Splashpage [Failed]")
