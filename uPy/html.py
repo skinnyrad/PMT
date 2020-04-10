@@ -177,7 +177,8 @@ def construct_form_from_tag_internals(tags):
 #                   dict["method"] -> "POST"
 def get_forms(html):
     
-    html = html.decode('utf-8') # int to str
+    if html is not str:
+        html = html.decode('utf-8') # int to str
 
     # each entry in list is "<form ...> <...> </form>" 
     forms = get_tags(html, "form")

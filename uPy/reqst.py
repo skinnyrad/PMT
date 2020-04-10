@@ -102,13 +102,17 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
         reason = ""
         if len(l) > 2:
             reason = l[2].rstrip()
+        headers = []
         while True:
             l = s.readline()
             if not l or l == b"\r\n":
                 break
             print(l)
+            headers.append()
             if l.startswith(b"Transfer-Encoding:"):
                 if b"chunked" in l:
+                    s.close()
+                    del s
                     raise ValueError("Unsupported " + l)
             elif l.startswith(b"Location:"): # and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
@@ -128,7 +132,8 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     s.close()
     del s
     gc.collect()
-    return [status, location, body.decode("utf-8")]
+    print("Returning from request_dns_internet")
+    return [status, location, body.decode("utf-8"), headers]
 
 
 
@@ -165,9 +170,11 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
     print(str(ai))
     s = usocket.socket(ai[0], ai[1], ai[2])
     try:
-        s.connect(ai[-1])
+        
         if proto == "https:":
             s = ussl.wrap_socket(s, server_hostname=host)
+        s.connect(ai[-1])
+
         s.write(b"%s /%s HTTP/1.0\r\n" % (method, path))
         if not "Host" in headers:
             s.write(b"Host: %s\r\n" % host)
@@ -204,6 +211,8 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
             headers.append(l)
             if l.startswith(b"Transfer-Encoding:"):
                 if b"chunked" in l:
+                    s.close()
+                    del s
                     raise ValueError("Unsupported " + l)
             elif l.startswith(b"Location:") and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
@@ -220,6 +229,8 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
     except OSError as err:
         print(str(err))
         s.close()
+        del s
+        gc.collect()
         raise
     
     print("Status_Code [{}]".format(status))
@@ -318,6 +329,8 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
                 return request_splash_page("GET",location)
     except OSError as err:
         s.close()
+        del s
+        gc.collect()
         raise
 
     print("Status_Code [{}]".format(status))

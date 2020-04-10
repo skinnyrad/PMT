@@ -47,8 +47,6 @@ def form_response(form):
 
 
 
-
-
 def break_sp(gdt, host, splashpage, location, recvd_headers):
     gdt.feed()
 
@@ -68,7 +66,7 @@ def break_sp(gdt, host, splashpage, location, recvd_headers):
         # new location specified
         if "action" in forms[0]:
             
-            if forms[0]["action"][0] == '/': # relative path
+            if forms[0]["action"][0] == '/' or forms[0]["action"][0] == './': # relative path
                 location = "{0}{1}".format(location, forms[0]["action"]) #append to location
             
             else: #absolute path
@@ -124,7 +122,8 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
     print("Fed GDT before DNS testing")
 
     # test DNS -> GET Request and Handles Redirection
-    [status, location, body] = reqst.test_dns_internet(host)
+    [status, location, body, headers] = reqst.test_dns_internet(host)
+    print("status={0}\nheaders={1}\nlocation={2}\nbody={3}".format(status,headers,location,body))
 
     gdt.feed()
     print("Fed GDT after DNS testing")
@@ -141,17 +140,24 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
 
     # Status Code 200 but not connected to internet yet
     # Make another request to get redirection information
-    elif status == 200:
-        # should handle requests prior to redirection
-        return station_connected(station, host, gdt, wifiLogger)
+    #elif status == 200:
+    #    # should handle requests prior to redirection
+    #    return station_connected(station, host, gdt, wifiLogger)
 
     # Redirection
-    elif location and 300 <= status <= 309:
+    elif (status == 200) or (location and 300 <= status <= 309):
         gdt.feed()
         print("Fed GDT before requesting splash page")
 
-        [status,splashpage,headers] = reqst.get_splash_page(location)
-        # splashpage received
+        #splashpage not received yet
+        if status == 200:
+           splashpage = body
+           location = host
+
+        #300s redirection
+        else:
+            [status,splashpage,headers] = reqst.get_splash_page(location)
+            # splashpage received
 
         gdt.feed()
         print("Fed GDT after splash page received")
