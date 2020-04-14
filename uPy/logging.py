@@ -1,3 +1,15 @@
+# ---------------------------------------
+#  _____  __  __ _______        __   ___  
+# |  __ \|  \/  |__   __|      /_ | / _ \ 
+# | |__) | \  / |  | |    __   _| || | | |
+# |  ___/| |\/| |  | |    \ \ / / || | | |
+# | |    | |  | |  | |     \ V /| || |_| |
+# |_|    |_|  |_|  |_|      \_/ |_(_)___/ 
+# ----------------------------------------
+#  Version 1.0
+#  microPython Firmware esp32spiram-idf3-20191220-v1.12
+#  Filename : logging.py
+
 CRITICAL = 50
 ERROR    = 40
 WARNING  = 30
@@ -44,6 +56,14 @@ class Logger:
     def write(self, msg):
         with open(self.logname, "a+") as fp:
             fp.write(msg)
+
+    def overwrite(self, msg):
+        with open(self.logname, "w+") as fp:
+            fp.write(msg)
+
+    def write_line(self, msg):
+        with open(self.logname, "a+") as fp:
+            fp.write("{0}\n".format(msg))
 
     def debug(self, msg):
         self.log(DEBUG, msg)

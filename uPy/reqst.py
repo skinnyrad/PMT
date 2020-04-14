@@ -1,9 +1,19 @@
-# uRequest extension
-# + Socket timeout
-# + HTTP Redirection
-# + Tag Parsing
-# David Tougaw & Ben Compton
-
+# ---------------------------------------
+#  _____  __  __ _______        __   ___  
+# |  __ \|  \/  |__   __|      /_ | / _ \ 
+# | |__) | \  / |  | |    __   _| || | | |
+# |  ___/| |\/| |  | |    \ \ / / || | | |
+# | |    | |  | |  | |     \ V /| || |_| |
+# |_|    |_|  |_|  |_|      \_/ |_(_)___/ 
+# ----------------------------------------
+#  Version 1.0
+#  microPython Firmware esp32spiram-idf3-20191220-v1.12
+#  Filename : reqst.py
+#
+#  uRequest extension
+#  + Socket timeout
+#  + HTTP Redirection
+#  + Tag Parsing
 
 import usocket
 # garbage collector
@@ -36,9 +46,10 @@ def handlerTimer(timer):
     #Resets the device in a manner similar to pushing the external RESET button.
     reset()
 
+# Initial check for open internet or splash page redirection
 def request_dns_internet(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
     # Get stuff from URL
-    proto, dummy, host, path, port = breakdown_url(url)
+    _, dummy, host, _, _ = breakdown_url(url)
     # No need to check if Host is IP. It's first request we
     # do after connection
     # TODO: Uncomment if we decide it's needed
@@ -48,7 +59,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
     location = None
 
-    ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
+    ai = usocket.getaddrinfo(host, 80, 0, usocket.SOCK_STREAM)
     #TODO: Uncomment this for solution
     #timer.deinit()
     if ai != []:
@@ -62,8 +73,8 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     s = usocket.socket(ai[0], ai[1], ai[2])
     try:
         s.connect(ai[-1])
-        if proto == "https:":
-            s = ussl.wrap_socket(s, server_hostname=host)
+        #if proto == "https:":
+        #    s = ussl.wrap_socket(s, server_hostname=host)
         s.write(b"%s /api/ HTTP/1.0\r\n" % (method))
         if not "Host" in headers:
             s.write(b"Host: %s\r\n" % host)
