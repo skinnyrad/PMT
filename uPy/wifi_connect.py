@@ -43,12 +43,14 @@ def form_response(form):
         for tag in content:
             resp = "{0}{1}={2}&".format(resp, tag["name"], tag["value"])
         
-        return resp[0:len(resp)] #remove final &, simpler code this way
+        return resp[0:len(resp)-1] #remove final &, simpler code this way
 
 
 
 def break_sp(gdt, host, splashpage, location, recvd_headers):
     gdt.feed()
+
+    print("break_sp: Location:{}".format(location))
 
     # break with form resubmission
     forms = get_forms(splashpage)
@@ -63,37 +65,48 @@ def break_sp(gdt, host, splashpage, location, recvd_headers):
         resp = form_response(forms[0])
         print("reponse: {}".format(resp))
 
+
+        # convert from dns address to usable URL
+        if type(location) is list and len(location) == 2:
+            if location[1] == 80:
+                location = "http://{}".format(location[0])
+            elif location[1]==443:
+                location = "https://{}".format(location[0])
+
+
         # new location specified
         if "action" in forms[0]:
             
             if forms[0]["action"][0] == '/' or forms[0]["action"][0] == './': # relative path
+                print("REALATIVE PATH")
                 location = "{0}{1}".format(location, forms[0]["action"]) #append to location
             
             else: #absolute path
+                print("ABSOLUTE PATH")
                 location = forms[0]["action"]
 
-        print("break_sp: Resubmitting form.\nLocation:{0}\n")
+        print("break_sp: Resubmitting form.\nLocation:{0}\n".format(location))
         collect()
         gdt.feed()
-        [status,page,headers] = reqst.post(location, data=resp, headers=recvd_headers, timeout=4000)
+        [_, status, recvd_page, headers] = reqst.post(location, data=resp, headers=recvd_headers, timeout=3000)
         gdt.feed()
         del resp
         collect()
 
     
     # no forms, try following a-tags
-    #else:
-        # <a> TAG Splash Page Breaking
-        # a = splash_breaking_a(splashpage)
-        # for v in a:
-        #     [status, _ ] = reqst.get(v)
-        #     if status == 200:
-        #         return True
+    else:
+         #<a> TAG Splash Page Breaking
+         a = splash_breaking_a(splashpage)
+         for v in a:
+             [status, _ ] = reqst.get(v)
+             if status == 200:
+                 return True
         # -----------------------------
 
     
     # test DNS -> GET Request and Handles Redirection
-    [status, location, body] = reqst.test_dns_internet(host)
+    [addr, status, location, body, headers] = reqst.test_dns_internet(host)
     gdt.feed()
 
     # NO SPLASH PAGE
@@ -106,10 +119,10 @@ def break_sp(gdt, host, splashpage, location, recvd_headers):
         gdt.feed()
         print("Fed GDT before requesting splash page")
 
-        [status,splashpage,headers] = reqst.get_splash_page(location)
+        [status,recvd_page,headers] = reqst.get_splash_page(location)
         # splashpage received
     
-    return [status,splashpage,headers]
+    return [status,recvd_page,headers]
 
 
 
@@ -122,7 +135,7 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
     print("Fed GDT before DNS testing")
 
     # test DNS -> GET Request and Handles Redirection
-    [status, location, body, headers] = reqst.test_dns_internet(host)
+    [addr, status, location, body, headers] = reqst.test_dns_internet(host)
     print("status={0}\nheaders={1}\nlocation={2}\nbody={3}".format(status,headers,location,body))
 
     gdt.feed()
@@ -152,7 +165,7 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
         #splashpage not received yet
         if status == 200:
            splashpage = body
-           location = host
+           location = addr
 
         #300s redirection
         else:
@@ -163,39 +176,23 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
         print("Fed GDT after splash page received")
 
         print(splashpage)
-        if status == 200:
-            print("Splashpage [OK]")
-            print("Splashpage Length [{}]".format(len(splashpage)))
-            
-            print("Splashpage Breaking...")
 
-            while splashpage != "":
-                [splashpage, location, headers] = break_sp(gdt, host, splashpage, location, headers)
+        print("Splashpage [OK]")
+        print("Splashpage Length [{}]".format(len(splashpage)))
+        
+        print("Splashpage Breaking...")
 
-            print("Splashpage Not Broken Unless Implemented Above...")
-            print("Splashpage [Failed]")
-            del splashpage
-            collect()
+        while splashpage != "":
+            [splashpage, location, headers] = break_sp(gdt, host, splashpage, location, headers)
 
-            #TODO: When You know you broke the page and allow DATA SENDING
-            # return True
-            return False
-            
-        elif 500 <= status <= 599:
-            """
-                station.active(False) seems to flush wifi module
+        print("Splashpage Not Broken Unless Implemented Above...")
+        print("Splashpage [Failed]")
+        del splashpage
+        collect()
 
-                board output:
-                    I (35596) wifi: flush txq
-                    I (35596) wifi: stop sw txq
-                    I (35596) wifi: lmac stop hw txq
-            """
-            station.active(False)
-            station.active(True)
-            return False
-        else:
-            print("Splashpage [Failed]")
-            return False
+        #TODO: When You know you broke the page and allow DATA SENDING
+        # return True
+        return False
 
     elif 500 <= status <= 599:
         """

@@ -47,6 +47,7 @@ def handlerTimer(timer):
     reset()
 
 # Initial check for open internet or splash page redirection
+# Return Value: 5 value list: [addr, status, location, body, headers]
 def request_dns_internet(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
     # Get stuff from URL
     _, dummy, host, _, _ = breakdown_url(url)
@@ -67,9 +68,11 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
         print("DNS Lookup [OK]")
     else:
         print("DNS Lookup [Failed]")
-        return [584,None,None]
+        return [None,584,None,None,None]
 
     ai = ai[0]
+    addr = ai[-1]
+    headers = []
     s = usocket.socket(ai[0], ai[1], ai[2])
     try:
         s.connect(ai[-1])
@@ -102,13 +105,13 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
         reason = ""
         if len(l) > 2:
             reason = l[2].rstrip()
-        headers = []
         while True:
             l = s.readline()
             if not l or l == b"\r\n":
                 break
-            print(l)
-            headers.append()
+            #print(l)
+            headers.append(l)
+
             if l.startswith(b"Transfer-Encoding:"):
                 if b"chunked" in l:
                     s.close()
@@ -133,7 +136,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     del s
     gc.collect()
     print("Returning from request_dns_internet")
-    return [status, location, body.decode("utf-8"), headers]
+    return [addr, status, location, body.decode("utf-8"), headers]
 
 
 
@@ -168,6 +171,8 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
         ai = [2,1,0,(host,port)]
 
     print(str(ai))
+    addr = ai[-1]
+    headers = []
     s = usocket.socket(ai[0], ai[1], ai[2])
     try:
         
@@ -202,7 +207,6 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
         reason = ""
         if len(l) > 2:
             reason = l[2].rstrip()
-        headers = []
         while True:
             l = s.readline()
             if not l or l == b"\r\n":
@@ -225,7 +229,7 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
                 print("L2 Redirection")
                 # need to get the method from the redirection
                 res = test_dns_internet(location)[0:1]
-                return [res[0], res[-1]]
+                return [res[0], res[-1]] #CURRAN TODO: these values are now incorrect, get with David/Ben and find out what is needed
     except OSError as err:
         print(str(err))
         s.close()
@@ -239,7 +243,7 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
     s.close()
     del s
     gc.collect()
-    return [status,page,headers]
+    return [addr,status,page,headers]
 
 
 
@@ -274,6 +278,9 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         # socket settings
         ai = [2,1,0,(host,port)]
     
+    addr = ai[-1]
+    headers = []
+
     s = usocket.socket(ai[0], ai[1], ai[2])
     # set timeout
     s.settimeout(timeout)
@@ -307,7 +314,6 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         reason = ""
         if len(l) > 2:
             reason = l[2].rstrip()
-        headers=[]
         while True:
             l = s.readline()
             if not l or l == b"\r\n":
@@ -340,7 +346,7 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
     s.close()
     del s
     gc.collect()
-    return [status,page,headers]
+    return [addr,status,page,headers]
 
 
 def test_dns_internet(url, **kw):
