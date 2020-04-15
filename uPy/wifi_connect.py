@@ -28,7 +28,7 @@ def splash_breaking_a(b_html):
         beg = b_html.find(b'<a')
         end = b_html.find(b'</a>')+4
         a.append(b_html[beg:end])
-        b_html = b_html[end+1:]
+        b_html = b_html[end+1:len(b_html)] #Regions Guest thinks its a string
     
     print(a)
     return a
@@ -62,22 +62,24 @@ def break_sp(gdt, host, splashpage, location, recvd_headers):
         del splashpage
         collect()
 
+        # generate response to form
         resp = form_response(forms[0])
         print("reponse: {}".format(resp))
 
+        # Header specifying form data present
+        recvd_headers["Content-Type"] = "application/x-www-form-urlencoded"
 
         # convert from dns address to usable URL
-        if type(location) is list and len(location) == 2:
+        if type(location) is tuple and len(location) == 2:
             if location[1] == 80:
                 location = "http://{}".format(location[0])
             elif location[1]==443:
                 location = "https://{}".format(location[0])
 
-
         # new location specified
         if "action" in forms[0]:
             
-            if forms[0]["action"][0] == '/' or forms[0]["action"][0] == './': # relative path
+            if forms[0]["action"][0] == '/' or forms[0]["action"][0:2] == './': # relative path
                 print("REALATIVE PATH")
                 location = "{0}{1}".format(location, forms[0]["action"]) #append to location
             

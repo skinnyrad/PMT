@@ -72,7 +72,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
 
     ai = ai[0]
     addr = ai[-1]
-    headers = []
+    recvd_headers = []
     s = usocket.socket(ai[0], ai[1], ai[2])
     try:
         s.connect(ai[-1])
@@ -110,7 +110,12 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
             if not l or l == b"\r\n":
                 break
             #print(l)
-            headers.append(l)
+            colon = l.find(':')
+            if colon != -1:
+                key = l[0:colon]
+                val = l[colon+1:]
+                print("Header (key:val) {0}:{1}".format(key,val))
+                recvd_headers[key]=val
 
             if l.startswith(b"Transfer-Encoding:"):
                 if b"chunked" in l:
@@ -172,7 +177,7 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
 
     print(str(ai))
     addr = ai[-1]
-    headers = []
+    recvd_headers = []
     s = usocket.socket(ai[0], ai[1], ai[2])
     try:
         
@@ -212,7 +217,12 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
             if not l or l == b"\r\n":
                 break
             #print(l)
-            headers.append(l)
+            colon = l.find(':')
+            if colon != -1:
+                key = l[0:colon]
+                val = l[colon+1:]
+                print("Header (key:val) {0}:{1}".format(key,val))
+                recvd_headers[key]=val
             if l.startswith(b"Transfer-Encoding:"):
                 if b"chunked" in l:
                     s.close()
@@ -252,6 +262,8 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
     # Get stuff from URL
     proto, dummy, host, path, port = breakdown_url(url)
 
+    print("breakdown url returned: host: {0} port:{1} path:{2}".format(host,port,path))
+
     # DNS Host or IPv4
     is_ipv4 = False
     eight_bits = host.split(".")[0]
@@ -279,12 +291,13 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         ai = [2,1,0,(host,port)]
     
     addr = ai[-1]
-    headers = []
+    recvd_headers = {}
 
     s = usocket.socket(ai[0], ai[1], ai[2])
     # set timeout
     s.settimeout(timeout)
     try:
+        print("Connecting to {} ...".format(ai[-1]))
         s.connect(ai[-1])
         if proto == "https:":
             s = ussl.wrap_socket(s, server_hostname=host)
@@ -307,6 +320,7 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         s.write(b"\r\n")
         if data:
             s.write(data)
+        
         l = s.readline()
         print(l)
         l = l.split(None, 2)
@@ -318,7 +332,12 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
             l = s.readline()
             if not l or l == b"\r\n":
                 break
-            headers.append(l)
+            colon = l.find(':')
+            if colon != -1:
+                key = l[0:colon]
+                val = l[colon+1:]
+                print("Header (key:val) {0}:{1}".format(key,val))
+                headers[key]=val
             #print(l)
             if l.startswith(b"Transfer-Encoding:"):
                 if b"chunked" in l:
@@ -346,7 +365,7 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
     s.close()
     del s
     gc.collect()
-    return [addr,status,page,headers]
+    return [addr, status, page, recvd_headers]
 
 
 def test_dns_internet(url, **kw):
