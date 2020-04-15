@@ -136,30 +136,35 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
 
     
     # no forms, try following a-tags
-    else:
-         #<a> TAG Splash Page Breaking
-         a = splash_breaking_a(splashpage)
-         for v in a:
-             [status, _ ] = reqst.get(v)
-             if status == 200:
-                 return True
+    #else:
+    #     #<a> TAG Splash Page Breaking
+    #     a = splash_breaking_a(splashpage)
+    #     for v in a:
+    #         [status, _ ] = reqst.get(v)
+    #         if status == 200:
+    #             return True
         # -----------------------------
 
 
     # Possible Redirection on new page
-    if "Location" or "redirURL" in recvd_headers and 300 <= status <= 309:
-        gdt.feed()
-        print("Fed GDT before requesting splash page")
-        [dns_addr, status, recvd_page, recvd_headers] = reqst.get_splash_page(recvd_headers["Location" or "redirURL" in recvd_headers])
+    gdt.feed()
+    print("Fed GDT before requesting splash page")
+    if "Location" in recvd_headers and 300 <= status <= 309:
+        [dns_addr, status, recvd_page, recvd_headers] = reqst.get_splash_page(recvd_headers["Location"])
+        # new splashpage received
+    elif "redirURL" in recvd_headers and 300 <= status <= 309:
+        [dns_addr, status, recvd_page, recvd_headers] = reqst.get_splash_page(recvd_headers["redirURL"])
         # new splashpage received
 
     print("PAGE BREAKING COMPLETE!")
-    print("Testing connection...")
+    host = "http://pmtlogger.000webhostapp.com/api/"
+    print("Testing connection from {} ...".format(host))
     
     # test DNS -> GET Request
     # Test for open connection. DO NOT SEND THIS DATA BACK, you will only be backtracking to the inital page.
     [_, dns_status, _, dns_body, _] = reqst.test_dns_internet(host)
     gdt.feed()
+    print("Status: {0}\nBody: {1}".format(dns_status, dns_body))
 
     if dns_status == 200 and dns_body == "OK":
         print("Internet Access [OK]")
