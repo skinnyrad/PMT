@@ -47,7 +47,7 @@ def form_response(form):
 
 
 
-def break_sp(gdt, host, splashpage, location, recvd_headers):
+def break_sp(gdt, host, location, recvd_headers, splashpage):
     gdt.feed()
 
     print("break_sp: Location:{}".format(location))
@@ -66,11 +66,17 @@ def break_sp(gdt, host, splashpage, location, recvd_headers):
         resp = form_response(forms[0])
         print("reponse: {}".format(resp))
 
-        # Header specifying form data present
+        # Add from resubmit specific headers
         recvd_headers["Content-Type"] = "application/x-www-form-urlencoded"
+        recvd_headers["Accept"] = "*/*"
 
         # convert from dns address to usable URL
         if type(location) is tuple and len(location) == 2:
+            
+            #Another necessary header
+            recvd_headers["Host"] = "{}".format(location[0])
+            
+            # URL conversion
             if location[1] == 80:
                 location = "http://{}".format(location[0])
             elif location[1]==443:
@@ -79,21 +85,32 @@ def break_sp(gdt, host, splashpage, location, recvd_headers):
         # new location specified
         if "action" in forms[0]:
             
-            if forms[0]["action"][0] == '/' or forms[0]["action"][0:2] == './': # relative path
-                print("REALATIVE PATH")
+            if forms[0]["action"][0] == '/': # relative path
+                print("REALATIVE PATH /")
                 location = "{0}{1}".format(location, forms[0]["action"]) #append to location
+            
+            elif forms[0]["action"][0:2] == './': # relative path
+                print("REALATIVE PATH ./")
+                location = "{0}{1}".format(location, forms[0]["action"][1:]) #append to location
             
             else: #absolute path
                 print("ABSOLUTE PATH")
                 location = forms[0]["action"]
 
-        print("break_sp: Resubmitting form.\nLocation:{0}\n".format(location))
+        del splashpage
+        del location
         collect()
+
+        print("break_sp: Resubmitting form.\nLocation:{0}\n".format(location))
         gdt.feed()
-        [_, status, recvd_page, headers] = reqst.post(location, data=resp, headers=recvd_headers, timeout=3000)
+        [dns_addr, status, recvd_page, recvd_headers] = reqst.post(location, data=resp, headers=recvd_headers, timeout=3000)
         gdt.feed()
         del resp
         collect()
+        print("After resubmitting forms:")
+        print("status:{}".format(status))
+        print("headers:{}".format(recvd_headers))
+        print("page:{}".format(recvd_page))
 
     
     # no forms, try following a-tags
@@ -106,25 +123,27 @@ def break_sp(gdt, host, splashpage, location, recvd_headers):
                  return True
         # -----------------------------
 
-    
-    # test DNS -> GET Request and Handles Redirection
-    [addr, status, location, body, headers] = reqst.test_dns_internet(host)
-    gdt.feed()
 
-    # NO SPLASH PAGE
-    if status == 200 and body == "OK":
-        print("Internet Access [OK]")
-        return ["", location, headers] #success
-
-    # Redirection
-    elif location and 300 <= status <= 309:
+    # Possible Redirection on new page
+    if "Location" or "redirURL" in recvd_headers and 300 <= status <= 309:
         gdt.feed()
         print("Fed GDT before requesting splash page")
+        [dns_addr, status, recvd_page, recvd_headers] = reqst.get_splash_page(recvd_headers["Location" or "redirURL" in recvd_headers])
+        # new splashpage received
 
-        [status,recvd_page,headers] = reqst.get_splash_page(location)
-        # splashpage received
+    print("PAGE BREAKING COMPLETE!")
+    print("Testing connection...")
     
-    return [status,recvd_page,headers]
+    # test DNS -> GET Request
+    # Test for open connection. DO NOT SEND THIS DATA BACK, you will only be backtracking to the inital page.
+    [_, dns_status, _, dns_body, _] = reqst.test_dns_internet(host)
+    gdt.feed()
+
+    if dns_status == 200 and dns_body == "OK":
+        print("Internet Access [OK]")
+        return True
+    
+    return [dns_addr, status, recvd_headers, recvd_page]
 
 
 
@@ -137,7 +156,7 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
     print("Fed GDT before DNS testing")
 
     # test DNS -> GET Request and Handles Redirection
-    [addr, status, location, body, headers] = reqst.test_dns_internet(host)
+    [dns_addr, status, location, body, headers] = reqst.test_dns_internet(host)
     print("status={0}\nheaders={1}\nlocation={2}\nbody={3}".format(status,headers,location,body))
 
     gdt.feed()
@@ -158,38 +177,41 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
     #elif status == 200:
     #    # should handle requests prior to redirection
     #    return station_connected(station, host, gdt, wifiLogger)
-
-    # Redirection
-    elif (status == 200) or (location and 300 <= status <= 309):
+    if location and 300 <= status <= 309:
+        #300s redirection
         gdt.feed()
         print("Fed GDT before requesting splash page")
+        [dns_addr, status, body, headers] = reqst.get_splash_page(location)
+        # splashpage received, move on to bypassing it
 
-        #splashpage not received yet
-        if status == 200:
-           splashpage = body
-           location = addr
 
-        #300s redirection
-        else:
-            [status,splashpage,headers] = reqst.get_splash_page(location)
-            # splashpage received
+    # Bypass Splashpage
+    if status == 200:
+
+        # dns_Addr is IP where the page came from, acquired from DNS lookup within previous activity
+
 
         gdt.feed()
         print("Fed GDT after splash page received")
 
-        print(splashpage)
+        print(body)
 
         print("Splashpage [OK]")
-        print("Splashpage Length [{}]".format(len(splashpage)))
+        print("Splashpage Length [{}]".format(len(body)))
         
+        location = dns_addr
+
         print("Splashpage Breaking...")
 
-        while splashpage != "":
-            [splashpage, location, headers] = break_sp(gdt, host, splashpage, location, headers)
+        # continue hopping from one page received to the next until we have access to host
+        while True:
+            [dns_addr, status, headers, body] = break_sp(gdt, host, dns_addr, headers, body)
+            if status == 200 and body == "OK":
+                return True
 
         print("Splashpage Not Broken Unless Implemented Above...")
         print("Splashpage [Failed]")
-        del splashpage
+        del body
         collect()
 
         #TODO: When You know you broke the page and allow DATA SENDING

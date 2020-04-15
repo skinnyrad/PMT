@@ -259,14 +259,9 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
 
 def request(method, url, data=None, json=None, headers={}, stream=None, timeout=0.5):
 
-    # Get stuff from URL
-    proto, dummy, host, path, port = breakdown_url(url)
-
-    print("breakdown url returned: host: {0} port:{1} path:{2}".format(host,port,path))
-
     # DNS Host or IPv4
     is_ipv4 = False
-    eight_bits = host.split(".")[0]
+    eight_bits = url.split(".")[0]
     # check 8 bits is enought
     try:
         if 0 < int(eight_bits) < 255:
@@ -275,8 +270,14 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         # not an IP
         pass
 
+
     #DNS Resolving Test
     if not is_ipv4:
+
+        # Get stuff from URL
+        proto, dummy, host, path, port = breakdown_url(url)
+        print("breakdown url returned: host: {0} port:{1} path:{2}".format(host,port,path))
+
         ai = usocket.getaddrinfo(host, port, 0, usocket.SOCK_STREAM)
         if ai != []:
             print("DNS Lookup [OK]")
@@ -286,7 +287,7 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
             return [584,None]
     else:
         # Is IPv4
-        print("DNS Lookup [Skipped]")
+        print("URL breakdown & DNS Lookup [Skipped]")
         # socket settings
         ai = [2,1,0,(host,port)]
     
@@ -332,10 +333,10 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
             l = s.readline()
             if not l or l == b"\r\n":
                 break
-            colon = l.find(':')
+            colon = l.find(b':')
             if colon != -1:
-                key = l[0:colon]
-                val = l[colon+1:]
+                key = l[0:colon].decode('utf-8')
+                val = l[colon+1:].decode('utf-8')
                 print("Header (key:val) {0}:{1}".format(key,val))
                 headers[key]=val
             #print(l)
