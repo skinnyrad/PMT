@@ -25,6 +25,7 @@ import ussl
 def breakdown_url(url):
     try:
         proto, dummy, host, path = url.split("/", 3)
+        path = "/{}".format(path) # Wireshark observation
     except ValueError:
         proto, dummy, host = url.split("/", 2)
         path = ""
@@ -303,24 +304,32 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         if proto == "https:":
             s = ussl.wrap_socket(s, server_hostname=host)
         s.write(b"%s /%s HTTP/1.0\r\n" % (method, path))
+        print("%s /%s HTTP/1.0\r\n" % (method, path))
         if not "Host" in headers:
             s.write(b"Host: %s\r\n" % host)
         # Iterate over keys to avoid tuple alloc
+        print("Sending Headers...")
         for k in headers:
             s.write(k)
             s.write(b": ")
             s.write(headers[k])
             s.write(b"\r\n")
+            print("{0}: {1}".format(k,headers[k]))
         if json is not None:
             assert data is None
             import ujson
             data = ujson.dumps(json)
             s.write(b"Content-Type: application/json\r\n")
+        print("Sending Headers...")
         if data:
             s.write(b"Content-Length: %d\r\n" % len(data))
+            print("Content-Length: %d\r\n" % len(data))
         s.write(b"\r\n")
+        print("Headers Sent... \\r\\n")
+        print("Sending body...")
         if data:
             s.write(data)
+            print(data)
         
         l = s.readline()
         print(l)
@@ -333,12 +342,13 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
             l = s.readline()
             if not l or l == b"\r\n":
                 break
+            l=l[0:-2] #remove newline chars
             colon = l.find(b':')
             if colon != -1:
                 key = l[0:colon].decode('utf-8')
                 val = l[colon+1:].decode('utf-8')
                 print("Header (key:val) {0}:{1}".format(key,val))
-                headers[key]=val
+                recvd_headers[key]=val
             #print(l)
             if l.startswith(b"Transfer-Encoding:"):
                 if b"chunked" in l:

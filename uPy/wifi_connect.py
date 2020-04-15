@@ -17,7 +17,7 @@ from gc import collect
 from gdt import GDT
 import logging
 import reqst
-from html import get_forms
+from html import get_forms, get_tags, breakup_tag, tag_internals_to_dict
 
 def splash_breaking_a(b_html):
     # read all bytes from socket
@@ -59,8 +59,6 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
     print(forms)
 
     if(len(forms) > 0):
-        del splashpage
-        collect()
 
         # generate response to form
         resp = form_response(forms[0])
@@ -69,6 +67,9 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
         # Add from resubmit specific headers
         recvd_headers["Content-Type"] = "application/x-www-form-urlencoded"
         recvd_headers["Accept"] = "*/*"
+        recvd_headers["Cache-Control"]= "no-cache"
+        recvd_headers["Accept-Encoding"]= "gzip, deflate, br"
+        recvd_headers["Connection"]= "keep-alive"
 
         # convert from dns address to usable URL
         if type(location) is tuple and len(location) == 2:
@@ -87,19 +88,40 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
             
             if forms[0]["action"][0] == '/': # relative path
                 print("REALATIVE PATH /")
-                location = "{0}{1}".format(location, forms[0]["action"]) #append to location
+                
+                # relative links append to <base ...> tag
+                base_tag = tag_internals_to_dict( breakup_tag( get_tags(splashpage, "base")[0] ) ) #relative paths must have a base specified
+                base_url = base_tag["href"]
+                [proto, dummy, base, _, _] = reqst.breakdown_url(base_url)
+                
+                location = "{0}//{1}{2}".format(proto, base, forms[0]["action"]) #append to location
+
+                #update header
+                recvd_headers["Host"] = "{}".format(base)
             
             elif forms[0]["action"][0:2] == './': # relative path
                 print("REALATIVE PATH ./")
-                location = "{0}{1}".format(location, forms[0]["action"][1:]) #append to location
+
+                # relative links append to <base ...> tag
+                base_tag = tag_internals_to_dict( breakup_tag( get_tags(splashpage, "base")[0] ) ) #relative paths must have a base specified
+                base_url = base_tag["href"]
+                [proto, dummy, base, _, _] = reqst.breakdown_url(base_url)
+
+                location = "{0}//{1}{2}".format(proto, base, forms[0]["action"][1:]) #append to location
+
+                #update header
+                recvd_headers["Host"] = "{}".format(base)
             
             else: #absolute path
                 print("ABSOLUTE PATH")
                 location = forms[0]["action"]
 
         del splashpage
-        del location
+        del forms
         collect()
+
+        #test
+        resp = 'apname=%7B%7B%20apname%20%7D%7D&clmac=%7B%7B%20clmac%20%7D%7D'
 
         print("break_sp: Resubmitting form.\nLocation:{0}\n".format(location))
         gdt.feed()
@@ -107,10 +129,10 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
         gdt.feed()
         del resp
         collect()
-        print("After resubmitting forms:")
+        print("New page after resubmitting forms:")
         print("status:{}".format(status))
         print("headers:{}".format(recvd_headers))
-        print("page:{}".format(recvd_page))
+        print("page:{}\n".format(recvd_page))
 
     
     # no forms, try following a-tags
