@@ -11,17 +11,17 @@
 #  Filename : gps.py
 
 # Pins
-# GPS TX => Pin 21 (Master RX)
-# GPS RX => Pin 22 (Master TX)
+# GPS TX => default TX for serial0
+# GPS RX => default RX for serial0
 
-from machine import UART
+import serial
 
 import logging
 
 class GPS():
-    def __init__(self, mac=1, _baudrate=9600, _tx=22, _rx=21, _txbuf=1024, _rxbuf=1024):
+    def __init__(self, port="/dev/serial0", _baudrate=9600):
         # create a new UART controller
-        self.uart = UART(mac, _baudrate, tx=_tx, rx=_rx, txbuf=_txbuf, rxbuf=_rxbuf)
+        self.uart = serial.Serial( port, _baudrate )
         
         # Used for finding new packets
         self.oldRXLength = 0
@@ -88,14 +88,16 @@ class GPS():
 
     def get_RMCdata(self, defaultLogger):
         self.oldRXLength = self.currentRXLength
-        self.currentRXLength = self.uart.any()
+        self.currentRXLength = self.uart.inWaiting() # how many bytes not read?
 
+        #if not unread bytes
         if(self.currentRXLength == 0):
             self.RMCdata = {}
             return [self.RMCdata, None]
 
+        #if more bytes received, check for RMC data
         else:
-            data = self.uart.read(self.currentRXLength)
+            data = self.uart.read(self.currentRXLength).decode('utf-8')
             rawData = list(d.replace('\r\n', '\\r\\n') for d in str(data).replace('\\r\\n', '\r\n').splitlines(True))
             try:
                 self.parse_RMCdata(rawData)
