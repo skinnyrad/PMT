@@ -25,6 +25,8 @@ _level_dict = {
     DEBUG: "DEBUG",
 }
 
+_loggers = {}
+
 class Logger:
 
     level = NOTSET
@@ -46,10 +48,10 @@ class Logger:
         self.logname = logname
 
     def isEnabledFor(self, level):
-        return level >= (self.level or _level)
+        return level >= (self.level)
 
     def log(self, level, msg):
-        if level >= (self.level or _level):
+        if level >= (self.level):
             with open(self.logname, "a+") as fp:
                 fp.write("{0}:{1}:{2}\n".format(self._level_str(level), self.name, msg))
 
@@ -82,12 +84,13 @@ class Logger:
 
     def exc(self, e, msg):
         self.log(ERROR, msg)
-        sys.print_exception(e, _stream)
+        #sys.print_exception(e, _stream)
+        print("{0}: {1}".format(e,msg))
 
     def exception(self, msg):
-        self.exc(sys.exc_info()[1], msg)
+        #self.exc(sys.exc_info()[1], msg)
+        print(msg)
 
-_loggers = {}
 
 def getLogger(name, filename):
     if name in _loggers:
@@ -95,3 +98,32 @@ def getLogger(name, filename):
     l = Logger(name, filename)
     _loggers[name] = l
     return l
+
+
+def openHomeDir(logger=None):
+    from os import chdir, getlogin
+    # must do this line by line, python gets mad otherwise
+    chdir('/')
+    chdir('home')
+    chdir(getlogin())
+
+# put python into runtime directory
+def openRuntimeDir(logger=None):
+    from os import chdir, access, mkdir, F_OK
+    openHomeDir()
+    if not access('runtime', F_OK): # if does not exist
+        mkdir('runtime') # make it
+    chdir('runtime')
+
+# put python into runtime directory
+def openPMTDir(logger=None):
+    from os import chdir, access, F_OK, getlogin
+    openHomeDir()
+    if not access('PMT', F_OK): # if does not exist
+        print("Error: PMT git repo not found in expected location!\n
+        print("Expected in /home/{0}/PMT  Exiting...".format(getlogin()))
+        if logger is not None:
+            logger.error("PMT git repo not found in expected location!\nExiting...")
+        exit()
+    chdir('PMT')
+    

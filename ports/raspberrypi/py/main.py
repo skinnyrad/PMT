@@ -17,7 +17,7 @@ from network import WLAN, STA_IF
 from os import remove
 from post import *
 from utime import sleep
-from uos import mount, umount
+import os
 from wifi_connect import *
 from gc import collect
 from gdt import GDT
@@ -26,19 +26,7 @@ from gdt import GDT
 
 ap_blacklist = ["xfinitywifi", "CableWiFi", "Omni10_Setup_B3B", "Regions Guest", "lululemonwifi", "Google Home.k"]
 
-# HELPFUL 
 
-## Get files in dir
-# import os
-# os.listdir()
-
-## Run python script within REPL 
-# execfile('<filename>')
-
-# if the SD card does not mount reset
-# manually remove and reinsert SD card before reset to fix
-# TODO: "Figure this out Ben you big dummy" - Ben
-# sd_wdt = WDT(timeout=((5)*1000))
 
 # Create a station object to store our connection
 station = WLAN(STA_IF)
@@ -46,36 +34,37 @@ station = WLAN(STA_IF)
 # activate station
 station.active(True)
 
-def sd_gdt_func(timer):
-    print("SD card did not mount correctly")
-    # TODO: add LED sigal from board to signify this
-    try:
-        umount("/sdcard")
-    except OSError as e:
-        # TODO: add LED signal from board to signify this
-        print("Reinsert SD Card in SD Card reader")
-        # TODO: remove sleep once LED signal is done
-        # sleep gives time to read comment before reseting the board
-        sleep(3)
-    reset()
 
-# mount SD card
-sd_gdt = GDT(2, station, func=sd_gdt_func)
-mount(SDCard(slot=3), "/sdcard")
-sd_gdt.deinit_timer()
-del sd_gdt
-collect()
 
-config_file = "/sdcard/pmt.conf"
-default = "/sdcard/pmt.log"
-wifi = "/sdcard/wifi.log"
-archive = "/sdcard/data.log"
-unsent = "/sdcard/buffer.log"
-blacklist = "/sdcard/blacklist.log"
-current_ap = "/sdcard/SSID.log"
-unsent_buffer_ptr = "/sdcard/buffer_pointer.log"
+# pmt.conf is kept in the PMT git repo, go there
+logging.openPMTDir()
 
-# create file for initial read
+with open("pmt.conf", 'rt') as fp:
+    pmt_config = eval(fp.read())
+
+try:
+    post_url = "{0}/api/post.php".format(pmt_config['post_url'] if pmt_config['post_url'][-1] != "/" else pmt_config['post_url'][:-1])
+    gps_interval = pmt_config['gps_interval']
+    enc_key = pmt_config['encryption_key']
+except KeyError as e:
+    print(e)
+    raise
+
+
+
+# put python into runtime directory
+logging.openRuntimeDir()
+
+default = "pmt.log"
+wifi = "wifi.log"
+archive = "data.log"
+unsent = "buffer.log"
+blacklist = "blacklist.log"
+current_ap = "SSID.log"
+unsent_buffer_ptr = "buffer_pointer.log"
+
+# create file should it not already exist,
+# append mode should it already contain contents
 with open(blacklist, "a+"):
     pass
 
@@ -100,43 +89,29 @@ apLogger.setLevel(logging.DEBUG)
 pointerLogger = logging.getLogger("BufferPointer", unsent_buffer_ptr)
 pointerLogger.setLevel(logging.DEBUG)
 
-# SD Card PINOUT:
-#    MISO    PIN 2
-#    MOSI    PIN 15
-#    CLK     PIN 14
-#    CS      PIN 13
+
 
 # GPS PINOUT:
-#   GPS TX => Pin 21 (Master RX)
-#   GPS RX => Pin 22 (Master TX)
-
-# Accelerometer PINOUT:
-#   SCL -> pin 10
-#   SDA -> pin 9
-
+# TODO: Insert pinout
 # instantiate GPS class
 gps = GPS()
 data = ""
 
-with open(config_file, 'r') as fp:
-    pmt_config = eval(fp.read())
 
-try:
-    post_url = "{0}/api/post.php".format(pmt_config['post_url'] if pmt_config['post_url'][-1] != "/" else pmt_config['post_url'][:-1])
-    gps_interval = pmt_config['gps_interval']
-    enc_key = pmt_config['encryption_key']
-except KeyError as e:
-    print(e)
-    raise
+
+# Accelerometer PINOUT:
+# TODO: Insert pinout
+
+
 
 with open(unsent_buffer_ptr, 'a+') as fp:
     total_bytes_read = int(fp.read()) if fp.read() != '' else 0
 
 posted = False
 
-#setup core WDT for partial reset (temporary)
-#TODO: change out with RWDT in esp32/panic.c
+
 collect()
+# setup core WDT for partial reset (temporary)
 # wdt = WDT(timeout=((5+gps_interval)*1000))
 gdt = GDT(5+gps_interval, station, logger=blacklistLogger)
 
