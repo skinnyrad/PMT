@@ -7,17 +7,17 @@
 # |_|    |_|  |_|  |_|      \_/ |_(_)___/ 
 # ----------------------------------------
 #  Version 1.0
-#  microPython Firmware esp32spiram-idf3-20191220-v1.12
+#  Raspbian Lite version February 2020
+#  Python 3.7
 #  Filename : wifi_connect.py
 
-from network import WLAN
-from usocket import getaddrinfo
-from machine import Timer, reset
+from socket import getaddrinfo
+from machine import reset
 from gc import collect
 from gdt import GDT
 import logging
 import reqst
-from html import get_forms, get_tags, breakup_tag, tag_internals_to_dict
+from html_parser import get_forms, get_tags, breakup_tag, tag_internals_to_dict
 
 def splash_breaking_a(b_html):
     # read all bytes from socket
@@ -174,7 +174,7 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
 
 
 
-def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger):
+def station_connected(host, gdt, wifiLogger):
     #TODO: remove print
     print("Connected [Testing Access]")
     wifiLogger.info("Connected [Testing Access]")
@@ -197,7 +197,7 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
     # Redirection Location but Status Code is 200
     elif status == 200 and location is not None:
         # should handle requests prior to redirection
-        return station_connected(station, location, gdt, wifiLogger)
+        return station_connected(location, gdt, wifiLogger)
 
     # Status Code 200 but not connected to internet yet
     # Make another request to get redirection information
@@ -254,8 +254,6 @@ def station_connected(station: WLAN, host: String, gdt: GDT, wifiLogger: Logger)
                 I (35596) wifi: stop sw txq
                 I (35596) wifi: lmac stop hw txq
         """
-        station.active(False)
-        station.active(True)
         return False
 
     # any error code not caught above

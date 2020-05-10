@@ -7,11 +7,11 @@
 # |_|    |_|  |_|  |_|      \_/ |_(_)___/ 
 # ----------------------------------------
 #  Version 1.0
-#  microPython Firmware esp32spiram-idf3-20191220-v1.12
+#  Raspbian Lite version February 2020
+#  Python 3.7
 #  Filename : post.py
 
 from reqst import post
-from machine import Timer, reset
 import logging
 # https request information
 headers = {
@@ -21,12 +21,12 @@ headers = {
 def handlerTimer(timer):
     print("Post: Timer Timeout")
     #Resets the device in a manner similar to pushing the external RESET button.
-    reset()
+    #reset()
 
-def post_data(post_data, post_url, station, logger: Logger) -> bool:
+def post_data(post_data, post_url, station, logger) -> bool:
     try:
         # init harware timer
-        timer = Timer(0)
+        #timer = Timer(0)
         #TODO: Uncomment this for solution
         #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
         [status, _] = post(post_url, headers=headers, data=post_data)

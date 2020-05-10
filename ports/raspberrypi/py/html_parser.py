@@ -7,7 +7,8 @@
 # |_|    |_|  |_|  |_|      \_/ |_(_)___/ 
 # ----------------------------------------
 #  Version 1.0
-#  microPython Firmware esp32spiram-idf3-20191220-v1.12
+#  Raspbian Lite version February 2020
+#  Python 3.7
 #  Filename : html.py
 # -------------------------------
 

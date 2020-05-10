@@ -7,7 +7,8 @@
 # |_|    |_|  |_|  |_|      \_/ |_(_)___/ 
 # ----------------------------------------
 #  Version 1.0
-#  microPython Firmware esp32spiram-idf3-20191220-v1.12
+#  Raspbian Lite version February 2020
+#  Python 3.7
 #  Filename : logging.py
 
 CRITICAL = 50
@@ -120,7 +121,7 @@ def openPMTDir(logger=None):
     from os import chdir, access, F_OK, getlogin
     openHomeDir()
     if not access('PMT', F_OK): # if does not exist
-        print("Error: PMT git repo not found in expected location!\n
+        print("Error: PMT git repo not found in expected location!\n")
         print("Expected in /home/{0}/PMT  Exiting...".format(getlogin()))
         if logger is not None:
             logger.error("PMT git repo not found in expected location!\nExiting...")
