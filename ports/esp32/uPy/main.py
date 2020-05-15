@@ -24,7 +24,7 @@ from gdt import GDT
 
 # import encry
 
-ap_blacklist = ["xfinitywifi", "CableWiFi"]
+ap_blacklist = ["xfinitywifi", "CableWiFi", "Omni10_Setup_B3B", "Regions Guest", "lululemonwifi", "Google Home.k"]
 
 # HELPFUL 
 

@@ -31,7 +31,7 @@ def find_complete_string(html_as_string, beginning_string, end_string, start_ind
     return [html_as_string[i:j], i, j]
 
 
-
+# Returns a list of strings
 def get_tags(html_as_string, tag_type=None):
     tag_list = []
     i=0
@@ -53,7 +53,7 @@ def get_tags(html_as_string, tag_type=None):
                 else: # end string was found
                     tag_list.append(ret_val[0])
 
-    # look for all tags
+    # tag_type not specified look for all tags
     else:
         while ret_val[0] != "":
             # tags that don't make up objects. ex: <form ...> ... </form>
@@ -107,6 +107,20 @@ def breakup_tag(tag):
         contents_list.append(val)
 
     return contents_list
+
+
+def tag_internals_to_dict(contents):
+    tag_dict = {}
+
+    tag_dict["tag_type"] = contents[0]
+
+    #put in key=val pairs
+    i=1
+    while i+1 < len(contents):
+        tag_dict[ contents[i] ] = contents[i+1]
+        i += 2
+    
+    return tag_dict
 
 
 
@@ -177,7 +191,8 @@ def construct_form_from_tag_internals(tags):
 #                   dict["method"] -> "POST"
 def get_forms(html):
     
-    html = html.decode('utf-8') # int to str
+    if type(html) is not str:
+        html = html.decode('utf-8') # int to str
 
     # each entry in list is "<form ...> <...> </form>" 
     forms = get_tags(html, "form")
@@ -215,3 +230,5 @@ def get_forms(html):
         parsed_forms.append(construct_form_from_tag_internals(form))
     
     return parsed_forms
+
+

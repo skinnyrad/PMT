@@ -10,9 +10,8 @@
 #  microPython Firmware esp32spiram-idf3-20191220-v1.12
 #  Filename : gdt.py
 
-from machine import SDCard, Timer
+from machine import SDCard, Timer, reset
 from uos import umount
-from rtcwatchdog import start
 
 class GDT():
     timer = Timer(0)
@@ -65,4 +64,4 @@ class GDT():
             with open("/sdcard/SSID.log", "r") as fp:
                 self.logger.write_line(fp.read())
         umount("/sdcard")
-        start(0)
+        reset()
