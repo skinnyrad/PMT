@@ -7,46 +7,48 @@
 # |_|    |_|  |_|  |_|      \_/ |_(_)___/ 
 # ----------------------------------------
 #  Version 1.0
-#  microPython Firmware esp32spiram-idf3-20191220-v1.12
+#  Raspbian Lite version February 2020
+#  Python 3.7
 #  Filename : gdt.py
 
-from machine import SDCard, Timer, reset
-from uos import umount
+from threading import Timer
+from os import system
 
 class GDT():
-    timer = Timer(0)
+    timer = None
     timeout = None
     station = None
     func = None
     logger = None
 
-    def __init__(self, timeout, station, func=None, logger=None):
+    def __init__(self, timeout, station, logger=None):
         self.set_timeout(timeout)
         self.set_station(station)
-        self.set_func(func)
+        self.set_func()
         self.set_logger(logger)
         self.init_timer()
 
     def init_timer(self):
-        self.timer.init(period=self.timeout, mode=Timer.ONE_SHOT, callback=self.func)
+        if self.timer is not None:
+            del self.timer
+        self.timer = Timer(self.timeout, self.func)
+        self.timer.start()
 
     def deinit_timer(self):
-        self.timer.deinit()
+        if self.timer is not None:
+            self.timer.cancel()
 
     def set_timeout(self, timeout):
-        self.timeout = timeout*1000
-        self.reset_timer()
+        self.timeout = timeout
 
     def set_station(self, station):
         self.station = station
-        self.reset_timer()
 
     def set_func(self, func=None):
         if func is None:
             self.func = self.timer_exp_func
         else:
             self.func = func
-        self.reset_timer()
 
     def set_logger(self, logger=None):
         self.logger = logger
@@ -61,7 +63,6 @@ class GDT():
     def timer_exp_func(self, timer):
         self.station.active(False)
         if self.logger is not None:
-            with open("/sdcard/SSID.log", "r") as fp:
+            with open("SSID.log", "rt") as fp:
                 self.logger.write_line(fp.read())
-        umount("/sdcard")
-        reset()
+        system('sudo reboot')
