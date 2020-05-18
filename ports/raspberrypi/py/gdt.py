@@ -17,13 +17,11 @@ from os import system
 class GDT():
     timer = None
     timeout = None
-    station = None
     func = None
     logger = None
 
-    def __init__(self, timeout, station, logger=None):
+    def __init__(self, timeout, logger=None):
         self.set_timeout(timeout)
-        self.set_station(station)
         self.set_func()
         self.set_logger(logger)
         self.init_timer()
@@ -40,9 +38,6 @@ class GDT():
 
     def set_timeout(self, timeout):
         self.timeout = timeout
-
-    def set_station(self, station):
-        self.station = station
 
     def set_func(self, func=None):
         if func is None:
@@ -61,7 +56,6 @@ class GDT():
         self.reset_timer()
 
     def timer_exp_func(self, timer):
-        self.station.active(False)
         if self.logger is not None:
             with open("SSID.log", "rt") as fp:
                 self.logger.write_line(fp.read())

@@ -13,28 +13,18 @@
 
 from gps import GPS
 import logging
-from machine import reset, SDCard
-from network import WLAN, STA_IF
+from machine import reset, scan_open_ssids, connect_to_ssid
 from os import remove
 from post import *
-from utime import sleep
-import os
+from time import sleep
 from wifi_connect import *
 from gc import collect
 from gdt import GDT
-
 # import encry
 
+
+
 ap_blacklist = ["xfinitywifi", "CableWiFi", "Omni10_Setup_B3B", "Regions Guest", "lululemonwifi", "Google Home.k"]
-
-
-
-# Create a station object to store our connection
-station = WLAN(STA_IF)
-
-# activate station
-station.active(True)
-
 
 
 # pmt.conf is kept in the PMT git repo, go there
@@ -50,7 +40,6 @@ try:
 except KeyError as e:
     print(e)
     raise
-
 
 
 # put python into runtime directory
@@ -111,10 +100,11 @@ with open(unsent_buffer_ptr, 'a+') as fp:
 posted = False
 
 
+
 collect()
 # setup core WDT for partial reset (temporary)
 # wdt = WDT(timeout=((5+gps_interval)*1000))
-gdt = GDT(5+gps_interval, station, logger=blacklistLogger)
+gdt = GDT(20+gps_interval, logger=blacklistLogger)
 
 while True:
     [GPSdata, speed] = gps.get_RMCdata(defaultLogger)
@@ -126,6 +116,7 @@ while True:
         archiveLogger.write(data)
         unsentLogger.write("{0}{1}".format(len(data), data))
         defaultLogger.info(data)
+        
     else:
         #TODO: remove print
         print("No GPS data.")

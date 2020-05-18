@@ -13,17 +13,15 @@
 
 # This is an abstraction layer used in porting
 # from micropython the python. As python does not 
-# have a machine class
+# have a machine module
 
 
 
 try:
-    from wifi import Cell, exceptions
     from os import popen
-    from time import sleep
 
 except (ModuleNotFoundError, ImportError) as err:
-    print("Error: wifi module not installed, or os module failed to load.\n\tInstall wifi module with: pip3 install wifi")
+    print("Error: Import failed in machine.py")
     print(err)
     exit()
 

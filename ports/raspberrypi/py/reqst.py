@@ -144,7 +144,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
                     s.close()
                     del s
                     raise ValueError("Unsupported " + l)
-            #check for redirection
+            # check for redirection
             elif l.startswith(b"Location:"): # and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
                 print("Redirection [{}]".format(location))
