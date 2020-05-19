@@ -20,7 +20,7 @@ if os.getcwd() != code_dir:
 
 import logging
 from gps import GPS
-from machine import reset, scan_open_ssids, connect_to_ssid
+from machine import reset
 from network import Station
 from post import *
 from time import sleep
