@@ -14,6 +14,7 @@
 from gps import GPS
 import logging
 from machine import reset, scan_open_ssids, connect_to_ssid
+from network import Station
 from os import remove
 from post import *
 from time import sleep
@@ -21,7 +22,6 @@ from wifi_connect import *
 from gc import collect
 from gdt import GDT
 # import encry
-
 
 
 ap_blacklist = ["xfinitywifi", "CableWiFi", "Omni10_Setup_B3B", "Regions Guest", "lululemonwifi", "Google Home.k"]
@@ -34,6 +34,7 @@ with open("pmt.conf", 'rt') as fp:
     pmt_config = eval(fp.read())
 
 try:
+    host_url = pmt_config['post_url']
     post_url = "{0}/api/post.php".format(pmt_config['post_url'] if pmt_config['post_url'][-1] != "/" else pmt_config['post_url'][:-1])
     gps_interval = pmt_config['gps_interval']
     enc_key = pmt_config['encryption_key']
@@ -80,7 +81,6 @@ pointerLogger = logging.getLogger("BufferPointer", unsent_buffer_ptr)
 pointerLogger.setLevel(logging.DEBUG)
 
 
-
 # GPS PINOUT:
 # TODO: Insert pinout
 # instantiate GPS class
@@ -88,17 +88,12 @@ gps = GPS()
 data = ""
 
 
-
 # Accelerometer PINOUT:
 # TODO: Insert pinout
 
 
-
-with open(unsent_buffer_ptr, 'a+') as fp:
-    total_bytes_read = int(fp.read()) if fp.read() != '' else 0
-
-posted = False
-
+# Set up wireless station
+station = Station()
 
 
 collect()
@@ -107,9 +102,15 @@ collect()
 gdt = GDT(20+gps_interval, logger=blacklistLogger)
 
 while True:
-    [GPSdata, speed] = gps.get_RMCdata(defaultLogger)
+
+    # Sample GNSS data
+    GPSdata = gps.get_RMCdata(defaultLogger)
+    speed = GPSdata['speed']
+    print("speed={}".format(speed))
+
+    # Store the data
     if not (GPSdata == {}):
-        data=','.join(list(GPSdata.values()))+','
+        data=','.join( list(GPSdata.values()) )+','
 
         #TODO: remove print
         print(data)
@@ -123,15 +124,66 @@ while True:
         defaultLogger.info("No GPS data.")
         data = ""
 
-    if station.isconnected():
+
+    # If we are not parked, then remove the list of SSIDs that didn't work
+    if (speed is not None) and (speed > 10.00):
+        remove(blacklist)
+
+        # re-create file for initial read
+        with open(blacklist, "a+"):
+            pass
+
+
+    # If our speed is slow enough we should try connecting to an Access Point
+    elif (speed is not None) and (speed <= 5.00):
+        if not station.is_connected():
+            try:
+                openNets = station.scan_open_ssids() # gets list of open SSIDS
+            except Exception as e:
+                #TODO: remove print
+                print("Warning: {0}".format(str(e)))
+                defaultLogger.warning(str(e))
+
+            # Update working blacklist with running list of bad APs in area
+            with open(blacklist, 'r') as fp:
+                ap_list = fp.read()
+                ap_list = ap_list.split("\n")
+                ap_blacklist = ap_blacklist + list(set(ap_list[:-1]) - set(ap_blacklist))
+
+            # try each SSID
+            for onet in openNets:
+                if onet not in ap_blacklist:
+                    # Try to connect to WiFi access point
+                    apLogger.overwrite(onet)
+                    #TODO: remove print
+                    print ( "Connecting to {0} ...\n".format(onet) )
+                    wifiLogger.info( "Connecting to {0} ...\n".format(onet[0]) )
+                    station.connect_to_ssid(onet)
+
+                    # Wait for connection
+                    while not station.is_connected():
+                        sleep(0.5)
+                    
+                    if station.is_connected():
+                        connected = station_connected(station, post_url, gdt, wifiLogger)
+                        if not connected:
+                            blacklistLogger.write_line(onet)
+                            #TODO: remove print
+                            print("Unable to Connect")
+                            wifiLogger.warning("Unable to Connect")
+                            break
+    
+
+    # If we have WAN access, post data
+    if station.has_wan_access(host_url):
         # enc_data = encry.encrypt(enc_key, rawData)
-        posted = post_data(data, post_url, station, defaultLogger)
-        
-        msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(apSSID), posted)
-        wifiLogger.write(msg)
+        posted = post_data(data, post_url, station, defaultLogger) # Send most recent data point
+        wifiLogger.write( "SSID: {0} Connected, POST: {1}\r\n".format(str(onet), posted) )
         # del enc_data
         # collect()
 
+        # unsent_buffer_ptr file just stores the number of bytes that have been sent off,
+        # use it as an offset to find the beginning of the unset data.
         data_points = ""
         with open(unsent_buffer_ptr, 'r') as fp:
             total_bytes_read = fp.read()
@@ -139,8 +191,8 @@ while True:
 
         with open(unsent, 'r') as fp:
             for i in range(15):
-                file_ptr.seek(total_bytes_read)
-                size = file_ptr.read(2)
+                fp.seek(total_bytes_read)
+                size = fp.read(2)
                 size = int(size) if size != '' else 0
 
                 if size == 0:
@@ -149,7 +201,7 @@ while True:
                     pointerLogger.overwrite(str(total_bytes_read))
                     break
                 
-                raw_data = file_ptr.read(int(size))
+                raw_data = fp.read(int(size))
                 total_bytes_read+=(2+size)
 
                 if data == raw_data:
@@ -176,48 +228,6 @@ while True:
             del data_points
             collect()
 
-    with open(blacklist, 'r') as fp:
-        ap_list = fp.read()
-        ap_list = ap_list.split("\n")
-        ap_blacklist = ap_blacklist + list(set(ap_list[:-1]) - set(ap_blacklist))
-
-    if (speed is not None) and (speed <= 10.00):
-        if not station.isconnected():
-            try:
-                # @param nets: tuple of obj(ssid, bssid, channel, RSSI, authmode, hidden)
-                nets = station.scan()
-            except RuntimeError as e:
-                #TODO: remove print
-                print("Warning: {0}".format(str(e)))
-                defaultLogger.warning(str(e)) 
-            # get only open nets
-            openNets = [n for n in nets if n[4] == 0]
-
-            for onet in openNets:
-                if onet[0].decode("utf-8") not in ap_blacklist:
-                    # Try to connect to WiFi access point
-                    apSSID = onet[0]
-                    apLogger.overwrite(apSSID.decode("utf-8"))
-                    #TODO: remove print
-                    print ("Connecting to {0} ...\n".format(str(onet[0],"utf-8")))
-                    wifiLogger.info("Connecting to {0} ...\n".format(str(onet[0],"utf-8")))
-                    station.connect(onet[0])
-                    while not station.isconnected():
-                        sleep(0.5)
-                    if station.isconnected():
-                        connected = station_connected(station, post_url, gdt, wifiLogger)
-                        if not connected:
-                            blacklistLogger.write_line(apSSID.decode("utf-8"))
-                            #TODO: remove print
-                            print("Unable to Connect")
-                            wifiLogger.warning("Unable to Connect")
-                            break
-    elif (speed is not None) and (speed > 10.00):
-        remove(blacklist)
-
-        # re-create file for initial read
-        with open(blacklist, "a+"):
-            pass
 
     sleep(gps_interval)
 

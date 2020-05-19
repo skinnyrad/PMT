@@ -174,7 +174,7 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
 
 
 
-def station_connected(host, gdt, wifiLogger):
+def station_connected(station, host, gdt, wifiLogger):
     #TODO: remove print
     print("Connected [Testing Access]")
     wifiLogger.info("Connected [Testing Access]")
