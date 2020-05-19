@@ -15,13 +15,13 @@
 # GPS TX => default TX for serial0
 # GPS RX => default RX for serial0
 
-import serial
+from serial import Serial
 import logging
 
 class GPS():
     def __init__(self, port="/dev/serial0", _baudrate=9600):
         # create a new UART controller
-        self.uart = serial.Serial( port, _baudrate )
+        self.uart = Serial( port, _baudrate )
         
         # Used for finding new packets
         self.oldRXLength = 0
@@ -31,8 +31,6 @@ class GPS():
         self.RMCdata = {}
         self.RMCfound = False
     
-    def __del__(self):
-        self.uart.deinit()
 
     def format_RMCdata(self, data):
         # Time
@@ -83,7 +81,7 @@ class GPS():
         else:
             self.RMCdata = {}
 
-    def get_RMCdata(self, defaultLogger):
+    def get_RMCdata(self, defaultLogger = None):
         self.oldRXLength = self.currentRXLength
         self.currentRXLength = self.uart.inWaiting() # how many bytes not read?
 
@@ -102,5 +100,6 @@ class GPS():
                 self.RMCdata = {}
                 #TODO: remove print
                 print(e)
-                defaultLogger.warning(str(e))
+                if defaultLogger != None:
+                    defaultLogger.warning(str(e))
             return self.RMCdata
