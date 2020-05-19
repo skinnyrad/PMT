@@ -11,11 +11,17 @@
 #  Python 3.7
 #  Filename : main.py
 
-from gps import GPS
+import os
+# Check if in correct directory
+code_dir = '/home/{}/PMT/ports/raspberrypi/py'.format(os.getlogin())
+if os.getcwd() != code_dir:
+    print("This programm must be run from: {}\nExiting...".format(code_dir))
+    exit(1)
+
 import logging
+from gps import GPS
 from machine import reset, scan_open_ssids, connect_to_ssid
 from network import Station
-from os import remove
 from post import *
 from time import sleep
 from wifi_connect import *
@@ -43,16 +49,16 @@ except KeyError as e:
     raise
 
 
-# put python into runtime directory
-logging.openRuntimeDir()
+# These files should be placed in runtime directory
+runtime_dir = '/home/{}/runtime/'.format(os.getlogin())
 
-default = "pmt.log"
-wifi = "wifi.log"
-archive = "data.log"
-unsent = "buffer.log"
-blacklist = "blacklist.log"
-current_ap = "SSID.log"
-unsent_buffer_ptr = "buffer_pointer.log"
+default = os.path.join(runtime_dir,"pmt.log")
+wifi = os.path.join(runtime_dir,"wifi.log")
+archive = os.path.join(runtime_dir,"data.log")
+unsent = os.path.join(runtime_dir,"buffer.log")
+blacklist = os.path.join(runtime_dir,"blacklist.log")
+current_ap = os.path.join(runtime_dir,"SSID.log")
+unsent_buffer_ptr = os.path.join(runtime_dir,"buffer_pointer.log")
 
 # create file should it not already exist,
 # append mode should it already contain contents
@@ -127,7 +133,7 @@ while True:
 
     # If we are not parked, then remove the list of SSIDs that didn't work
     if (speed is not None) and (speed > 10.00):
-        remove(blacklist)
+        os.remove(blacklist)
 
         # re-create file for initial read
         with open(blacklist, "a+"):
@@ -196,7 +202,7 @@ while True:
                 size = int(size) if size != '' else 0
 
                 if size == 0:
-                    remove(unsent)
+                    os.remove(unsent)
                     total_bytes_read = 0
                     pointerLogger.overwrite(str(total_bytes_read))
                     break
@@ -218,7 +224,7 @@ while True:
                 # enc_data = encry.encrypt(enc_key, rawData)
                 posted = post_data(data_points, post_url, station, defaultLogger)
 
-                msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(apSSID), posted)
+                msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(onet), posted)
                 wifiLogger.write(msg)
                 # del enc_data
 
