@@ -15,7 +15,7 @@ import os
 # Check if in correct directory
 code_dir = '/home/{}/PMT/ports/raspberrypi/py'.format(os.getlogin())
 if os.getcwd() != code_dir:
-    print("This programm must be run from: {}\nExiting...".format(code_dir))
+    print("This program must be run from: {}\nExiting...".format(code_dir))
     exit(1)
 
 import logging
