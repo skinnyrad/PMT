@@ -120,12 +120,12 @@ def openRuntimeDir(logger=None):
 def openPMTDir(logger=None):
     from os import chdir, access, F_OK, getlogin
     PMT_dir = '/home/{}/PMT'.format(getlogin())
-    
+
     if not access(PMT_dir, F_OK): # if does not exist
         print("Error: PMT git repo not found in expected location!\n")
         print("Expected in /boot/PMT  Exiting...")
         if logger is not None:
             logger.error("PMT git repo not found in expected location /boot/PMT\nExiting...")
         exit()
-    chdir('PMT')
+    chdir(PMT_dir)
     
