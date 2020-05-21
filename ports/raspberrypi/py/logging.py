@@ -11,6 +11,10 @@
 #  Python 3.7
 #  Filename : logging.py
 
+from os import getlogin
+
+runtime_dir = "/home/{}/runtime".format(getlogin())
+
 CRITICAL = 50
 ERROR    = 40
 WARNING  = 30

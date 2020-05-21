@@ -12,18 +12,21 @@
 #  Filename : gdt.py
 
 from threading import Timer
-from os import system
+import os
+import machine
 
 class GDT():
     timer = None
     timeout = None
     func = None
     logger = None
+    wifi_station = None
 
-    def __init__(self, timeout, logger=None):
+    def __init__(self, timeout, logger=None, wifi_station=None):
         self.set_timeout(timeout)
         self.set_func()
         self.set_logger(logger)
+        self.set_wifi_station(wifi_station)
         self.init_timer()
 
     def init_timer(self):
@@ -47,6 +50,9 @@ class GDT():
 
     def set_logger(self, logger=None):
         self.logger = logger
+    
+    def set_wifi_station(self, wifi_station=None):
+        self.wifi_station = wifi_station
 
     def reset_timer(self):
         self.deinit_timer()
@@ -55,8 +61,20 @@ class GDT():
     def feed(self):
         self.reset_timer()
 
-    def timer_exp_func(self, timer):
+    def timer_exp_func(self):
+        print("Guard func running")
         if self.logger is not None:
-            with open("SSID.log", "rt") as fp:
-                self.logger.write_line(fp.read())
-        system('sudo reboot')
+            from logging import runtime_dir
+            # If the SSID file exists, read the current SSID we are connected to and blacklist it
+            if os.access( os.path.join(runtime_dir, "SSID.log"), os.F_OK ):
+                with open( os.path.join(runtime_dir, "SSID.log"), "rt") as fp:
+                    self.logger.write_line(fp.read())
+        # Try rebooting the process
+        try:
+            print("Rebooting process")
+            #machine.proc_restart()
+        # If proc_reboot fails then reboot board
+        except Exception:
+            print(Exception)
+            print("Rebooting board")
+            #machine.reset()

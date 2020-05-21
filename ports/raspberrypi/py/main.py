@@ -91,7 +91,7 @@ pointerLogger.setLevel(logging.DEBUG)
 # TODO: Insert pinout
 # instantiate GPS class
 gps = GPS()
-data = ""
+data = ''
 
 
 # Accelerometer PINOUT:
@@ -116,7 +116,13 @@ while True:
 
     # Store the data
     if not (GPSdata == {}):
-        data=','.join( list(GPSdata.values()) )+','
+        # Use when we support sending speed to host
+        #data = ''
+        #for val in GPSdata.values():
+        #    data = "{0}{1}".format(data, val)
+        #    data = '{},'.format(data)
+        data = "{0},{1},{2},{3},".format(GPSdata['time'], GPSdata['latitude'], GPSdata['longitude'], GPSdata['date'] )
+        print(data)
 
         #TODO: remove print
         print(data)

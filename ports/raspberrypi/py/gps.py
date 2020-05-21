@@ -33,6 +33,8 @@ class GPS():
     
 
     def format_RMCdata(self, data):
+        
+        print(data)
         # Time
         self.RMCdata['time'] = data[1][0:2] + ':' + data[1][2:4] + ':' + data[1][4:6]
 
@@ -92,7 +94,13 @@ class GPS():
 
         #if more bytes received, check for RMC data
         else:
-            data = self.uart.read(self.currentRXLength).decode('utf-8')
+            try:
+                data = self.uart.read(self.currentRXLength).decode('utf-8')
+            except UnicodeDecodeError as err:
+                print("Failure converting GPS bytes to utf-8")
+                print(err)
+                return {}
+            
             rawData = list(d.replace('\r\n', '\\r\\n') for d in str(data).replace('\\r\\n', '\r\n').splitlines(True))
             try:
                 self.parse_RMCdata(rawData)
