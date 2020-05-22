@@ -111,11 +111,14 @@ while True:
 
     # Sample GNSS data
     GPSdata = gps.get_RMCdata(defaultLogger)
-    speed = GPSdata['speed']
-    print("speed={}".format(speed))
+    speed = 0
 
     # Store the data
     if not (GPSdata == {}):
+
+        speed = GPSdata['speed']
+        print("speed={}".format(speed))
+
         # Use when we support sending speed to host
         #data = ''
         #for val in GPSdata.values():
@@ -148,6 +151,7 @@ while True:
 
     # If our speed is slow enough we should try connecting to an Access Point
     elif (speed is not None) and (speed <= 5.00):
+        print("Scanning for SSIDS")
         if not station.is_connected():
             try:
                 openNets = station.scan_open_ssids() # gets list of open SSIDS
@@ -155,6 +159,8 @@ while True:
                 #TODO: remove print
                 print("Warning: {0}".format(str(e)))
                 defaultLogger.warning(str(e))
+
+            print(openNets)
 
             # Update working blacklist with running list of bad APs in area
             with open(blacklist, 'r') as fp:
@@ -174,8 +180,9 @@ while True:
 
                     # Wait for connection
                     while not station.is_connected():
-                        sleep(0.5)
+                        sleep(0.5) # Half second
                     
+                    # If we now have a valid IP
                     if station.is_connected():
                         connected = station_connected(station, post_url, gdt, wifiLogger)
                         if not connected:

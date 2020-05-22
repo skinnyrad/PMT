@@ -84,7 +84,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     #TODO: Uncomment this for solution
     #timer.deinit()
     if ai != []:
-        print(str(ai))
+        print( "DNA address info: {}".format(str(ai)) )
         print("DNS Lookup [OK]")
     else:
         print("DNS Lookup [Failed]")
@@ -145,7 +145,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
                     del s
                     raise ValueError("Unsupported " + l)
             # check for redirection
-            elif l.startswith(b"Location:"): # and not 200 <= status <= 299:
+            elif l.startswith("Location:"): # and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
                 print("Redirection [{}]".format(location))
                 # need to get the method from the redirection

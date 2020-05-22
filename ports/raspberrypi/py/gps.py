@@ -60,7 +60,7 @@ class GPS():
 
         # TODO: Let's revisit this...
         # #Speed and Course
-        self.RMCdata['speed'] = float(data[7])
+        self.RMCdata['speed'] = 0 + float(data[7])
         # self.RMCdata['course'] = float(data[8])
 
         #Date
