@@ -15,26 +15,22 @@
 # GPS TX => default TX for serial0
 # GPS RX => default RX for serial0
 
-import serial
+from serial import Serial
 import logging
 
 class GPS():
     def __init__(self, port="/dev/serial0", _baudrate=9600):
         # create a new UART controller
-        self.uart = serial.Serial( port, _baudrate )
+        self.uart = Serial( port, _baudrate )
         
         # Used for finding new packets
         self.oldRXLength = 0
         self.currentRXLength = 0
 
-        self.speed = 0
-
         #make a dictionary for RMC data
         self.RMCdata = {}
         self.RMCfound = False
     
-    def __del__(self):
-        self.uart.deinit()
 
     def format_RMCdata(self, data):
         # Time
@@ -62,9 +58,8 @@ class GPS():
 
         # TODO: Let's revisit this...
         # #Speed and Course
-        # self.RMCdata['speed'] = float(data[7])
+        self.RMCdata['speed'] = 0 + float(data[7])
         # self.RMCdata['course'] = float(data[8])
-        self.speed = float(data[7])
 
         #Date
         self.RMCdata['date'] = str(2000 + int(data[9][4:6])) + '-' + data[9][2:4] + '-' + data[9][0:2]
@@ -86,18 +81,24 @@ class GPS():
         else:
             self.RMCdata = {}
 
-    def get_RMCdata(self, defaultLogger):
+    def get_RMCdata(self, defaultLogger = None):
         self.oldRXLength = self.currentRXLength
         self.currentRXLength = self.uart.inWaiting() # how many bytes not read?
 
         #if not unread bytes
         if(self.currentRXLength == 0):
             self.RMCdata = {}
-            return [self.RMCdata, None]
+            return self.RMCdata
 
         #if more bytes received, check for RMC data
         else:
-            data = self.uart.read(self.currentRXLength).decode('utf-8')
+            try:
+                data = self.uart.read(self.currentRXLength).decode('utf-8')
+            except UnicodeDecodeError as err:
+                print("Failure converting GPS bytes to utf-8")
+                print(err)
+                return {}
+            
             rawData = list(d.replace('\r\n', '\\r\\n') for d in str(data).replace('\\r\\n', '\r\n').splitlines(True))
             try:
                 self.parse_RMCdata(rawData)
@@ -105,5 +106,6 @@ class GPS():
                 self.RMCdata = {}
                 #TODO: remove print
                 print(e)
-                defaultLogger.warning(str(e))
-            return [self.RMCdata, self.speed]
+                if defaultLogger != None:
+                    defaultLogger.warning(str(e))
+            return self.RMCdata

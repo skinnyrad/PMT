@@ -84,8 +84,8 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     #TODO: Uncomment this for solution
     #timer.deinit()
     if ai != []:
-        print(str(ai))
-        print("DNS Lookup [OK]")
+        print( "DNA address info: {}".format(str(ai[0])) )
+        print("DNS Lookup [OK]\n")
     else:
         print("DNS Lookup [Failed]")
         return [None,584,None,None,None]
@@ -118,7 +118,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
 
         data = recv_all(s).decode('utf-8')
         data = StringIO(data)
-        l = data.readline()
+        l = data.readline().rstrip()
         print(l)
         l = l.split(None, 2)
         status = int(l[1])
@@ -135,7 +135,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
             colon = l.find(':')
             if colon != -1:
                 key = l[0:colon]
-                val = l[colon+1:]
+                val = l[colon+1:].rstrip()
                 print("Header (key:val) {0}:{1}".format(key,val))
                 recvd_headers[key]=val
             # Currently not supporting chunked transfer
@@ -144,8 +144,8 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
                     s.close()
                     del s
                     raise ValueError("Unsupported " + l)
-            #check for redirection
-            elif l.startswith(b"Location:"): # and not 200 <= status <= 299:
+            # check for redirection
+            elif l.startswith("Location:"): # and not 200 <= status <= 299:
                 location = str(l[10:])[2:-5]
                 print("Redirection [{}]".format(location))
                 # need to get the method from the redirection
@@ -181,14 +181,14 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
     if not is_ipv4:
         ai = socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM)
         if ai != []:
-            print("DNS Lookup [OK]")
+            print("DNS Lookup [OK]\n")
             ai = ai[0]
         else:
             print("DNS Lookup [Failed]")
             return [584,None]
     else:
         # Is IPv4
-        print("DNS Lookup [Skipped]")
+        print("DNS Lookup [Skipped]\n")
         # socket settings
         ai = [2,1,0,(host,port)]
 
@@ -222,7 +222,7 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
 
         data = recv_all(s).decode('utf-8')
         data = StringIO(data)
-        l = data.readline()
+        l = data.readline().rstrip()
         print(l)
         l = l.split(None, 2)
         status = int(l[1])
@@ -237,7 +237,7 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
             colon = l.find(':')
             if colon != -1:
                 key = l[0:colon]
-                val = l[colon+1:]
+                val = l[colon+1:].rstrip()
                 print("Header (key:val) {0}:{1}".format(key,val))
                 recvd_headers[key]=val
             if l.startswith("Transfer-Encoding:"):
@@ -296,14 +296,14 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
 
         ai = socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM)
         if ai != []:
-            print("DNS Lookup [OK]")
+            print("DNS Lookup [OK]\n")
             ai = ai[0]
         else:
             print("DNS Lookup [Failed]")
             return [584,None]
     else:
         # Is IPv4
-        print("URL breakdown & DNS Lookup [Skipped]")
+        print("URL breakdown & DNS Lookup [Skipped]\n")
         # socket settings
         ai = [2,1,0,(host,port)]
     
@@ -321,18 +321,17 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         s.sendall("{0} /{1} HTTP/1.0\r\n".format(method, path).encode() )
         print("{1} /{0} HTTP/1.0\r\n".format(method, path).encode() )
         if not "Host" in headers:
-            s.sendall("Host: {}\r\n".format(host) )
+            s.sendall("Host: {}\r\n".format(host).encode() )
         # Iterate over keys to avoid tuple alloc
         print("Sending Headers...")
         for k in headers:
-            s.sendall( b"{0}: {1}\r\n".format(k, headers[k]) )
+            s.sendall( "{0}: {1}\r\n".format(k, headers[k]).encode() )
             print("{0}: {1}".format(k,headers[k]))
         if json is not None:
             assert data is None
             from json import dumps
             data = dumps(json)
             s.sendall(b"Content-Type: application/json\r\n")
-        print("Sending Headers...")
         if data:
             s.sendall( "Content-Length: {}\r\n".format(len(data)).encode() )
             print( "Content-Length: {}\r\n".format(len(data)).encode() )
@@ -345,7 +344,7 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         
         data = recv_all(s).decode('utf-8')
         data = StringIO(data)
-        l = data.readline()
+        l = data.readline().rstrip()
         print(l)
         l = l.split(None, 2)
         status = int(l[1])
@@ -356,11 +355,11 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
             l = data.readline()
             if not l or l == "\r\n":
                 break
-            l=l[0:-2] #remove newline chars
-            colon = l.find(b':')
+            l=l[0:-2] # remove newline chars
+            colon = l.find(':')
             if colon != -1:
                 key = l[0:colon].decode('utf-8')
-                val = l[colon+1:].decode('utf-8')
+                val = l[colon+1:].decode('utf-8').rstrip()
                 print("Header (key:val) {0}:{1}".format(key,val))
                 recvd_headers[key]=val
             #print(l)

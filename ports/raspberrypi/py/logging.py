@@ -11,6 +11,10 @@
 #  Python 3.7
 #  Filename : logging.py
 
+from os import getlogin
+
+runtime_dir = "/home/{}/runtime".format(getlogin())
+
 CRITICAL = 50
 ERROR    = 40
 WARNING  = 30
@@ -32,9 +36,9 @@ class Logger:
 
     level = NOTSET
 
-    def __init__(self, name, logname):
+    def __init__(self, name, location):
         self.name = name
-        self.logname = logname
+        self.location = location
 
     def _level_str(self, level):
         l = _level_dict.get(level)
@@ -45,27 +49,27 @@ class Logger:
     def setLevel(self, level):
         self.level = level
 
-    def setLogname(self, logname):
-        self.logname = logname
+    def setLocation(self, location):
+        self.location = location
 
     def isEnabledFor(self, level):
         return level >= (self.level)
 
     def log(self, level, msg):
         if level >= (self.level):
-            with open(self.logname, "a+") as fp:
+            with open( self.location, "a+") as fp:
                 fp.write("{0}:{1}:{2}\n".format(self._level_str(level), self.name, msg))
 
     def write(self, msg):
-        with open(self.logname, "a+") as fp:
+        with open(self.location, "a+") as fp:
             fp.write(msg)
 
     def overwrite(self, msg):
-        with open(self.logname, "w+") as fp:
+        with open(self.location, "w+") as fp:
             fp.write(msg)
 
     def write_line(self, msg):
-        with open(self.logname, "a+") as fp:
+        with open(self.location, "a+") as fp:
             fp.write("{0}\n".format(msg))
 
     def debug(self, msg):
@@ -111,20 +115,21 @@ def openHomeDir(logger=None):
 # put python into runtime directory
 def openRuntimeDir(logger=None):
     from os import chdir, access, mkdir, F_OK
-    openHomeDir()
+    openPMTDir()
     if not access('runtime', F_OK): # if does not exist
         mkdir('runtime') # make it
     chdir('runtime')
 
-# put python into runtime directory
+# put python into /boot/PMT/ directory
 def openPMTDir(logger=None):
     from os import chdir, access, F_OK, getlogin
-    openHomeDir()
-    if not access('PMT', F_OK): # if does not exist
+    PMT_dir = '/home/{}/PMT'.format(getlogin())
+
+    if not access(PMT_dir, F_OK): # if does not exist
         print("Error: PMT git repo not found in expected location!\n")
-        print("Expected in /home/{0}/PMT  Exiting...".format(getlogin()))
+        print("Expected in /boot/PMT  Exiting...")
         if logger is not None:
-            logger.error("PMT git repo not found in expected location!\nExiting...")
+            logger.error("PMT git repo not found in expected location /boot/PMT\nExiting...")
         exit()
-    chdir('PMT')
+    chdir(PMT_dir)
     

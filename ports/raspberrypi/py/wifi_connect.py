@@ -174,7 +174,7 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
 
 
 
-def station_connected(host, gdt, wifiLogger):
+def station_connected(station, host, gdt, wifiLogger):
     #TODO: remove print
     print("Connected [Testing Access]")
     wifiLogger.info("Connected [Testing Access]")
@@ -197,7 +197,7 @@ def station_connected(host, gdt, wifiLogger):
     # Redirection Location but Status Code is 200
     elif status == 200 and location is not None:
         # should handle requests prior to redirection
-        return station_connected(location, gdt, wifiLogger)
+        return station_connected(station, location, gdt, wifiLogger)
 
     # Status Code 200 but not connected to internet yet
     # Make another request to get redirection information
