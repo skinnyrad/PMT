@@ -30,7 +30,7 @@ from gdt import GDT
 # import encry
 
 
-ap_blacklist = ["xfinitywifi", "CableWiFi", "Omni10_Setup_B3B", "Regions Guest", "lululemonwifi", "Google Home.k"]
+ap_blacklist = ["", "xfinitywifi", "CableWiFi", "Omni10_Setup_B3B", "lululemonwifi", "Google Home.k"]
 
 
 # pmt.conf is kept in the PMT git repo, go there
@@ -51,6 +51,9 @@ except KeyError as e:
 
 # These files should be placed in runtime directory
 runtime_dir = '/home/{}/runtime/'.format(os.getlogin())
+
+if not os.access(runtime_dir, os.F_OK): # if does not exist
+    os.mkdir(runtime_dir) #make it
 
 default = os.path.join(runtime_dir,"pmt.log")
 wifi = os.path.join(runtime_dir,"wifi.log")
@@ -103,9 +106,7 @@ station = Station()
 
 
 collect()
-# setup core WDT for partial reset (temporary)
-# wdt = WDT(timeout=((5+gps_interval)*1000))
-gdt = GDT(20+gps_interval, logger=blacklistLogger)
+gdt = GDT(30+gps_interval, logger=blacklistLogger)
 
 while True:
 
@@ -127,8 +128,6 @@ while True:
         data = "{0},{1},{2},{3},".format(GPSdata['time'], GPSdata['latitude'], GPSdata['longitude'], GPSdata['date'] )
         print(data)
 
-        #TODO: remove print
-        print(data)
         archiveLogger.write(data)
         unsentLogger.write("{0}{1}".format(len(data), data))
         defaultLogger.info(data)
@@ -151,8 +150,12 @@ while True:
 
     # If our speed is slow enough we should try connecting to an Access Point
     elif (speed is not None) and (speed <= 5.00):
-        print("Scanning for SSIDS")
+        gdt.feed()
+
+        # If not connected we need to connect
         if not station.is_connected():
+            print("Scanning for SSIDS")
+
             try:
                 openNets = station.scan_open_ssids() # gets list of open SSIDS
             except Exception as e:
@@ -169,83 +172,105 @@ while True:
                 ap_blacklist = ap_blacklist + list(set(ap_list[:-1]) - set(ap_blacklist))
 
             # try each SSID
-            for onet in openNets:
-                if onet not in ap_blacklist:
+            for ssid in openNets:
+                if ssid not in ap_blacklist:
                     # Try to connect to WiFi access point
-                    apLogger.overwrite(onet)
+                    apLogger.overwrite(ssid)
                     #TODO: remove print
-                    print ( "Connecting to {0} ...\n".format(onet) )
-                    wifiLogger.info( "Connecting to {0} ...\n".format(onet[0]) )
-                    station.connect_to_ssid(onet)
+                    print ( "Connecting to {0} ...\n".format(ssid) )
+                    wifiLogger.info( "Connecting to {0} ...\n".format(ssid[0]) )
+                    gdt.feed()
+                    station.connect_to_ssid(ssid)
 
                     # Wait for connection
                     while not station.is_connected():
+                        gdt.feed()
                         sleep(0.5) # Half second
                     
-                    # If we now have a valid IP
-                    if station.is_connected():
-                        connected = station_connected(station, post_url, gdt, wifiLogger)
-                        if not connected:
-                            blacklistLogger.write_line(onet)
-                            #TODO: remove print
-                            print("Unable to Connect")
-                            wifiLogger.warning("Unable to Connect")
-                            break
-    
-
-    # If we have WAN access, post data
-    if station.has_wan_access(host_url):
-        # enc_data = encry.encrypt(enc_key, rawData)
-        posted = post_data(data, post_url, station, defaultLogger) # Send most recent data point
-        wifiLogger.write( "SSID: {0} Connected, POST: {1}\r\n".format(str(onet), posted) )
-        # del enc_data
-        # collect()
-
-        # unsent_buffer_ptr file just stores the number of bytes that have been sent off,
-        # use it as an offset to find the beginning of the unset data.
-        data_points = ""
-        with open(unsent_buffer_ptr, 'r') as fp:
-            total_bytes_read = fp.read()
-            total_bytes_read = int(total_bytes_read) if total_bytes_read != '' else 0
-
-        with open(unsent, 'r') as fp:
-            for i in range(15):
-                fp.seek(total_bytes_read)
-                size = fp.read(2)
-                size = int(size) if size != '' else 0
-
-                if size == 0:
-                    os.remove(unsent)
-                    total_bytes_read = 0
-                    pointerLogger.overwrite(str(total_bytes_read))
-                    break
-                
-                raw_data = fp.read(int(size))
-                total_bytes_read+=(2+size)
-
-                if data == raw_data:
-                    continue
-                else:
-                    data_points = "{0}{1}".format(data_points, raw_data)
-                    del raw_data
-                    collect()
+        # If we now have a valid I
+        if station.is_connected():
+            
+            # Case: after reboot rasperry pi wpa_supplicant.conf is already configured for SSID and connects automatically.
+            # Therefore python may not have SSID defined. Need to recover from file.
+            try:
+                ssid=ssid
+            except NameError as err:
+                print("ssid not yet defined")
+                with open(current_ap, 'rt') as fp:
+                    ssid = fp.read()
 
             gdt.feed()
-            print("Fed GDT after reading from buffer")
+            print("Connected to {}".format(ssid))
+            connected = station_connected(station, post_url, gdt, wifiLogger)
+            if not connected:
+                blacklistLogger.write_line(ssid)
+                #TODO: remove print
+                print("Unable to Connect")
+                wifiLogger.warning("Unable to Connect")
+                break
 
-            if data_points != "":
+            # So long as we have WAN access, post data
+            print("Checking WAN access")
+            while station.has_wan_access(host_url):
                 # enc_data = encry.encrypt(enc_key, rawData)
-                posted = post_data(data_points, post_url, station, defaultLogger)
-
-                msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(onet), posted)
-                wifiLogger.write(msg)
+                posted = post_data(data, post_url, station, defaultLogger) # Send most recent data point
+                wifiLogger.write( "SSID: {0} Connected, POST: {1}\r\n".format(str(ssid), posted) )
                 # del enc_data
+                # collect()
 
-            if posted:
-                pointerLogger.overwrite(str(total_bytes_read))
+                # unsent_buffer_ptr file just stores the number of bytes that have been sent off,
+                # use it as an offset to find the beginning of the unset data.
+                data_points = ""
+                with open(unsent_buffer_ptr, 'r') as fp:
+                    total_bytes_read = fp.read()
+                    total_bytes_read = int(total_bytes_read) if total_bytes_read != '' else 0
 
-            del data_points
-            collect()
+                with open(unsent, 'r') as fp:
+                    for i in range(15):
+                        # seek to unsent data
+                        fp.seek(total_bytes_read)
+
+                        # read size of data point
+                        size = fp.read(2)
+                        size = int(size) if size != '' else 0
+
+                        # If we've sent all the data, update as such
+                        if size == 0:
+                            os.remove(unsent)
+                            total_bytes_read = 0
+                            pointerLogger.overwrite(str(total_bytes_read))
+                            break
+                        
+                        # Read the rest of the data point
+                        raw_data = fp.read(int(size))
+                        total_bytes_read+=(2+size)
+
+                        # If the data read if the most recent data point,
+                        # then don't send it again. Already sent above
+                        if data == raw_data:
+                            continue
+                        # append this data point in with the others
+                        else:
+                            data_points = "{0}{1}".format(data_points, raw_data)
+                            del raw_data
+                            collect()
+
+                    gdt.feed()
+                    print("Fed GDT after reading from buffer")
+
+                    if data_points != "":
+                        # enc_data = encry.encrypt(enc_key, rawData)
+                        posted = post_data(data_points, post_url, station, defaultLogger)
+
+                        msg = "SSID: {0} Connected, POST: {1}\r\n".format(str(ssid), posted)
+                        wifiLogger.write(msg)
+                        # del enc_data
+
+                    if posted:
+                        pointerLogger.overwrite(str(total_bytes_read))
+
+                    del data_points
+                    collect()
 
 
     sleep(gps_interval)

@@ -156,10 +156,24 @@ class Station():
 
         # Request host/api/ should return OK in body
         from reqst import test_dns_internet
-        [_, status, _, body, _] = test_dns_internet(url)
+        from socket import gaierror
+        MAX_RETRIES = 3
+        current = 0
+        while current < MAX_RETRIES:
+            # try to test our known good "OK"
+            try:
+                current += 1
+                [_, status, _, body, _] = test_dns_internet(url)
+            
+            # Sometimes DNS fails
+            except gaierror as err:
+                print(err)
+                if current < MAX_RETRIES:
+                    print("Retrying...")
 
-        if status == 200 and body == "OK":
-            return True
+            # If we got access to the external page
+            if status == 200 and body == "OK":
+                return True
         
         return False
 

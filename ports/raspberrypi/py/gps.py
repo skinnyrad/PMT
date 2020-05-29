@@ -33,8 +33,6 @@ class GPS():
     
 
     def format_RMCdata(self, data):
-        
-        print(data)
         # Time
         self.RMCdata['time'] = data[1][0:2] + ':' + data[1][2:4] + ':' + data[1][4:6]
 
@@ -90,7 +88,7 @@ class GPS():
         #if not unread bytes
         if(self.currentRXLength == 0):
             self.RMCdata = {}
-            return [self.RMCdata, None]
+            return self.RMCdata
 
         #if more bytes received, check for RMC data
         else:
