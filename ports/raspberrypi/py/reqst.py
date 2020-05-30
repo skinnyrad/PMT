@@ -276,6 +276,10 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
 
 def request(method, url, data=None, json=None, headers={}, stream=None, timeout=0.5):
 
+    # If string data, make into bytes
+    if type(data) is str:
+        data = data.encode()
+
     # DNS Host or IPv4
     is_ipv4 = False
     eight_bits = url.split(".")[0]
@@ -358,8 +362,8 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
             l=l[0:-2] # remove newline chars
             colon = l.find(':')
             if colon != -1:
-                key = l[0:colon].decode('utf-8')
-                val = l[colon+1:].decode('utf-8').rstrip()
+                key = l[0:colon]
+                val = l[colon+1:].rstrip()
                 print("Header (key:val) {0}:{1}".format(key,val))
                 recvd_headers[key]=val
             #print(l)
