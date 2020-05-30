@@ -39,6 +39,11 @@ class Logger:
     def __init__(self, name, location):
         self.name = name
         self.location = location
+        # create file should it not already exist,
+        # append mode should it already contain contents
+        print("creating file: {}".format(location))
+        with open(location, "a+"):
+            pass
 
     def _level_str(self, level):
         l = _level_dict.get(level)

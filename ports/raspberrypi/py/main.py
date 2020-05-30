@@ -63,11 +63,8 @@ blacklist = os.path.join(runtime_dir,"blacklist.log")
 current_ap = os.path.join(runtime_dir,"SSID.log")
 unsent_buffer_ptr = os.path.join(runtime_dir,"buffer_pointer.log")
 
-# create file should it not already exist,
-# append mode should it already contain contents
-with open(blacklist, "a+"):
-    pass
 
+# Creation of a logger also creates the file should it not already exist
 defaultLogger = logging.getLogger("Default_Logger", default)
 defaultLogger.setLevel(logging.DEBUG)
 
@@ -236,7 +233,7 @@ while True:
 
                         # If we've sent all the data, update as such
                         if size == 0:
-                            os.remove(unsent)
+                            unsentLogger.overwrite('') # remove old data
                             total_bytes_read = 0
                             pointerLogger.overwrite(str(total_bytes_read))
                             break

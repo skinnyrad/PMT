@@ -29,7 +29,7 @@ def post_data(post_data, post_url, station, logger) -> bool:
         #timer = Timer(0)
         #TODO: Uncomment this for solution
         #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
-        [status, _] = post(post_url, headers=headers, data=post_data)
+        [_, status, _, _] = post(post_url, headers=headers, data=post_data)
         #TODO: Uncomment this for solution
         #timer.deinit()
         if status == 200:

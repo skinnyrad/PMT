@@ -72,14 +72,15 @@ class Station():
 
         # scan
         nets = []
-        again = True
-        while(again):
+        MAX_ATTEMPTS = 4
+        count = 0
+        while count < MAX_ATTEMPTS:
             try:
+                count += 1
                 nets = list(Cell.all('wlan0'))
-                again = False
+                break
             except exceptions.InterfaceError:
                 sleep(.1)
-                again = True
 
         # pull out open ssids
         free_ssids = []
