@@ -48,6 +48,9 @@ except KeyError as e:
     print(e)
     raise
 
+# go back to raspberrypi\py directory for GDT rebooting purposes
+os.chdir('ports/raspberrypi/py')
+
 
 # These files should be placed in runtime directory
 runtime_dir = '/home/{}/runtime/'.format(os.getlogin())

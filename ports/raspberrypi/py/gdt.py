@@ -69,7 +69,7 @@ class GDT():
     def timer_exp_func(self):
         print("Guard func running")
         if self.logger is not None:
-            from logging import runtime_dir
+            from logging import runtime_dir, openPMTDir
             # If the SSID file exists, read the current SSID we are connected to and blacklist it
             if os.access( os.path.join(runtime_dir, "SSID.log"), os.F_OK ):
                 with open( os.path.join(runtime_dir, "SSID.log"), "rt") as fp:
@@ -77,9 +77,9 @@ class GDT():
         # Try rebooting the process
         try:
             print("Rebooting process")
-            machine.proc_restart(self.pid)
+            machine.proc_restart( self.pid )
         # If proc_reboot fails then reboot board
-        except Exception:
-            print(Exception)
-            print("Rebooting board")
+        except Exception as err:
+            print(err)
+            #print("Rebooting board")
             machine.reset()
