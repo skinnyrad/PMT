@@ -11,6 +11,7 @@
 #  Python 3.7
 #  Filename : post.py
 
+import socket
 from reqst import post
 import logging
 # https request information
@@ -29,7 +30,13 @@ def post_data(post_data, post_url, station, logger) -> bool:
         #timer = Timer(0)
         #TODO: Uncomment this for solution
         #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
-        [_, status, _, _] = post(post_url, headers=headers, data=post_data)
+        try:
+            [_, status, _, _] = post(post_url, headers=headers, data=post_data)
+        except socket.gaierror as err:
+            print("socket.gaierror in post_data")
+            print(err)
+            return False
+
         #TODO: Uncomment this for solution
         #timer.deinit()
         if status == 200:

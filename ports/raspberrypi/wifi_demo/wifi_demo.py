@@ -1,7 +1,7 @@
 # wifi_demo.py
 # note must be run as sudo
 
-from wifi import Cell, Scheme
+from wifi import Cell
 import os
 
 location_wpa_sup_conf = "/etc/wpa_supplicant/wpa_supplicant.conf"

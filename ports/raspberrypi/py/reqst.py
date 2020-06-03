@@ -80,11 +80,16 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
     location = None
 
-    ai = socket.getaddrinfo(host, 80, 0, socket.SOCK_STREAM)
+    try:
+        ai = socket.getaddrinfo(host, 80, 0, socket.SOCK_STREAM)
+    except socket.gaierror as err:
+        print(err)
+        raise socket.gaierror
+
     #TODO: Uncomment this for solution
     #timer.deinit()
     if ai != []:
-        print( "DNA address info: {}".format(str(ai[0])) )
+        print( "DNS address info: {}".format(str(ai[0])) )
         print("DNS Lookup [OK]\n")
     else:
         print("DNS Lookup [Failed]")
@@ -95,6 +100,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     recvd_headers = {}
     s = socket.socket(ai[0], ai[1], ai[2])
     try:
+        print("Attempting connection...")
         s.connect(ai[-1])
         #if proto == "https:":
         #    s = ssl.wrap_socket(s, server_hostname=host)
@@ -393,7 +399,7 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
     s.close()
     del s
     gc.collect()
-    return [addr, status, page, recvd_headers]
+    return [addr, status, recvd_headers, page]
 
 
 

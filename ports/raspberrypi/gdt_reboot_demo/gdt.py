@@ -79,7 +79,7 @@ class GDT():
             print("Rebooting process")
             machine.proc_restart(self.pid)
         # If proc_reboot fails then reboot board
-        except Exception:
-            print(Exception)
-            print("Rebooting board")
+        except Exception as err:
+            print(err)
+            #print("Rebooting board")
             machine.reset()

@@ -19,6 +19,7 @@
 
 try:
     from os import popen
+    from subprocess import Popen
 
 except (ModuleNotFoundError, ImportError) as err:
     print("Error: Import failed in machine.py")
@@ -30,6 +31,9 @@ def reset():
     popen("sudo reboot")
 
 #TODO
-def proc_restart():
+def proc_restart(pid):
+    # kill the stalled process
+    popen("kill -s 9 {}".format(pid))
     # popen this same process the way you do on bootup
+    Popen("cmd","sudo python3 main.py")
     exit()
