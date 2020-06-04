@@ -25,10 +25,13 @@ def splash_breaking_a(b_html):
     print("<a> search...")
     # parse socket bytes
     a = []
-    while b_html.find(b'<a') != -1:
-        beg = b_html.find(b'<a')
-        end = b_html.find(b'</a>')+4
-        a.append(b_html[beg:end])
+    while b_html.find('<a') != -1:
+        beg = b_html.find('<a')
+        end = b_html.find('</a>')+4
+        a_tag = tag_internals_to_dict(breakup_tag(b_html[beg:end]))
+        print(a_tag)
+        if "href" in a_tag:
+            a.append(a_tag["href"])
         b_html = b_html[end+1:len(b_html)] #Regions Guest thinks its a string
     
     print(a)
@@ -57,7 +60,7 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
     forms = get_forms(splashpage)
     gdt.feed()
     collect()
-    print(forms)
+    print("forms:{}".format(forms))
 
     #If there were forms in the page
     if(len(forms) > 0):
@@ -142,13 +145,15 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
 
     
     # no forms, try following a-tags
-    #else:
-    #     #<a> TAG Splash Page Breaking
-    #     a = splash_breaking_a(splashpage)
-    #     for v in a:
-    #         [addr, status, recvd_headers, page] = reqst.get(v)
-    #         if status == 200:
-    #             return True
+    else:
+        print("Using A-Tag following")
+        #<a> TAG Splash Page Breaking
+        a = splash_breaking_a(splashpage)
+        for v in a:
+            print("going to: {}".format(v))
+            [addr, status, recvd_headers, page] = reqst.get(v)
+            if status == 200:
+                return True
         # -----------------------------
 
 
@@ -202,7 +207,7 @@ def station_connected(station, host, gdt, wifiLogger):
     print("Fed GDT after DNS testing")
 
 
-    MAX_DEPTH = 5 # How many pages are we willing to bypass before giving up?
+    MAX_DEPTH = 10 # How many pages are we willing to bypass before giving up?
     depth = 0
     while depth <= MAX_DEPTH:
         depth += 1
@@ -214,7 +219,7 @@ def station_connected(station, host, gdt, wifiLogger):
 
         #If we received the Location:http... header
         elif 'Location' in recvd_headers:
-
+            print("Location header found, redirecting...")
             # Redirection Location but Status Code is 200
             if status == 200 :
                 try:
@@ -233,7 +238,7 @@ def station_connected(station, host, gdt, wifiLogger):
                 gdt.feed()
                 print("Fed GDT before requesting splash page")
                 try:
-                    [dns_addr, status, body, headers] = reqst.get_splash_page(recvd_headers['Location'])
+                    [dns_addr, status, body, recvd_headers] = reqst.get_splash_page(recvd_headers['Location'])
                 except socket.gaierror as err:
                     return False
                 # splashpage received, move on to bypassing it
@@ -255,7 +260,13 @@ def station_connected(station, host, gdt, wifiLogger):
             print("Splashpage Breaking...")
 
             try:
-                [dns_addr, status, headers, body] = break_sp(gdt, host, dns_addr, headers, body)
+                ret_val = break_sp(gdt, host, dns_addr, recvd_headers, body)
+                
+                if type(ret_val) is bool:
+                    return ret_val
+                else:
+                    [dns_addr, status, recvd_headers, body] = ret_val
+
             except socket.gaierror as err:
                 print(err)
 
