@@ -48,6 +48,9 @@ except KeyError as e:
     print(e)
     raise
 
+# go back to raspberrypi\py directory for GDT rebooting purposes
+os.chdir('ports/raspberrypi/py')
+
 
 # These files should be placed in runtime directory
 runtime_dir = '/home/{}/runtime/'.format(os.getlogin())
@@ -103,7 +106,7 @@ station = Station()
 
 
 collect()
-gdt = GDT(30+gps_interval, logger=blacklistLogger)
+gdt = GDT(30+gps_interval, pid=os.getpid(), logger=blacklistLogger)
 
 while True:
 
@@ -179,12 +182,25 @@ while True:
                     gdt.feed()
                     station.connect_to_ssid(ssid)
 
-                    # Wait for connection
+                    # Wait for connection (aka valid IP)
+                    count = 0
+                    MAX_IP_WAIT = 12 # 12*0.25 = 3 seconds
                     while not station.is_connected():
+                        print("No IP yet...")
                         gdt.feed()
-                        sleep(0.5) # Half second
+                        sleep(0.25) # Quarter Second
+                        count+=1
+                        #If we've waited long enough but no IP
+                        if count >= MAX_IP_WAIT:
+                            break
+                   
+                    # If we are connected break from checking each SSID
+                    # and move onto splashpage/posting
+                    if station.is_connected():
+                        break
+
                     
-        # If we now have a valid I
+        # If we now have a valid IP
         if station.is_connected():
             
             # Case: after reboot rasperry pi wpa_supplicant.conf is already configured for SSID and connects automatically.
@@ -208,12 +224,24 @@ while True:
 
             # So long as we have WAN access, post data
             print("Checking WAN access")
-            while station.has_wan_access(host_url):
+            post_fail_count = 0
+
+            while connected:
                 # enc_data = encry.encrypt(enc_key, rawData)
                 posted = post_data(data, post_url, station, defaultLogger) # Send most recent data point
                 wifiLogger.write( "SSID: {0} Connected, POST: {1}\r\n".format(str(ssid), posted) )
                 # del enc_data
                 # collect()
+
+                if not posted:
+                    post_fail_count += 1
+                else:
+                    post_fail_count = 0
+                
+                # If we lost valid IP, move on
+                # or If 3 fails, actively check connection (short circuit eval). If fail, move on
+                if not station.is_connected() or ( (post_fail_count > 3) and not station.has_wan_access(host_url) ):
+                    break
 
                 # unsent_buffer_ptr file just stores the number of bytes that have been sent off,
                 # use it as an offset to find the beginning of the unset data.

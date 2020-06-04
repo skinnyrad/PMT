@@ -11,13 +11,14 @@
 #  Python 3.7
 #  Filename : wifi_connect.py
 
-from socket import getaddrinfo
+import socket
 from machine import reset
 from gc import collect
 from gdt import GDT
 import logging
 import reqst
 from html_parser import get_forms, get_tags, breakup_tag, tag_internals_to_dict
+import urllib.parse
 
 def splash_breaking_a(b_html):
     # read all bytes from socket
@@ -58,13 +59,14 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
     collect()
     print(forms)
 
+    #If there were forms in the page
     if(len(forms) > 0):
 
         # generate response to form
         resp = form_response(forms[0])
         print("reponse: {}".format(resp))
 
-        # Add from resubmit specific headers
+        # Add form resubmit specific headers
         recvd_headers["Content-Type"] = "application/x-www-form-urlencoded"
         recvd_headers["Accept"] = "*/*"
         recvd_headers["Cache-Control"]= "no-cache"
@@ -83,7 +85,7 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
             elif location[1]==443:
                 location = "https://{}".format(location[0])
 
-        # new location specified
+        # new location to send from data to
         if "action" in forms[0]:
             
             if forms[0]["action"][0] == '/': # relative path
@@ -120,12 +122,14 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
         del forms
         collect()
 
+        # response must be url encoded
         #test
-        resp = 'apname=%7B%7B%20apname%20%7D%7D&clmac=%7B%7B%20clmac%20%7D%7D'
+        #resp = 'apname=%7B%7B%20apname%20%7D%7D&clmac=%7B%7B%20clmac%20%7D%7D'
+        resp = urllib.parse.quote_plus(resp)
 
         print("break_sp: Resubmitting form.\nLocation:{0}\n".format(location))
         gdt.feed()
-        [dns_addr, status, recvd_page, recvd_headers] = reqst.post(location, data=resp, headers=recvd_headers, timeout=3000)
+        [dns_addr, status, recvd_headers, recvd_page] = reqst.post(location, data=resp, headers=recvd_headers, timeout=3000)
         gdt.feed()
         del resp
         collect()
@@ -134,13 +138,15 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
         print("headers:{}".format(recvd_headers))
         print("page:{}\n".format(recvd_page))
 
+        return [dns_addr, status, recvd_headers, recvd_page]
+
     
     # no forms, try following a-tags
     #else:
     #     #<a> TAG Splash Page Breaking
     #     a = splash_breaking_a(splashpage)
     #     for v in a:
-    #         [status, _ ] = reqst.get(v)
+    #         [addr, status, recvd_headers, page] = reqst.get(v)
     #         if status == 200:
     #             return True
         # -----------------------------
@@ -179,73 +185,92 @@ def station_connected(station, host, gdt, wifiLogger):
     print("Connected [Testing Access]")
     wifiLogger.info("Connected [Testing Access]")
 
+    # Must make initial request to posting page to start the process
+    # of getting full internet access.
     gdt.feed()
     print("Fed GDT before DNS testing")
 
     # test DNS -> GET Request and Handles Redirection
-    [dns_addr, status, location, body, headers] = reqst.test_dns_internet(host)
-    print("status={0}\nheaders={1}\nlocation={2}\nbody={3}".format(status,headers,location,body))
+    try:
+        [dns_addr, status, _, body, recvd_headers] = reqst.test_dns_internet(host)
+        print("status={0}\nheaders={1}\nbody={2}".format(status,recvd_headers,body))
+    except socket.gaierror as err:
+        print(err)
+        return False
 
     gdt.feed()
     print("Fed GDT after DNS testing")
 
-    # NO SPLASH PAGE
-    if status == 200 and body == "OK":
-        print("Internet Access [OK]")
-        return True
 
-    # Redirection Location but Status Code is 200
-    elif status == 200 and location is not None:
-        # should handle requests prior to redirection
-        return station_connected(station, location, gdt, wifiLogger)
+    MAX_DEPTH = 5 # How many pages are we willing to bypass before giving up?
+    depth = 0
+    while depth <= MAX_DEPTH:
+        depth += 1
 
-    # Status Code 200 but not connected to internet yet
-    # Make another request to get redirection information
-    #elif status == 200:
-    #    # should handle requests prior to redirection
-    #    return station_connected(station, host, gdt, wifiLogger)
-    if location and 300 <= status <= 309:
-        #300s redirection
-        gdt.feed()
-        print("Fed GDT before requesting splash page")
-        [dns_addr, status, body, headers] = reqst.get_splash_page(location)
-        # splashpage received, move on to bypassing it
+        # NO SPLASH PAGE
+        if status == 200 and body == "OK":
+            print("Internet Access [OK]")
+            return True
+
+        #If we received the Location:http... header
+        elif 'Location' in recvd_headers:
+
+            # Redirection Location but Status Code is 200
+            if status == 200 :
+                try:
+                    [dns_addr, status, _, body, recvd_headers] = reqst.test_dns_internet(recvd_headers['Location'])
+                    continue
+                except socket.gaierror as err:
+                    return False
+
+            # Status Code 200 but not connected to internet yet
+            # Make another request to get redirection information
+            #elif status == 200:
+            #    # should handle requests prior to redirection
+            #    return station_connected(station, host, gdt, wifiLogger)
+            elif 300 <= status <= 309:
+                #300s redirection
+                gdt.feed()
+                print("Fed GDT before requesting splash page")
+                try:
+                    [dns_addr, status, body, headers] = reqst.get_splash_page(recvd_headers['Location'])
+                except socket.gaierror as err:
+                    return False
+                # splashpage received, move on to bypassing it
+                continue
 
 
-    # Bypass Splashpage
-    if status == 200:
+        # Bypass Splashpage
+        elif status == 200:
 
-        # dns_Addr is IP where the page came from, acquired from DNS lookup within previous activity
+            # dns_Addr is IP where the page came from, acquired from DNS lookup within previous activity
 
+            gdt.feed()
+            print("Fed GDT after splash page received")
 
-        gdt.feed()
-        print("Fed GDT after splash page received")
+            print(body)
 
-        print(body)
+            print("Splashpage [OK]")
+            print("Splashpage Length [{}]".format(len(body)))
+            print("Splashpage Breaking...")
 
-        print("Splashpage [OK]")
-        print("Splashpage Length [{}]".format(len(body)))
-        
-        location = dns_addr
+            try:
+                [dns_addr, status, headers, body] = break_sp(gdt, host, dns_addr, headers, body)
+            except socket.gaierror as err:
+                print(err)
 
-        print("Splashpage Breaking...")
+            print("Splashpage Not Broken Unless Implemented Above...")
+            print("Splashpage [Failed]")
+            del body
+            collect()
 
-        # continue hopping from one page received to the next until we have access to host
-        while True:
-            [dns_addr, status, headers, body] = break_sp(gdt, host, dns_addr, headers, body)
-            if status == 200 and body == "OK":
-                return True
+            #TODO: When You know you broke the page and allow DATA SENDING
+            # return True
+            return False
 
-        print("Splashpage Not Broken Unless Implemented Above...")
-        print("Splashpage [Failed]")
-        del body
-        collect()
+    print("splashpage breaking too many requests deep... giving up.")
 
-        #TODO: When You know you broke the page and allow DATA SENDING
-        # return True
-        return False
-
-    elif 500 <= status <= 599:
+    if 500 <= status <= 599:
         """
             station.active(False) seems to flush wifi module
 
@@ -256,7 +281,5 @@ def station_connected(station, host, gdt, wifiLogger):
         """
         return False
 
-    # any error code not caught above
-    else:
-            print("Splashpage [Failed]")
-            return False
+    print("Splashpage [Failed]")
+    return False
