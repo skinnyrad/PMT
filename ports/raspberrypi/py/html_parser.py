@@ -21,11 +21,13 @@
 #   startindex = the index within html_as_string where the beginning of the complete string is located.
 #   endindex = the index within html_as_string where the end of the complete string is located (one after the last character of String).
 def find_complete_string(html_as_string, beginning_string, end_string, start_index = 0):
+    
     i = html_as_string.find(str(beginning_string), start_index, len(html_as_string))
-    if i == -1:
+    if i == -1: #If we cannot find beginning string
         return ["",-1,-1] # only return a valid string
+
     j = html_as_string.find(str(end_string), i, len(html_as_string))
-    if j == -1:
+    if j == -1: # If we found beginning string but not end string
         return ["",i,-1] # only return a valid string
     
     j = j+len(end_string) # include end_string in the string
@@ -42,10 +44,10 @@ def get_tags(html_as_string, tag_type=None):
     # look for a specific tag
     if tag_type is not None:
         while ret_val[0] != "":
-            # tags that don't make up objects. ex: <form ...> ... </form>
+            # tags that make up objects. ex: <form ...> ... </form>
             ret_val = find_complete_string(html_as_string, "<{0}".format(tag_type), "</{0}>".format(tag_type), ret_val[2] ) #start search at end of last string
 
-            # tags that do make up objects. ex: <a ... > there is no </a>
+            # tags that don't make up objects. ex: <a ... > there is no </a>
             # start string found
             if(ret_val[1] != -1):
                 if(ret_val[2] == -1): # end string was not found
@@ -67,7 +69,7 @@ def get_tags(html_as_string, tag_type=None):
 
 def breakup_tag(tag):
     tag=tag.lstrip('<')
-    tag=tag.rstrip('>')
+    tag=tag.lstrip('>')
     tag=tag.strip() #beg end whitespace
         
     #time to split up elements within the tag
@@ -75,36 +77,53 @@ def breakup_tag(tag):
     j=0
     contents_list =[]
     
-    # pull out type
+    # pull out type (ie form, html, body)
     j=tag.find(' ', 0, len(tag))
     if(j == -1): #ex: </form>
         ret=tag
     else:       #ex: <form method="POST" ... >
         ret=tag[0:j]
     
-    tag=tag[j+1:len(tag)]
+    tag=tag[j+1:] # cut out the tag_type
     ret=ret.strip()
-    contents_list.append(ret)
+    contents_list.append(ret) # put tag_type in list
         
     while len(tag)>0:
 
         #searching for key/value pair
         j=tag.find('=', 0, len(tag))
         if(j==-1):
-            break #end if no keyval pairs
+            break # end if no keyval pairs
 
         key = tag[0:j] #pull out key
-        tag = tag[j+1:len(tag)]
+        tag = tag[j+1:]
         key = key.strip(' ')
         contents_list.append(key)
     
-        #key found, pull "value"
+        #key found, pull val (key="val" key='val' key=val )
         #pull val inbetween quotes
-        j = tag.find('"', 0, len(tag)) #first quote
-        tag=tag[j+1:len(tag)]
-        j = tag.find('"', 0, len(tag)) #second quote
+        # Case: sometimes value is not wrong in quotes if it is just alphabetical characters
+        # need to determine if quotes were used.
+        wrapper = '"'
+        j = tag.find(wrapper, 0, len(tag)) #could be wrapped in double quotes
+        if(j != 0):
+            wrapper = "'"
+            j = tag.find(wrapper, 0, len(tag)) # could be wrapped in single quotes
+            if(j != 0):
+                wrapper = "" # Well crud val isnt wrapped in anything
+
+        if wrapper == "'" or wrapper == '"':
+            tag=tag[j+1:len(tag)]
+            j = tag.find(wrapper, 0, len(tag)) #second quote
+        
+        elif wrapper == "":
+            j = tag.find(' ', 0, len(tag)) #grab the end space
+            if(j == -1):
+                j = tag.find('>', 0, len(tag)) #grab the end space
+
+        
         val=tag[0:j].strip()
-        tag = tag[j+1:len(tag)]
+        tag = tag[j+1:]
         contents_list.append(val)
 
     return contents_list
@@ -199,13 +218,14 @@ def get_forms(html):
     forms = get_tags(html, "form")
     if(len(forms) == 0):
         return []
-    elif(len(forms) == 1): #caused if <form...> but bad html received no </form>
-        forms = []      #get rid of previous bad entry
-        ret_val = find_complete_string(html, "<form", "</div", 0) #WORKAROUND: try going until the end of the next div
-        if(ret_val[0] == ""):
-            return []   #gah lee you've just hit the worst written splashpage ever. just give up already
-        forms.append(ret_val[0])
+    #elif(len(forms) == 1): # caused if <form...> but bad html received no </form>
+    #    forms = []      # get rid of previous bad entry
+    #    ret_val = find_complete_string(html, "<form", "<html", 0) #WORKAROUND: by definition
+    #    if(ret_val[0] == ""):
+    #        return []   #gah lee you've just hit the worst written splashpage ever. just give up already
+    #    forms.append(ret_val[0])
 
+    print(forms)
 
     #break forms as strings into a list of tags: [form] = ["<form ...>", "<...>", "</form>"]
     all_forms = []
@@ -213,6 +233,7 @@ def get_forms(html):
         ret = get_tags(string)
         all_forms.append(ret)
         
+    print(all_forms)
 
     # split out each tag's internals
     i = 0
@@ -225,11 +246,14 @@ def get_forms(html):
             j+=1
         i+=1
     
+    print(all_forms)
 
     parsed_forms = []
     for form in all_forms:
         parsed_forms.append(construct_form_from_tag_internals(form))
     
+    print(parsed_forms)
+
     return parsed_forms
 
 
