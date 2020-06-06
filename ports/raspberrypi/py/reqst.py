@@ -18,9 +18,10 @@
 
 import socket
 import gc
-from machine import reset
+from machine import proc_restart
 import ssl
 from io import StringIO
+from os import getpid
 
 
 
@@ -62,13 +63,16 @@ def breakdown_url(url):
 def handlerTimer(timer):
     print("DNS_Lookup_Test: Timer Timeout")
     #Resets the device in a manner similar to pushing the external RESET button.
-    reset()
+    proc_restart(getpid())
 
 
 
 # Initial check for open internet or splash page redirection
 # Return Value: 5 value list: [addr, status, location, body, headers]
 def request_dns_internet(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
+    print("\n--------------")
+    print("request_dns_internet @ {}".format(url))
+    
     # Get stuff from URL
     _, dummy, host, _, _ = breakdown_url(url)
     # No need to check if Host is IP. It's first request we
@@ -90,7 +94,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     #timer.deinit()
     if ai != []:
         print( "DNS address info: {}".format(str(ai[0])) )
-        print("DNS Lookup [OK]\n")
+        print("DNS Lookup [OK]")
     else:
         print("DNS Lookup [Failed]")
         return [None,584,None,None,None]
@@ -100,7 +104,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     recvd_headers = {}
     s = socket.socket(ai[0], ai[1], ai[2])
     try:
-        print("Attempting connection...")
+        print("Attempting connection to {}...".format(ai[-1]))
         s.connect(ai[-1])
         #if proto == "https:":
         #    s = ssl.wrap_socket(s, server_hostname=host)
@@ -141,7 +145,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
             colon = l.find(':')
             if colon != -1:
                 key = l[0:colon]
-                val = l[colon+1:].rstrip()
+                val = l[colon+1:].strip()
                 print("Header (key:val) {0}:{1}".format(key,val))
                 recvd_headers[key]=val
             # Currently not supporting chunked transfer
@@ -152,7 +156,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
                     raise ValueError("Unsupported " + l)
             # check for redirection
             elif l.startswith("Location:"): # and not 200 <= status <= 299:
-                location = str(l[10:])[2:-5]
+                location = recvd_headers["Location"]
                 print("Redirection [{}]".format(location))
                 # need to get the method from the redirection
     except (OSError, TypeError) as e:
@@ -169,6 +173,9 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
 
 
 def request_splash_page(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
+    print("\n---------------")
+    print("request_splash_page @ {}".format(url))
+    
     # Get stuff from URL
     proto, dummy, host, path, port = breakdown_url(url)
     
@@ -187,7 +194,7 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
     if not is_ipv4:
         ai = socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM)
         if ai != []:
-            print("DNS Lookup [OK]\n")
+            print("DNS Lookup [OK]")
             ai = ai[0]
         else:
             print("DNS Lookup [Failed]")
@@ -243,7 +250,7 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
             colon = l.find(':')
             if colon != -1:
                 key = l[0:colon]
-                val = l[colon+1:].rstrip()
+                val = l[colon+1:].strip()
                 print("Header (key:val) {0}:{1}".format(key,val))
                 recvd_headers[key]=val
             if l.startswith("Transfer-Encoding:"):
@@ -281,6 +288,8 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
 
 
 def request(method, url, data=None, json=None, headers={}, stream=None, timeout=0.5):
+    print("\n--------------")
+    print("request method={0}   URL={1}".format(method, url))
 
     # If string data, make into bytes
     if type(data) is str:
@@ -369,7 +378,7 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
             colon = l.find(':')
             if colon != -1:
                 key = l[0:colon]
-                val = l[colon+1:].rstrip()
+                val = l[colon+1:].strip()
                 print("Header (key:val) {0}:{1}".format(key,val))
                 recvd_headers[key]=val
             #print(l)

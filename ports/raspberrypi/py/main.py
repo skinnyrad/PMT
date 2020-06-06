@@ -166,7 +166,7 @@ while True:
             print(openNets)
 
             # Update working blacklist with running list of bad APs in area
-            with open(blacklist, 'r') as fp:
+            with open(blacklist, 'rt') as fp:
                 ap_list = fp.read()
                 ap_list = ap_list.split("\n")
                 ap_blacklist = ap_blacklist + list(set(ap_list[:-1]) - set(ap_blacklist))
