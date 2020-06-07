@@ -45,9 +45,10 @@ def form_response(form):
     if( len(content) > 0 ):
         # key1=val1&key2=val2
         for tag in content:
-            resp = "{0}{1}={2}&".format(resp, tag["name"], tag["value"])
+            if "name" in tag and "value" in tag:
+                resp = "{0}{1}={2}&".format(resp, tag["name"], tag["value"])
         
-        return resp[0:len(resp)-1] #remove final &, simpler code this way
+        return urllib.parse.quote_plus(resp[0:len(resp)-1]) # remove final &, and url encode response
 
 
 
@@ -128,7 +129,6 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
         # response must be url encoded
         #test
         #resp = 'apname=%7B%7B%20apname%20%7D%7D&clmac=%7B%7B%20clmac%20%7D%7D'
-        resp = urllib.parse.quote_plus(resp)
 
         print("break_sp: Resubmitting form.\nLocation:{0}\n".format(location))
         gdt.feed()
