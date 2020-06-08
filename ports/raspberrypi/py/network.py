@@ -211,3 +211,13 @@ class Station():
         
         # close it out
         file_wpa_sup_conf.close()
+
+    
+
+    def end_ip_lease(self):
+
+        # drop the currently held IPs
+        popen("sudo dhclient -r wlan0")
+
+        # return true if no more valid IPs
+        return ( not self.is_connected() )

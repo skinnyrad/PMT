@@ -173,7 +173,15 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
     
     # test DNS -> GET Request
     # Test for open connection. DO NOT SEND THIS DATA BACK, you will only be backtracking to the inital page.
-    [_, dns_status, _, dns_body, _] = reqst.test_dns_internet(host)
+    try:
+        [_, dns_status, _, dns_body, _] = reqst.test_dns_internet(host)
+    except socket.gaierror as err:
+        print("Excpetion: socket.gaierror in break_sp in wifi_connect: {}".format(err))
+        return False
+    except Exception as err:
+        print("Excpetion: Exception in break_sp in wifi_connect: {}".format(err))
+        return None
+    
     gdt.feed()
     print("Status: {0}\nBody: {1}".format(dns_status, dns_body))
 
@@ -200,8 +208,12 @@ def station_connected(station, host, gdt, wifiLogger):
         [dns_addr, status, _, body, recvd_headers] = reqst.test_dns_internet(host)
         print("status={0}\nheaders={1}\nbody={2}".format(status,recvd_headers,body))
     except socket.gaierror as err:
-        print(err)
+        print("socket.gaierror in station_connected: {}".format(err))
         return False
+    except Exception as err:
+        print("default Exception in station_connected: {}".format(err))
+        station.end_ip_lease()
+        return None
 
     gdt.feed()
     print("Fed GDT after DNS testing")
@@ -226,7 +238,12 @@ def station_connected(station, host, gdt, wifiLogger):
                     [dns_addr, status, _, body, recvd_headers] = reqst.test_dns_internet(recvd_headers['Location'])
                     continue
                 except socket.gaierror as err:
+                    print("socket.gaierror in station_connected: {}".format(err))
                     return False
+                except Exception as err:
+                    print("default Exception in station_connected: {}".format(err))
+                    station.end_ip_lease()
+                    return None
 
             # Status Code 200 but not connected to internet yet
             # Make another request to get redirection information
@@ -240,7 +257,12 @@ def station_connected(station, host, gdt, wifiLogger):
                 try:
                     [dns_addr, status, body, recvd_headers] = reqst.get_splash_page(recvd_headers['Location'])
                 except socket.gaierror as err:
+                    print("socket.gaierror in station_connected: {}".format(err))
                     return False
+                except Exception as err:
+                    print("default Exception in station_connected: {}".format(err))
+                    station.end_ip_lease()
+                    return None
                 # splashpage received, move on to bypassing it
                 continue
 
@@ -268,7 +290,12 @@ def station_connected(station, host, gdt, wifiLogger):
                     [dns_addr, status, recvd_headers, body] = ret_val
 
             except socket.gaierror as err:
-                print(err)
+                print("socket.gaierror in station_connected: {}".format(err))
+                return False
+            except Exception as err:
+                print("default Exception in station_connected: {}".format(err))
+                station.end_ip_lease()
+                return None
 
             print("Splashpage Not Broken Unless Implemented Above...")
             print("Splashpage [Failed]")

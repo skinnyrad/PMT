@@ -142,9 +142,15 @@ while True:
     # If we are not parked, then remove the list of SSIDs that didn't work
     if (speed is not None) and (speed > 10.00):
         os.remove(blacklist)
+        os.remove(current_ap)
+
+        # drop any leased IPs if we have any
+        station.end_ip_lease()
 
         # re-create file for initial read
         with open(blacklist, "a+"):
+            pass
+        with open(current_ap, "a+"):
             pass
 
 
@@ -181,14 +187,15 @@ while True:
                     wifiLogger.info( "Connecting to {0} ...\n".format(ssid[0]) )
                     gdt.feed()
                     station.connect_to_ssid(ssid)
+                    gdt.feed()
 
                     # Wait for connection (aka valid IP)
                     count = 0
-                    MAX_IP_WAIT = 12 # 12*0.25 = 3 seconds
+                    MAX_IP_WAIT = 15 # 15 seconds
                     while not station.is_connected():
                         print("No IP yet...")
                         gdt.feed()
-                        sleep(0.25) # Quarter Second
+                        sleep(1) # 1 Second
                         count+=1
                         #If we've waited long enough but no IP
                         if count >= MAX_IP_WAIT:
@@ -211,11 +218,25 @@ while True:
                 print("ssid not yet defined")
                 with open(current_ap, 'rt') as fp:
                     ssid = fp.read()
+                
+                # Case: RaspPi has incorrectly held onto a valid IP so long
+                # user had even wiped the SSID.log file
+                if ssid == "":
+                    station.end_ip_lease()
+                    continue # exit out, we are no longer connected
+
 
             gdt.feed()
             print("Connected to {}".format(ssid))
             connected = station_connected(station, post_url, gdt, wifiLogger)
-            if not connected:
+            
+            # Caught default Exception, normally from leaving AP range
+            # dropping lease on any valid IP should be handled within station_connected
+            if connected is None:
+                continue #run next cycle of main processing loop
+            
+            # WAN access failed
+            elif not connected:
                 blacklistLogger.write_line(ssid)
                 #TODO: remove print
                 print("Unable to Connect")
