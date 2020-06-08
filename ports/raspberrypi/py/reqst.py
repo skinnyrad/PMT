@@ -106,7 +106,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
             dns_count += 1
 
         except socket.gaierror as err:
-            print(err)
+            print("socket.gaierror in request_dns_internet: {}".format(err))
             raise socket.gaierror
 
         except Exception as err:
@@ -239,7 +239,7 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
                 dns_count += 1
 
             except socket.gaierror as err:
-                print(err)
+                print("socket.gaierror in request_splash_page: {}".format(err))
                 raise socket.gaierror
 
             except Exception as err:
@@ -376,7 +376,7 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
                 dns_count += 1
 
             except socket.gaierror as err:
-                print(err)
+                print("socket.gaierror in reqst: {}".format(err))
                 raise socket.gaierror
 
             except Exception as err:
