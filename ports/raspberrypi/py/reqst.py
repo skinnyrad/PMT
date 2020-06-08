@@ -24,6 +24,8 @@ from io import StringIO
 from os import getpid
 
 
+MAX_DNS_COUNT = 5
+
 
 def recv_all(soc):
     fragments = []
@@ -83,12 +85,39 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     # TODO: Uncomment this for solution
     #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
     location = None
+    addr = None
+    status = None
+    body = None
+    recvd_headers = None
 
-    try:
-        ai = socket.getaddrinfo(host, 80, 0, socket.SOCK_STREAM)
-    except socket.gaierror as err:
-        print(err)
-        raise socket.gaierror
+    # DNS Resolve
+    dns_count = 0
+    while dns_count <= MAX_DNS_COUNT:
+        try:
+            ai = socket.getaddrinfo(host, 80, 0, socket.SOCK_STREAM)
+            if ai != []:
+                print("DNS Lookup [OK]")
+                ai = ai[0]
+                break
+            else:
+                print("DNS Lookup [Failed]")
+                return [584,None]
+            
+            dns_count += 1
+
+        except socket.gaierror as err:
+            print(err)
+            raise socket.gaierror
+
+        except Exception as err:
+            if dns_count == MAX_DNS_COUNT:
+                raise ConnectionError
+
+    #try:
+    #    ai = socket.getaddrinfo(host, 80, 0, socket.SOCK_STREAM)
+    #except socket.gaierror as err:
+    #    print(err)
+    #    raise socket.gaierror
 
     #TODO: Uncomment this for solution
     #timer.deinit()
@@ -132,6 +161,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
         print(l)
         l = l.split(None, 2)
         status = int(l[1])
+        print("Status_Code [{}]".format(status))
         reason = ""
         if len(l) > 2:
             reason = l[2].rstrip()
@@ -159,11 +189,13 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
                 location = recvd_headers["Location"]
                 print("Redirection [{}]".format(location))
                 # need to get the method from the redirection
-    except (OSError, TypeError) as e:
-        print("Warning: {0}".format(str(e)))
+        
+        # the rest is the body
+        body = data.read()
 
-    print("Status_Code [{}]".format(status))
-    body = data.read()
+    except (OSError, TypeError) as e:
+        print("request_dns_internetError: {0}".format(str(e)))
+
     s.close()
     del s
     gc.collect()
@@ -192,13 +224,28 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
 
     #DNS Resolving Test
     if not is_ipv4:
-        ai = socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM)
-        if ai != []:
-            print("DNS Lookup [OK]")
-            ai = ai[0]
-        else:
-            print("DNS Lookup [Failed]")
-            return [584,None]
+        dns_count = 0
+        while dns_count <= MAX_DNS_COUNT:
+            try:
+                ai = socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM)
+                if ai != []:
+                    print("DNS Lookup [OK]")
+                    ai = ai[0]
+                    break
+                else:
+                    print("DNS Lookup [Failed]")
+                    return [584,None]
+                
+                dns_count += 1
+
+            except socket.gaierror as err:
+                print(err)
+                raise socket.gaierror
+
+            except Exception as err:
+                if dns_count == MAX_DNS_COUNT:
+                    raise ConnectionError
+
     else:
         # Is IPv4
         print("DNS Lookup [Skipped]\n")
@@ -306,6 +353,7 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         # not an IP
         pass
 
+
     #DNS Resolving Test
     if not is_ipv4:
 
@@ -313,13 +361,27 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         proto, dummy, host, path, port = breakdown_url(url)
         print("breakdown url returned: host:{0} port:{1} path:{2}".format(host,port,path))
 
-        ai = socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM)
-        if ai != []:
-            print("DNS Lookup [OK]\n")
-            ai = ai[0]
-        else:
-            print("DNS Lookup [Failed]")
-            return [584,None]
+        dns_count = 0
+        while dns_count <= MAX_DNS_COUNT:
+            try:
+                ai = socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM)
+                if ai != []:
+                    print("DNS Lookup [OK]")
+                    ai = ai[0]
+                    break
+                else:
+                    print("DNS Lookup [Failed]")
+                    return [584,None]
+                
+                dns_count += 1
+
+            except socket.gaierror as err:
+                print(err)
+                raise socket.gaierror
+
+            except Exception as err:
+                if dns_count == MAX_DNS_COUNT:
+                    raise ConnectionError
     else:
         # Is IPv4
         print("URL breakdown & DNS Lookup [Skipped]\n")
