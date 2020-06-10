@@ -106,7 +106,7 @@ station = Station()
 
 
 collect()
-gdt = GDT(30+gps_interval, pid=os.getpid(), logger=blacklistLogger)
+gdt = GDT(60+gps_interval, pid=os.getpid(), logger=blacklistLogger)
 
 while True:
     print(" ---------- Main processing loop ----------")
