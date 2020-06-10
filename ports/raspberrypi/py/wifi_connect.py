@@ -176,10 +176,10 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
     try:
         [_, dns_status, _, dns_body, _] = reqst.test_dns_internet(host)
     except socket.gaierror as err:
-        print("Excpetion: socket.gaierror in break_sp in wifi_connect: {}".format(err))
+        print("Exception: socket.gaierror in break_sp in wifi_connect: {}".format(err))
         return False
     except Exception as err:
-        print("Excpetion: Exception in break_sp in wifi_connect: {}".format(err))
+        print("Exception: Exception in break_sp in wifi_connect: {}".format(err))
         return None
     
     gdt.feed()
@@ -209,10 +209,13 @@ def station_connected(station, host, gdt, wifiLogger):
         print("status={0}\nheaders={1}\nbody={2}".format(status,recvd_headers,body))
     except socket.gaierror as err:
         print("socket.gaierror in station_connected: {}".format(err))
+        station.end_ip_lease()
         return False
     except Exception as err:
         print("default Exception in station_connected: {}".format(err))
-        station.end_ip_lease()
+        return None
+
+    if status is None: # something broke in the request
         return None
 
     gdt.feed()
@@ -223,6 +226,8 @@ def station_connected(station, host, gdt, wifiLogger):
     depth = 0
     while depth <= MAX_DEPTH:
         depth += 1
+        print("Page breaking depth: {}".format(depth))
+        print("Status={}".format(status))
 
         # NO SPLASH PAGE
         if status == 200 and body == "OK":
@@ -232,6 +237,7 @@ def station_connected(station, host, gdt, wifiLogger):
         #If we received the Location:http... header
         elif 'Location' in recvd_headers:
             print("Location header found, redirecting...")
+
             # Redirection Location but Status Code is 200
             if status == 200 :
                 try:
@@ -307,17 +313,17 @@ def station_connected(station, host, gdt, wifiLogger):
             return False
 
     print("splashpage breaking too many requests deep... giving up.")
-
-    if 500 <= status <= 599:
-        """
-            station.active(False) seems to flush wifi module
-
-            board output:
-                I (35596) wifi: flush txq
-                I (35596) wifi: stop sw txq
-                I (35596) wifi: lmac stop hw txq
-        """
-        return False
-
     print("Splashpage [Failed]")
     return False
+
+    #
+    #if 500 <= status <= 599:
+    #    
+    #        station.active(False) seems to flush wifi module
+    #
+    #        board output:
+    #            I (35596) wifi: flush txq
+    #            I (35596) wifi: stop sw txq
+    #            I (35596) wifi: lmac stop hw txq
+    #    
+    #    return False

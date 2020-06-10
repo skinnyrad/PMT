@@ -109,6 +109,7 @@ collect()
 gdt = GDT(30+gps_interval, pid=os.getpid(), logger=blacklistLogger)
 
 while True:
+    print(" ---------- Main processing loop ----------")
 
     # Sample GNSS data
     GPSdata = gps.get_RMCdata(defaultLogger)
@@ -166,7 +167,7 @@ while True:
                 openNets = station.scan_open_ssids() # gets list of open SSIDS
             except Exception as e:
                 #TODO: remove print
-                print("Warning: {0}".format(str(e)))
+                print("Exception when scanning ssids: {0}".format(str(e)))
                 defaultLogger.warning(str(e))
 
             print(openNets)
@@ -219,12 +220,12 @@ while True:
                 with open(current_ap, 'rt') as fp:
                     ssid = fp.read()
                 
-                # Case: RaspPi has incorrectly held onto a valid IP so long
-                # user had even wiped the SSID.log file
-                if ssid == "":
-                    station.end_ip_lease()
-                    continue # exit out, we are no longer connected
-
+            # Case: RaspPi has incorrectly held onto a valid IP so long
+            # user had even wiped the SSID.log file
+            if ssid == "":
+                print("empty ssid detected, ending IP lease and continuing")
+                station.end_ip_lease()
+                continue # exit out, we are no longer connected
 
             gdt.feed()
             print("Connected to {}".format(ssid))

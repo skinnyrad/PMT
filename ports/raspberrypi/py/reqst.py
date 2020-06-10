@@ -24,7 +24,7 @@ from io import StringIO
 from os import getpid
 
 
-MAX_DNS_COUNT = 5
+MAX_DNS_COUNT = 2
 
 
 def recv_all(soc):
@@ -79,11 +79,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     _, dummy, host, _, _ = breakdown_url(url)
     # No need to check if Host is IP. It's first request we
     # do after connection
-    # TODO: Uncomment if we decide it's needed
-    # init harware timer
-    # timer = Timer(0)
-    # TODO: Uncomment this for solution
-    #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
+
     location = None
     addr = None
     status = None
@@ -96,38 +92,29 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
         try:
             ai = socket.getaddrinfo(host, 80, 0, socket.SOCK_STREAM)
             if ai != []:
-                print("DNS Lookup [OK]")
-                ai = ai[0]
                 break
             else:
                 print("DNS Lookup [Failed]")
-                return [584,None]
+                return [None,584,None,None,None]
             
             dns_count += 1
 
         except socket.gaierror as err:
             print("socket.gaierror in request_dns_internet: {}".format(err))
-            raise socket.gaierror
+            if dns_count >= MAX_DNS_COUNT:
+                raise socket.gaierror
 
         except Exception as err:
-            if dns_count == MAX_DNS_COUNT:
-                raise ConnectionError
+            print("Default Exception in request_dns_internet: {}".format(err))
 
-    #try:
-    #    ai = socket.getaddrinfo(host, 80, 0, socket.SOCK_STREAM)
-    #except socket.gaierror as err:
-    #    print(err)
-    #    raise socket.gaierror
 
-    #TODO: Uncomment this for solution
-    #timer.deinit()
     if ai != []:
         print( "DNS address info: {}".format(str(ai[0])) )
         print("DNS Lookup [OK]")
     else:
         print("DNS Lookup [Failed]")
         return [None,584,None,None,None]
-
+    
     ai = ai[0]
     addr = ai[-1]
     recvd_headers = {}
@@ -194,7 +181,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
         body = data.read()
 
     except (OSError, TypeError) as e:
-        print("request_dns_internetError: {0}".format(str(e)))
+        print("request_dns_internet Error: {0}".format(str(e)))
 
     s.close()
     del s
