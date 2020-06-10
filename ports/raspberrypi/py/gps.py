@@ -66,10 +66,12 @@ class GPS():
 
     def parse_RMCdata(self, rawData):
         # search each line for RMC data set
-        for d in rawData:
-            if (d[3:6] == 'RMC') and (d[-4:] == '\\r\\n'):
+        for line in rawData:
+            if (line[3:6] == 'RMC') and (line[-4:] == '\\r\\n'):
                 self.RMCfound = True
-                break #we found RMC data
+                d = line
+                # Line below commented out, we want the most recent data, so don't break on first line
+                # break # we found RMC data
         
         if self.RMCfound:
             self.RMCfound = False
@@ -108,4 +110,5 @@ class GPS():
                 print(e)
                 if defaultLogger != None:
                     defaultLogger.warning(str(e))
+            
             return self.RMCdata
