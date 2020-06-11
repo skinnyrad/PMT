@@ -123,7 +123,7 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
                 location = forms[0]["action"]
 
         del splashpage
-        del forms
+        
         collect()
 
         # response must be url encoded
@@ -131,10 +131,16 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
         #resp = 'apname=%7B%7B%20apname%20%7D%7D&clmac=%7B%7B%20clmac%20%7D%7D'
 
         print("break_sp: Resubmitting form.\nLocation:{0}\n".format(location))
+        
         gdt.feed()
-        [dns_addr, status, recvd_headers, recvd_page] = reqst.post(location, data=resp, headers=recvd_headers, timeout=3000)
+        if "METHOD" in forms[0] and forms[0]["METHOD"] == "POST":
+            [dns_addr, status, recvd_headers, recvd_page] = reqst.post(location, data=resp, headers=recvd_headers, timeout=3000)
+        if "METHOD" in forms[0] and forms[0]["METHOD"] == "GET":
+            [dns_addr, status, recvd_headers, recvd_page] = reqst.get(location, data=resp, headers=recvd_headers, timeout=3000)
         gdt.feed()
+
         del resp
+        del forms
         collect()
         print("New page after resubmitting forms:")
         print("status:{}".format(status))
@@ -176,10 +182,10 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
     try:
         [_, dns_status, _, dns_body, _] = reqst.test_dns_internet(host)
     except socket.gaierror as err:
-        print("Excpetion: socket.gaierror in break_sp in wifi_connect: {}".format(err))
+        print("Exception: socket.gaierror in break_sp in wifi_connect: {}".format(err))
         return False
     except Exception as err:
-        print("Excpetion: Exception in break_sp in wifi_connect: {}".format(err))
+        print("Exception: Exception in break_sp in wifi_connect: {}".format(err))
         return None
     
     gdt.feed()
@@ -209,10 +215,13 @@ def station_connected(station, host, gdt, wifiLogger):
         print("status={0}\nheaders={1}\nbody={2}".format(status,recvd_headers,body))
     except socket.gaierror as err:
         print("socket.gaierror in station_connected: {}".format(err))
+        station.end_ip_lease()
         return False
     except Exception as err:
         print("default Exception in station_connected: {}".format(err))
-        station.end_ip_lease()
+        return None
+
+    if status is None: # something broke in the request
         return None
 
     gdt.feed()
@@ -223,6 +232,8 @@ def station_connected(station, host, gdt, wifiLogger):
     depth = 0
     while depth <= MAX_DEPTH:
         depth += 1
+        print("Page breaking depth: {}".format(depth))
+        print("Status={}".format(status))
 
         # NO SPLASH PAGE
         if status == 200 and body == "OK":
@@ -232,6 +243,7 @@ def station_connected(station, host, gdt, wifiLogger):
         #If we received the Location:http... header
         elif 'Location' in recvd_headers:
             print("Location header found, redirecting...")
+
             # Redirection Location but Status Code is 200
             if status == 200 :
                 try:
@@ -239,10 +251,10 @@ def station_connected(station, host, gdt, wifiLogger):
                     continue
                 except socket.gaierror as err:
                     print("socket.gaierror in station_connected: {}".format(err))
+                    station.end_ip_lease()
                     return False
                 except Exception as err:
                     print("default Exception in station_connected: {}".format(err))
-                    station.end_ip_lease()
                     return None
 
             # Status Code 200 but not connected to internet yet
@@ -258,10 +270,10 @@ def station_connected(station, host, gdt, wifiLogger):
                     [dns_addr, status, body, recvd_headers] = reqst.get_splash_page(recvd_headers['Location'])
                 except socket.gaierror as err:
                     print("socket.gaierror in station_connected: {}".format(err))
+                    station.end_ip_lease()
                     return False
                 except Exception as err:
                     print("default Exception in station_connected: {}".format(err))
-                    station.end_ip_lease()
                     return None
                 # splashpage received, move on to bypassing it
                 continue
@@ -291,10 +303,10 @@ def station_connected(station, host, gdt, wifiLogger):
 
             except socket.gaierror as err:
                 print("socket.gaierror in station_connected: {}".format(err))
+                station.end_ip_lease()
                 return False
             except Exception as err:
                 print("default Exception in station_connected: {}".format(err))
-                station.end_ip_lease()
                 return None
 
             print("Splashpage Not Broken Unless Implemented Above...")
@@ -307,17 +319,17 @@ def station_connected(station, host, gdt, wifiLogger):
             return False
 
     print("splashpage breaking too many requests deep... giving up.")
-
-    if 500 <= status <= 599:
-        """
-            station.active(False) seems to flush wifi module
-
-            board output:
-                I (35596) wifi: flush txq
-                I (35596) wifi: stop sw txq
-                I (35596) wifi: lmac stop hw txq
-        """
-        return False
-
     print("Splashpage [Failed]")
     return False
+
+    #
+    #if 500 <= status <= 599:
+    #    
+    #        station.active(False) seems to flush wifi module
+    #
+    #        board output:
+    #            I (35596) wifi: flush txq
+    #            I (35596) wifi: stop sw txq
+    #            I (35596) wifi: lmac stop hw txq
+    #    
+    #    return False

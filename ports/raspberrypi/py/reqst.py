@@ -24,7 +24,7 @@ from io import StringIO
 from os import getpid
 
 
-MAX_DNS_COUNT = 5
+MAX_DNS_COUNT = 2
 
 
 def recv_all(soc):
@@ -71,7 +71,7 @@ def handlerTimer(timer):
 
 # Initial check for open internet or splash page redirection
 # Return Value: 5 value list: [addr, status, location, body, headers]
-def request_dns_internet(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
+def request_dns_internet(method, url, data=None, json=None, headers={}, stream=None, gdt=None, timeout=3000):
     print("\n--------------")
     print("request_dns_internet @ {}".format(url))
     
@@ -79,11 +79,7 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     _, dummy, host, _, _ = breakdown_url(url)
     # No need to check if Host is IP. It's first request we
     # do after connection
-    # TODO: Uncomment if we decide it's needed
-    # init harware timer
-    # timer = Timer(0)
-    # TODO: Uncomment this for solution
-    #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
+
     location = None
     addr = None
     status = None
@@ -94,39 +90,37 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
     dns_count = 0
     while dns_count <= MAX_DNS_COUNT:
         try:
+            dns_count += 1
+            print("Testing DNS attempt {0}/{1}".format(dns_count,MAX_DNS_COUNT))
             ai = socket.getaddrinfo(host, 80, 0, socket.SOCK_STREAM)
             if ai != []:
-                print("DNS Lookup [OK]")
-                ai = ai[0]
                 break
             else:
                 print("DNS Lookup [Failed]")
-                return [584,None]
-            
-            dns_count += 1
+                return [None,584,None,None,None]
 
         except socket.gaierror as err:
             print("socket.gaierror in request_dns_internet: {}".format(err))
-            raise socket.gaierror
+            if dns_count >= MAX_DNS_COUNT:
+                raise socket.gaierror
 
         except Exception as err:
-            if dns_count == MAX_DNS_COUNT:
-                raise ConnectionError
+            print("Default Exception in request_dns_internet: {}".format(err))
+            return None
 
-    #try:
-    #    ai = socket.getaddrinfo(host, 80, 0, socket.SOCK_STREAM)
-    #except socket.gaierror as err:
-    #    print(err)
-    #    raise socket.gaierror
 
-    #TODO: Uncomment this for solution
-    #timer.deinit()
     if ai != []:
         print( "DNS address info: {}".format(str(ai[0])) )
         print("DNS Lookup [OK]")
     else:
         print("DNS Lookup [Failed]")
         return [None,584,None,None,None]
+    
+
+    # Optionally feed guard-dog timer
+    if gdt is not None:
+        gdt.feed()
+
 
     ai = ai[0]
     addr = ai[-1]
@@ -194,17 +188,17 @@ def request_dns_internet(method, url, data=None, json=None, headers={}, stream=N
         body = data.read()
 
     except (OSError, TypeError) as e:
-        print("request_dns_internetError: {0}".format(str(e)))
+        print("request_dns_internet Error: {0}".format(str(e)))
 
     s.close()
     del s
     gc.collect()
-    print("Returning from request_dns_internet")
+    print("Returning from request_dns_internet with:")
     return [addr, status, location, body, recvd_headers]
 
 
 
-def request_splash_page(method, url, data=None, json=None, headers={}, stream=None, timeout=3000):
+def request_splash_page(method, url, data=None, json=None, headers={}, gdt=None, stream=None, timeout=3000):
     print("\n---------------")
     print("request_splash_page @ {}".format(url))
     
@@ -227,6 +221,8 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
         dns_count = 0
         while dns_count <= MAX_DNS_COUNT:
             try:
+                dns_count += 1
+                print("Testing DNS attempt {0}/{1}".format(dns_count,MAX_DNS_COUNT))
                 ai = socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM)
                 if ai != []:
                     print("DNS Lookup [OK]")
@@ -239,18 +235,25 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
                 dns_count += 1
 
             except socket.gaierror as err:
-                print("socket.gaierror in request_splash_page: {}".format(err))
-                raise socket.gaierror
+                print("socket.gaierror in request_dns_internet: {}".format(err))
+                if dns_count >= MAX_DNS_COUNT:
+                    raise socket.gaierror
 
             except Exception as err:
-                if dns_count == MAX_DNS_COUNT:
-                    raise ConnectionError
+                print("Default Exception in request_dns_internet: {}".format(err))
+                return None
 
     else:
         # Is IPv4
         print("DNS Lookup [Skipped]\n")
         # socket settings
         ai = [2,1,0,(host,port)]
+
+
+    # Optionally feed guard-dog timer
+    if gdt is not None:
+        gdt.feed()
+
 
     print(str(ai))
     addr = ai[-1]
@@ -259,7 +262,9 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
     try:
         
         if proto == "https:":
+            print("Wrapping SSL/TLS socket...")
             s = ssl.wrap_socket(s)#, server_hostname=host)
+        print("Attempting connection to {}".format(ai[-1]))
         s.connect(ai[-1])
 
         s.sendall("{0} /{1} HTTP/1.0\r\n".format(method, path).encode())
@@ -306,17 +311,11 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
                     del s
                     raise ValueError("Unsupported " + l)
             elif l.startswith("Location:") and not 200 <= status <= 299:
-                location = str(l[10:])[2:-5]
-                
+                location = recvd_headers["Location"]          
                 print("L2 Location [{}]".format(location))
-                # close socket (should prevent ENOMEM error)
-                s.close()
-                del s
-                gc.collect()
-                print("L2 Redirection")
-                # need to get the method from the redirection
-                res = test_dns_internet(location)[0:1]
-                return [res[0], res[-1]] #CURRAN TODO: these values are now incorrect, get with David/Ben and find out what is needed
+
+        page = data.read()
+
     except OSError as err:
         print(str(err))
         s.close()
@@ -326,7 +325,6 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
     
     print("Status_Code [{}]".format(status))
 
-    page = data.read()
     s.close()
     del s
     gc.collect()
@@ -334,7 +332,7 @@ def request_splash_page(method, url, data=None, json=None, headers={}, stream=No
 
 
 
-def request(method, url, data=None, json=None, headers={}, stream=None, timeout=0.5):
+def request(method, url, data=None, json=None, headers={}, stream=None, gdt=None, timeout=0.5):
     print("\n--------------")
     print("request method={0}   URL={1}".format(method, url))
 
@@ -364,6 +362,8 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
         dns_count = 0
         while dns_count <= MAX_DNS_COUNT:
             try:
+                dns_count += 1
+                print("Testing DNS attempt {0}/{1}".format(dns_count,MAX_DNS_COUNT))
                 ai = socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM)
                 if ai != []:
                     print("DNS Lookup [OK]")
@@ -372,22 +372,28 @@ def request(method, url, data=None, json=None, headers={}, stream=None, timeout=
                 else:
                     print("DNS Lookup [Failed]")
                     return [584,None]
-                
-                dns_count += 1
 
             except socket.gaierror as err:
-                print("socket.gaierror in reqst: {}".format(err))
-                raise socket.gaierror
+                print("socket.gaierror in request_dns_internet: {}".format(err))
+                if dns_count >= MAX_DNS_COUNT:
+                    raise socket.gaierror
 
             except Exception as err:
-                if dns_count == MAX_DNS_COUNT:
-                    raise ConnectionError
+                print("Default Exception in request_dns_internet: {}".format(err))
+                return None
+
     else:
         # Is IPv4
         print("URL breakdown & DNS Lookup [Skipped]\n")
         # socket settings
         ai = [2,1,0,(host,port)]
     
+
+    # Optionally feed guard-dog timer
+    if gdt is not None:
+        gdt.feed()
+
+
     addr = ai[-1]
     recvd_headers = {}
 
