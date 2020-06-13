@@ -17,15 +17,13 @@
 
 from serial import Serial
 import logging
+from time import time
 
 class GPS():
     def __init__(self, port="/dev/serial0", _baudrate=9600):
         # create a new UART controller
         self.uart = Serial( port, _baudrate )
-        
-        # Used for finding new packets
-        self.oldRXLength = 0
-        self.currentRXLength = 0
+        self.uart.close() # only open during reads
 
         #make a dictionary for RMC data
         self.RMCdata = {}
@@ -66,10 +64,10 @@ class GPS():
 
     def parse_RMCdata(self, rawData):
         # search each line for RMC data set
-        for d in rawData:
-            if (d[3:6] == 'RMC') and (d[-4:] == '\\r\\n'):
+        for line in rawData:
+            if (line[3:6] == 'RMC') and (line[-4:] == '\\r\\n'):
                 self.RMCfound = True
-                break #we found RMC data
+                d = line
         
         if self.RMCfound:
             self.RMCfound = False
@@ -82,24 +80,34 @@ class GPS():
             self.RMCdata = {}
 
     def get_RMCdata(self, defaultLogger = None):
-        self.oldRXLength = self.currentRXLength
+
+        # re-open for read
+        self.uart.open()
+
+        start_time = time()
         try:
-			self.currentRXLength = self.uart.inWaiting() # how many bytes not read?
-		except OSError as dummy1:
-			print(dummy1)
+            currentRXLength = 0
+            # break after 1000 bytes or 2 seconds
+            while currentRXLength < 1000 and ( time()-start_time < 2 ):
+                currentRXLength = self.uart.inWaiting() # how many bytes not read?
+
+        except OSError as dummy1:
+            print("OSError reading number UART bytes waiting: {}".format(dummy1))
+            self.uart.close()
+            return {}
 
         #if not unread bytes
-        if(self.currentRXLength == 0):
+        if(currentRXLength == 0):
             self.RMCdata = {}
-            return self.RMCdata
 
         #if more bytes received, check for RMC data
         else:
             try:
-                data = self.uart.read(self.currentRXLength).decode('utf-8')
+                data = self.uart.read(currentRXLength).decode('utf-8')
             except UnicodeDecodeError as err:
                 print("Failure converting GPS bytes to utf-8")
                 print(err)
+                self.uart.close()
                 return {}
             
             rawData = list(d.replace('\r\n', '\\r\\n') for d in str(data).replace('\\r\\n', '\r\n').splitlines(True))
@@ -111,4 +119,6 @@ class GPS():
                 print(e)
                 if defaultLogger != None:
                     defaultLogger.warning(str(e))
-            return self.RMCdata
+
+        self.uart.close()    
+        return self.RMCdata
