@@ -80,6 +80,7 @@ class GPS():
             self.RMCdata = {}
 
     def get_RMCdata(self, defaultLogger = None):
+
         # re-open for read
         self.uart.open()
 
@@ -90,8 +91,8 @@ class GPS():
             while currentRXLength < 1000 and ( time()-start_time < 2 ):
                 currentRXLength = self.uart.inWaiting() # how many bytes not read?
 
-        except OSError as err:
-            print("OSError reading number UART bytes waiting: {}".format(err))
+        except OSError as dummy1:
+            print("OSError reading number UART bytes waiting: {}".format(dummy1))
             self.uart.close()
             return {}
 
