@@ -83,7 +83,10 @@ class GPS():
 
     def get_RMCdata(self, defaultLogger = None):
         self.oldRXLength = self.currentRXLength
-        self.currentRXLength = self.uart.inWaiting() # how many bytes not read?
+        try:
+			self.currentRXLength = self.uart.inWaiting() # how many bytes not read?
+		except OSError as dummy1:
+			print(dummy1)
 
         #if not unread bytes
         if(self.currentRXLength == 0):

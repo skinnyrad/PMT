@@ -29,9 +29,7 @@ from gc import collect
 from gdt import GDT
 # import encry
 
-
 ap_blacklist = ["", "xfinitywifi", "CableWiFi", "Omni10_Setup_B3B", "lululemonwifi", "Google Home.k"]
-
 
 # pmt.conf is kept in the PMT git repo, go there
 logging.openPMTDir()
@@ -106,14 +104,13 @@ station = Station()
 
 
 collect()
-gdt = GDT(60+gps_interval, pid=os.getpid(), logger=blacklistLogger)
+gdt = GDT(30+gps_interval, pid=os.getpid(), logger=blacklistLogger)
 
 while True:
-    print(" ---------- Main processing loop ----------")
 
     # Sample GNSS data
     GPSdata = gps.get_RMCdata(defaultLogger)
-    speed = 0
+    speed = None
 
     # Store the data
     if not (GPSdata == {}):
@@ -138,8 +135,7 @@ while True:
         print("No GPS data.")
         defaultLogger.info("No GPS data.")
         data = ""
-
-
+	
     # If we are not parked, then remove the list of SSIDs that didn't work
     if (speed is not None) and (speed > 10.00):
         os.remove(blacklist)
@@ -167,7 +163,7 @@ while True:
                 openNets = station.scan_open_ssids() # gets list of open SSIDS
             except Exception as e:
                 #TODO: remove print
-                print("Exception when scanning ssids: {0}".format(str(e)))
+                print("Warning: {0}".format(str(e)))
                 defaultLogger.warning(str(e))
 
             print(openNets)
@@ -220,12 +216,12 @@ while True:
                 with open(current_ap, 'rt') as fp:
                     ssid = fp.read()
                 
-            # Case: RaspPi has incorrectly held onto a valid IP so long
-            # user had even wiped the SSID.log file
-            if ssid == "":
-                print("empty ssid detected, ending IP lease and continuing")
-                station.end_ip_lease()
-                continue # exit out, we are no longer connected
+                # Case: RaspPi has incorrectly held onto a valid IP so long
+                # user had even wiped the SSID.log file
+                if ssid == "":
+                    station.end_ip_lease()
+                    continue # exit out, we are no longer connected
+
 
             gdt.feed()
             print("Connected to {}".format(ssid))
