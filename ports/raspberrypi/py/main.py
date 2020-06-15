@@ -234,10 +234,12 @@ while True:
             
             # WAN access failed
             elif not connected:
-                blacklistLogger.write_line(ssid)
-                #TODO: remove print
                 print("Unable to Connect")
+                print("blacklisting {} and dropping IP".format(ssid))
                 wifiLogger.warning("Unable to Connect")
+                wifiLogger.warning("blacklisting {} and dropping IP".format(ssid))
+                blacklistLogger.write_line(ssid)
+                station.end_ip_lease()
                 break
 
             # So long as we have WAN access, post data
