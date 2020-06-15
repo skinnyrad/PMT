@@ -69,7 +69,7 @@ class GDT():
     def timer_exp_func(self):
         print("Guard func running")
         if self.logger is not None:
-            from logging import runtime_dir, openPMTDir
+            from logging import runtime_dir
             # If the SSID file exists, read the current SSID we are connected to and blacklist it
             if os.access( os.path.join(runtime_dir, "SSID.log"), os.F_OK ):
                 with open( os.path.join(runtime_dir, "SSID.log"), "rt") as fp:
