@@ -66,10 +66,10 @@ def get_tags(html_as_string, tag_type=None):
     return tag_list
 
 
-
+# takes in string, spits out list
 def breakup_tag(tag):
     tag=tag.lstrip('<')
-    tag=tag.lstrip('>')
+    tag=tag.rstrip('>')
     tag=tag.strip() #beg end whitespace
         
     #time to split up elements within the tag
@@ -128,7 +128,7 @@ def breakup_tag(tag):
 
     return contents_list
 
-
+# takes list, returns dict
 def tag_internals_to_dict(contents):
     tag_dict = {}
 
@@ -144,17 +144,19 @@ def tag_internals_to_dict(contents):
 
 
 
-def construct_form_from_tag_internals(tags):
+def construct_object_from_tag_internals(tags):
     
-    form_open = False #indicates if <form ...> seen but </form> not seen yet
-    form = {}
+    obj_open = False #indicates if <form ...> seen but </form> not seen yet
+    obj = {}
     #From here on we have a list of the contents of a tag.
     #Decide how to handle it
+
+    object_type = tags[0][0]
 
     for tag_internals in tags: # the splitup tag internals of a single tag
 
         #form tag: beginning of form
-        if(tag_internals[0]=="form"):
+        if(tag_internals[0]==object_type):
 
             # Create a new dictionary to store info
             tag_dict = {}
@@ -170,16 +172,16 @@ def construct_form_from_tag_internals(tags):
             
             # other tags will be inside forms
             tag_dict["inside"] = []
-            form = tag_dict
-            form_open = True
+            obj = tag_dict
+            obj_open = True
 
         # /form tag : end of form
-        elif(tag_internals[0]=="/form"):
-            form_open=False #close out the form
+        elif(tag_internals[0]=="/{}".format(object_type)):
+            obj_open=False #close out the obj
 
 
         # a tag: indicates hyperlinked text
-        elif(tag_internals[0]=="a" or tag_internals[0]=="input"):
+        else: # elif(tag_internals[0]=="a" or tag_internals[0]=="input"):
             # Create a new dictionary to store info
             tag_dict={}
             tag_dict["tag_type"]=tag_internals[0]
@@ -193,12 +195,12 @@ def construct_form_from_tag_internals(tags):
                 tag_dict[key]=val
             
             #append this tag into the form
-            if(form_open):
-                    inside_list=form["inside"]   #get
+            if(obj_open):
+                    inside_list=obj["inside"]   #get
                     inside_list.append(tag_dict)  #append
-                    form["inside"]=inside_list   #put back
+                    obj["inside"]=inside_list   #put back
 
-    return form
+    return obj
 
 
 # TOP LEVEL FUNCTION
@@ -250,7 +252,56 @@ def get_forms(html):
 
     parsed_forms = []
     for form in all_forms:
-        parsed_forms.append(construct_form_from_tag_internals(form))
+        parsed_forms.append(construct_object_from_tag_internals(form))
+    
+    print(parsed_forms)
+
+    return parsed_forms
+
+
+
+def get_objects(html, object_type):
+    
+    if type(html) is not str:
+        html = html.decode('utf-8') # int to str
+
+    # each entry in list is "<form ...> <...> </form>" 
+    forms = get_tags(html, object_type)
+    if(len(forms) == 0):
+        return []
+    #elif(len(forms) == 1): # caused if <form...> but bad html received no </form>
+    #    forms = []      # get rid of previous bad entry
+    #    ret_val = find_complete_string(html, "<form", "<html", 0) #WORKAROUND: by definition
+    #    if(ret_val[0] == ""):
+    #        return []   #gah lee you've just hit the worst written splashpage ever. just give up already
+    #    forms.append(ret_val[0])
+
+    print(forms)
+
+    #break forms as strings into a list of tags: [form] = ["<form ...>", "<...>", "</form>"]
+    all_forms = []
+    for string in forms:
+        ret = get_tags(string)
+        all_forms.append(ret)
+        
+    print(all_forms)
+
+    # split out each tag's internals
+    i = 0
+    while i < len(all_forms):
+        tags = all_forms[i]
+        j = 0
+        while j < len(tags):
+            tag = tags[j]
+            all_forms[i][j] = breakup_tag(tag)
+            j+=1
+        i+=1
+    
+    print(all_forms)
+
+    parsed_forms = []
+    for form in all_forms:
+        parsed_forms.append(construct_object_from_tag_internals(form))
     
     print(parsed_forms)
 

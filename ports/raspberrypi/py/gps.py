@@ -16,7 +16,7 @@
 # GPS RX => default RX for serial0
 
 from serial import Serial
-import logging
+import pmt_logging as logging
 from time import time
 
 class GPS():

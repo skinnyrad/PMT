@@ -15,18 +15,18 @@
 # from micropython the python. As python does not 
 # have a nework module
 
-
+from time import sleep
+#from reqst import test_dns_internet
+from request import get
 
 try:
     from wifi import Cell, exceptions
     from os import popen
-    from time import sleep
 
 except (ModuleNotFoundError, ImportError) as err:
     print("Error: wifi module not installed, or os module failed to load.\n\tInstall wifi module with: pip3 install wifi")
     print(err)
     exit()
-
 
 
 
@@ -156,19 +156,17 @@ class Station():
             return False
 
         # Request host/api/ should return OK in body
-        from reqst import test_dns_internet
-        from socket import gaierror
-        MAX_RETRIES = 3
-        current = 0
+        MAX_RETRIES = 2
+        current = 1
         while current < MAX_RETRIES:
             # try to test our known good "OK"
             try:
                 current += 1
-                [_, status, _, body, _] = test_dns_internet(url)
+                [_, status, _, body] = get(url)
             
             # Sometimes DNS fails
-            except gaierror as err:
-                print(err)
+            except ConnectionError as err:
+                print("ConnectionError in has_wan_access: {}".format(err))
                 if current < MAX_RETRIES:
                     print("Retrying...")
 
