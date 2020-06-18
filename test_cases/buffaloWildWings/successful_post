@@ -1,0 +1,29 @@
+POST /login HTTP/1.1
+User-Agent: PostmanRuntime/7.25.0
+Accept: */*
+Cache-Control: no-cache
+Postman-Token: 5e770553-f56f-40bb-8be8-7da9ca53eff5
+Host: 172.16.0.1
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 250
+
+password=bogus12345&username=user%40omahabww&dst=http%3A%2F%2Fedge.c9w.net%2Fwifi_dest.html%3Fdest_url%3Dhttp%253A%252F%252Fonsite.harborlink.net%252Fportal%252Fbww%252FBWW_Landing.php%3Fidentity%3D%3C%3F%20echo%20%24_GET%5B%22identity%22%5D%3B%3F%3EHTTP/1.1 200 OK
+Cache-Control: no-cache
+Connection: Keep-Alive
+Content-Length: 352
+Content-Type: text/html
+Date: Mon, 15 Jun 2020 19:23:44 GMT
+Expires: 0
+
+<html>
+<head>
+<title>...</title>
+<meta http-equiv="refresh" content="0; url=http://edge.c9w.net/wifi_dest.html?dest_url=http%3A%2F%2Fonsite.harborlink.net%2Fportal%2Fbww%2FBWW_Landing.php?identity=&lt;? echo $_GET["identity"];?&gt;">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="-1">
+</head>
+<body>
+</body>
+</html>

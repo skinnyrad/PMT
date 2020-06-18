@@ -13,8 +13,9 @@
 
 from gc import collect
 from gdt import GDT
+import logging
 import request
-from html_parser import get_objects, get_tags, breakup_tag, tag_internals_to_dict
+from html_parser import get_forms, get_tags, breakup_tag, tag_internals_to_dict
 import urllib.parse
 
 def splash_breaking_a(b_html):
@@ -55,8 +56,7 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
     print("break_sp: Location:{}".format(location))
 
     # break with form resubmission
-    #forms = get_objects(splashpage, "form")
-    forms = []
+    forms = get_forms(splashpage)
     print("forms:{}".format(forms))
 
     # If there were forms in the page
@@ -186,7 +186,7 @@ def station_connected(station, host, gdt, wifiLogger):
     # Must make initial request to posting page to start the process
     # of getting full internet access.
     gdt.feed()
-    print("Fed GDT before requesting Host: {}".format(host))
+    print("Fed GDT before DNS testing")
 
     # test DNS -> GET Request and Handles Redirection
     try:
@@ -196,9 +196,9 @@ def station_connected(station, host, gdt, wifiLogger):
         print("ConnectionError in station_connected: {}".format(err))
         station.end_ip_lease()
         return False
-#    except Exception as err:
-#        print("default Exception in station_connected: {}".format(err))
-#        return None
+    except Exception as err:
+        print("default Exception in station_connected: {}".format(err))
+        return None
 
     if status is None: # something broke in the request
         return None

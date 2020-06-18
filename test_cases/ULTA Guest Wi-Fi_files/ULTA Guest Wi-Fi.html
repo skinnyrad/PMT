@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="description" content="ULTA Guest Wi-Fi access form">
+    <title>ULTA Guest Wi-Fi</title>
+    <link href="ULTA%20Guest%20Wi-Fi_files/wifi.css" rel="stylesheet" type="text/css">
+    <script src="ULTA%20Guest%20Wi-Fi_files/jquery-3.js" crossorigin="anonymous"></script>
+    <script src="http://pages.exacttarget.com/page.aspx?QS=38dfbe491fab00ea0b14771cc556f7a3389f46b0ccb9c55903584a7586dbe152"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var touchzone = document.getElementById('agreeBtn');
+            touchzone.addEventListener('touchstart', isValid, false);
+            touchzone.addEventListener('click', isValid, false);
+
+            var thisLoc = window.location.href;
+            var thisSite = thisLoc.substring(0,thisLoc.lastIndexOf('/')+1);
+            var alertParam = '';
+            var errParam = '';
+            var grantUrl = '';
+            var continueUrl = '';
+
+            $.urlParam = function(name) {
+                var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(thisLoc);
+                if(results == null) {
+                   return '';
+                } else {
+                   return results[1] || 0;
+                }
+            }
+            alertParam = $.urlParam('response');
+            errParam = $.urlParam('error_message');
+            if(alertParam == 'error' || errParam != '') {
+                $('#errMsg').html('Something is awry, please try again...');
+            /*} else if(alertParam == 'success') { // temp setting
+                $('#errMsg').html('All your emails belong to us!');*/
+            }
+            grantUrl = $.urlParam('base_grant_url');
+            continueUrl = $.urlParam('user_continue_url');
+            clientMac = $.urlParam('client_mac');
+            $('#MacAddress').val(clientMac);
+            $('#_errorURL').val(thisSite + '?response=error');
+            if(continueUrl == '') {
+                $('#_successURL').val(thisSite + 'youre-in.html');
+            } else {
+                $('#_successURL').val(decodeURIComponent(grantUrl) + '?continue_url=' + encodeURIComponent(thisSite) + 'youre-in.html');
+            }
+        });
+
+        function isValid() {
+            var emailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test($('#EmailAddress').val());
+            if(emailValid == false) {
+                $('#errMsg').html('Oops, please check your email address.');
+                $('#EmailAddress').addClass('invalid');
+                return false;
+            } else {
+                if($('#FirstName').val() == 'First Name') {$('#FirstName').val('')}
+                if($('#LastName').val() == 'Last Name') {$('#LastName').val('')}
+                $('#subscribeForm').submit();
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div><img class="logo" src="ULTA%20Guest%20Wi-Fi_files/UltaLogo-297x120-OTM.png" alt="ULTA Beauty Logo"></div>
+            <h1><span class="pop">FREE </span><span class="mad">Wi-Fi</span></h1>
+            <div id="errMsg"></div>
+            <form action="http://cl.exct.net/DEManager.aspx" id="subscribeForm" name="subscribeForm" method="POST">
+                <input type="hidden" id="_clientID" name="_clientID" value="10250006">
+                <input type="hidden" id="_deExternalKey" name="_deExternalKey" value="StoreGuestWIFI">
+                <input type="hidden" id="_action" name="_action" value="add">
+                <input type="hidden" id="_returnXML" name="_returnXML" value="0">
+                <input type="hidden" id="_successURL" name="_successURL" value="https://n106.network-auth.com/splash/grant?continue_url=https%3A%2F%2Fwww.ulta.com%2Fstorewifi%2Fyoure-in.html">
+                <input type="hidden" id="_errorURL" name="_errorURL" value="https://www.ulta.com/storewifi/?response=error">
+                <input type="hidden" id="MacAddress" name="MacAddress" value="aa:25:4e:88:f1:1d">
+             <div class="input-div">
+                <label class="sr-only" for="EmailAddress">Email&nbsp;Address*: </label>
+                <input class="input-field" type="email" id="EmailAddress" name="EmailAddress" onfocus="if(this.value=='Email Address*') {this.value='';this.style.color='#000';}$(this).removeClass('invalid');" onblur="if(this.value=='') {this.value='Email Address*';this.style.color='#555';}" value="Email Address*" tabindex="1" aria-required="true" required="">
+            </div>
+            <div class="input-div">
+                <label class="sr-only" for="FirstName">First Name: </label>
+                <input class="input-field" type="text" id="FirstName" name="FirstName" onfocus="if(this.value=='First Name') {this.value='';this.style.color='#000';}" onblur="if(this.value=='') {this.value='First Name';this.style.color='#555';}" value="First Name" tabindex="2">
+            </div>
+            <div class="input-div">
+                <label class="sr-only" for="last_name">Last Name: </label>
+                <input class="input-field" type="text" id="LastName" name="LastName" onfocus="if(this.value=='Last Name') {this.value='';this.style.color='#000';}" onblur="if(this.value=='') {this.value='Last Name';this.style.color='#555';}" value="Last Name" tabindex="3">
+            </div>
+            <div class="submit-div">
+                <p class="required">* Required Field</p>
+                <input type="button" id="agreeBtn" class="submit-button" tabindex="4" value="Accept &amp; Connect">
+            </div>
+            </form>
+        </div>
+        <p class="disclaimer">By entering your email address and clicking Accept &amp; Connect, you acknowledge your acceptance of the <a href="https://www.ulta.com/storewifi/terms.html">Terms &amp; Conditions</a> and <a href="http://www.ulta.com/ulta/common/privacyPolicy.jsp">Privacy Policy</a>.</p>
+        <div><img class="logob" src="ULTA%20Guest%20Wi-Fi_files/allthingsbeauty-white.png" alt="All Things Beauty Logo"></div>
+    </div>
+
+
+</body></html>

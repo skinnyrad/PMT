@@ -18,13 +18,13 @@ if os.getcwd() != code_dir:
     print("This program must be run from: {}\nExiting...".format(code_dir))
     exit(1)
 
-import logging
+import pmt_logging as logging
 from gps import GPS
 from machine import reset
 from network import Station
-from post import *
+from post import post_data
 from time import sleep
-from wifi_connect import *
+from wifi_connect import station_connected
 from gc import collect
 from gdt import GDT
 # import encry
@@ -225,7 +225,7 @@ while True:
 
             gdt.feed()
             print("Connected to {}".format(ssid))
-            connected = station_connected(station, post_url, gdt, wifiLogger)
+            connected = station_connected(station, host_url, gdt, wifiLogger)
             
             # Caught default Exception, normally from leaving AP range
             # dropping lease on any valid IP should be handled within station_connected

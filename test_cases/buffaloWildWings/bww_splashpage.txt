@@ -1,0 +1,138 @@
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;"><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>HarborLink | Buffalo Wild Wings Wi-Fi</title>
+<meta name="generator" content="WYSIWYG Web Builder - http://www.wysiwygwebbuilder.com">
+
+
+
+<style type="text/css">
+body
+{
+   margin: 0;
+   padding: 0;
+   background-color: #C0C0C0;
+   color: #000000;
+}
+</style>
+<style type="text/css">
+a
+{
+   color: #0000FF;
+   text-decoration: underline;
+}
+a:visited
+{
+   color: #800080;
+}
+a:active
+{
+   color: #FF0000;
+}
+a:hover
+{
+   color: #0000FF;
+   text-decoration: underline;
+}
+a.style1
+{
+   color: #000000;
+   text-decoration: none;
+}
+a.style1:visited
+{
+   color: #4B0082;
+   text-decoration: none;
+}
+a.style1:active
+{
+   color: #FF0000;
+   text-decoration: underline;
+}
+a.style1:hover
+{
+   color: #FF0000;
+   text-decoration: underline;
+}
+</style>
+<style type="text/css">
+#wb_Text4
+{
+   background-color: transparent;
+   border: 0px #000000 none;
+   padding: 0;
+   text-align: left;
+}
+#wb_Text4 div
+{
+   text-align: left;
+}
+#wb_Text3
+{
+   background-color: transparent;
+   border: 0px #000000 none;
+   padding: 0;
+   text-align: center;
+}
+#wb_Text3 div
+{
+   text-align: center;
+}
+#Image2
+{
+   border: 0px #000000 solid;
+}
+#wb_Text1
+{
+   background-color: transparent;
+   border: 0px #000000 none;
+   padding: 0;
+   text-align: center;
+}
+#wb_Text1 div
+{
+   text-align: center;
+}
+#ImageButton1
+{
+   border: 0px #000000 solid;
+}
+#Image1
+{
+   border: 0px #000000 solid;
+}
+</style>
+</head>
+<body>
+
+<!-- BEGIN AUTHENTICATION FORM CODE -->
+
+<form method="POST" action=http://172.16.0.1/login>
+                                <input type=hidden name=password value="bogus12345" style="font-weight: 700">
+                                <input type=hidden name=username value="user@omahabww" style="font-weight: 700">
+                                <input type=hidden name=dst value="http://edge.c9w.net/wifi_dest.html?dest_url=http%3A%2F%2Fonsite.harborlink.net%2Fportal%2Fbww%2FBWW_Landing.php?identity=<? echo $_GET["identity"];?>">
+
+<!-- END AUTHENTICATION FORM CODE -->
+<div id="wb_Shape1" style="position:absolute;left:10px;top:7px;width:300px;height:176px;z-index:0;">
+<img src="images/img0287.gif" id="Shape1" alt="" style="border-width:0;width:300px;height:176px;"></div>
+<!-- JiWire Code -->
+<div id="Html2" style="position:absolute;left:10px;top:192px;width:300px;height:250px;z-index:1">
+
+
+</div>
+<div id="wb_Text4" style="position:absolute;left:149px;top:163px;width:159px;height:14px;z-index:2;text-align:left;">
+<span style="color:#000000;font-family:Arial;font-size:11px;"><em>powered by harborlink network</em></span></div>
+<div id="wb_Text3" style="position:absolute;left:135px;top:21px;width:168px;height:70px;text-align:center;z-index:3;">
+<span style="color:#000000;font-family:Arial;font-size:11px;"><strong>To begin your session, press the &quot;START&quot; button below.&nbsp; By doing so, you agree to the <a href="http://www.harborlink.net/AUP.html" target="_blank">HarborLink Network Acceptable Use Policy</a>.&nbsp; </strong></span></div>
+<div id="wb_Image2" style="position:absolute;left:25px;top:33px;width:100px;height:103px;z-index:4;">
+<img src="images/Slice-1%20%282%29.gif" id="Image2" alt="" style="width:100px;height:103px;"></div>
+<div id="wb_Shape2" style="position:absolute;left:317px;top:7px;width:449px;height:434px;z-index:5;">
+<img src="images/img0288.gif" id="Shape2" alt="" style="border-width:0;width:449px;height:434px;"></div>
+<div id="wb_Text1" style="position:absolute;left:0px;top:459px;width:768px;height:48px;text-align:center;z-index:6;">
+<span style="color:#000000;font-family:Arial;font-size:13px;">A PROUD MEMBER OF THE HARBORLINK NETWORK<br><a href="http://www.harborlink.net/home.html" class="style1">Home</a> | <a href="http://www.harborlink.net/support.html" class="style1">Support</a> | <a href="http://www.harborlink.net/locations.html" class="style1">Locations</a> | <a href="http://www.harborlink.net/aboutus.html" class="style1">About</a> | <a href="http://www.harborlink.net/news.html" class="style1">News</a><br>2012 HarborLink Network, Ltd.&nbsp; All Rights Reserved</span></div>
+<input type="image" name="ImageButton1" id="ImageButton1" src="images/blackstartbutton.gif" style="position:absolute;left:169px;top:106px;width:95px;height:42px;z-index:7;">
+<div id="wb_Image1" style="position:absolute;left:327px;top:14px;width:430px;height:420px;z-index:8;">
+<a href="http://www.buffalowildwings.com"><img src="images/2013-1932_Harborlink_banner_430x420%20%281%29.jpg" id="Image1" alt="" style="width:430px;height:420px;"></a></div>
+</body>
+</html>

@@ -11,18 +11,15 @@
 #  Python 3.7
 #  Filename : post.py
 
-import socket
-from reqst import post
-import logging
+#from reqst import post
+from request import post
+
+
 # https request information
 headers = {
     'Content-Type': 'application-json',
 }
 
-def handlerTimer(timer):
-    print("Post: Timer Timeout")
-    #Resets the device in a manner similar to pushing the external RESET button.
-    #reset()
 
 def post_data(post_data, post_url, station, logger) -> bool:
     try:
@@ -31,9 +28,9 @@ def post_data(post_data, post_url, station, logger) -> bool:
         #TODO: Uncomment this for solution
         #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
         try:
-            [_, status, _, _] = post(post_url, headers=headers, data=post_data)
-        except socket.gaierror as err:
-            print("socket.gaierror in post_data")
+            [_, status, _, _] = post(post_url, headers=headers, data=post_data, timeout=10)
+        except ConnectionError as err:
+            print("ConnectionError in post_data")
             print(err)
             return False
 
