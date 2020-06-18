@@ -77,7 +77,7 @@ def breakup_tag(tag):
     j=0
     contents_list =[]
     
-    # pull out type (ie form, html, body)
+    # pull out type  by finding first space(ie form, html, body)
     j=tag.find(' ', 0, len(tag))
     if(j == -1): #ex: </form>
         ret=tag
@@ -94,36 +94,56 @@ def breakup_tag(tag):
         j=tag.find('=', 0, len(tag))
         if(j==-1):
             break # end if no keyval pairs
-
-        key = tag[0:j] #pull out key
-        tag = tag[j+1:]
-        key = key.strip(' ')
-        contents_list.append(key)
-    
-        #key found, pull val (key="val" key='val' key=val )
-        #pull val inbetween quotes
-        # Case: sometimes value is not wrong in quotes if it is just alphabetical characters
-        # need to determine if quotes were used.
-        wrapper = '"'
-        j = tag.find(wrapper, 0, len(tag)) #could be wrapped in double quotes
-        if(j != 0):
-            wrapper = "'"
-            j = tag.find(wrapper, 0, len(tag)) # could be wrapped in single quotes
-            if(j != 0):
-                wrapper = "" # Well crud val isnt wrapped in anything
-
-        if wrapper == "'" or wrapper == '"':
-            tag=tag[j+1:len(tag)]
-            j = tag.find(wrapper, 0, len(tag)) #second quote
         
-        elif wrapper == "":
-            j = tag.find(' ', 0, len(tag)) #grab the end space
-            if(j == -1):
-                j = tag.find('>', 0, len(tag)) #grab the end space
+        # KEY
+        key = tag[0:j] # save the key
+        tag = tag[j+1:].strip() # cut out the key
+        key = key.strip(' ') # cleanup
+        contents_list.append(key) # store it
+        
+        # VALUE
+        # anything that happens inbetween "" or '' doesn't matter
+        delim = tag[0]
+        #print("delim={}".format(delim))
+
+        # The value is wrapped
+        if delim == "'" or delim == '"':
+            
+            state = 'in'
+            for i in range(1, len(tag)):
+                
+                if state == 'in' and tag[i] == delim:
+                    #print( "{} out".format(tag[0:i+1]) )
+                    state = 'out'
+
+                elif state == 'out':
+                    
+                    # end of val reached
+                    if tag[i] == ' ':
+                        j = i
+                        break
+                    
+                    elif tag[i] == delim:
+                        #print( "{} in".format(tag[0:i+1]) )
+                        state = 'in'
+                
+                # at the end and havent left yet
+                if i == (len(tag)-1):
+                    j=i+1
+                    #print("end of val @{0}:{1}".format(i,tag[i]))
+
+
+        # The value is not wrapped
+        else:
+            j=tag.find(' ') # next space must dictate end of val
+            if j == -1: #If we found it
+                j=len(tag)+1 #if no ' ', use end of tag as deliminator
 
         
         val=tag[0:j].strip()
-        tag = tag[j+1:]
+        val=val.strip('"')
+        #print("val={}\n".format(val))
+        tag = tag[j+1:].strip()
         contents_list.append(val)
 
     return contents_list
@@ -227,7 +247,7 @@ def get_forms(html):
     #        return []   #gah lee you've just hit the worst written splashpage ever. just give up already
     #    forms.append(ret_val[0])
 
-    print(forms)
+    #print(forms)
 
     #break forms as strings into a list of tags: [form] = ["<form ...>", "<...>", "</form>"]
     all_forms = []
@@ -235,7 +255,7 @@ def get_forms(html):
         ret = get_tags(string)
         all_forms.append(ret)
         
-    print(all_forms)
+    #print(all_forms)
 
     # split out each tag's internals
     i = 0
@@ -248,13 +268,13 @@ def get_forms(html):
             j+=1
         i+=1
     
-    print(all_forms)
+    #print(all_forms)
 
     parsed_forms = []
     for form in all_forms:
         parsed_forms.append(construct_object_from_tag_internals(form))
     
-    print(parsed_forms)
+    #print(parsed_forms)
 
     return parsed_forms
 
@@ -269,14 +289,11 @@ def get_objects(html, object_type):
     forms = get_tags(html, object_type)
     if(len(forms) == 0):
         return []
-    #elif(len(forms) == 1): # caused if <form...> but bad html received no </form>
-    #    forms = []      # get rid of previous bad entry
-    #    ret_val = find_complete_string(html, "<form", "<html", 0) #WORKAROUND: by definition
-    #    if(ret_val[0] == ""):
-    #        return []   #gah lee you've just hit the worst written splashpage ever. just give up already
-    #    forms.append(ret_val[0])
-
-    print(forms)
+    if len(forms) > 0 and forms[0].find("</{}".format(object_type)) == -1:
+        ret_val = find_complete_string(html, "<{}".format(object_type), "</body")
+        forms = ret_val[0]
+    
+    print("{}\n".format(forms))
 
     #break forms as strings into a list of tags: [form] = ["<form ...>", "<...>", "</form>"]
     all_forms = []
@@ -284,7 +301,7 @@ def get_objects(html, object_type):
         ret = get_tags(string)
         all_forms.append(ret)
         
-    print(all_forms)
+    #print("{}\n".format(all_forms))
 
     # split out each tag's internals
     i = 0
@@ -297,14 +314,33 @@ def get_objects(html, object_type):
             j+=1
         i+=1
     
-    print(all_forms)
+    #print("{}\n".format(all_forms))
 
     parsed_forms = []
     for form in all_forms:
         parsed_forms.append(construct_object_from_tag_internals(form))
     
-    print(parsed_forms)
+    #print("{}\n".format(parsed_forms))
 
     return parsed_forms
 
 
+
+def get_head_redir_url(body):
+    
+    if body.find('<head') > -1:
+
+        head_objects = get_objects(body, 'head')
+        #print( "HEAD objects: {}".format(head_objects) )
+
+        for head in head_objects:
+            if 'inside' in head:
+                for tag in head['inside']:
+                    if (tag["tag_type"] == "meta") and ('http-equiv' in tag) and (tag['http-equiv'] == 'refresh') and ('content' in tag):
+                            i = tag['content'].find('url=')
+                            if i > -1:
+                                url = tag['content'][i+4:]
+                                print("head object redirection to url={}".format(url))
+                                return url
+    
+    return None

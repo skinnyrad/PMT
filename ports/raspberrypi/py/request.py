@@ -52,39 +52,21 @@ def py_request(url, method, headers={}, data=None, timeout=10, gdt=None ):
         gdt.feed()
 
     # <head> redirects not natively supported. Handled here
-    if body.find('<head') > -1:
-        
-        #head_str = html_parser.get_tags('head')
-        #head_list = html_parser.breakup_tag(head_str)
-        #head_dicts = html_parser.tag_internals_to_dict(head_list)
-        #head_obj = html_parser.construct_object_from_tag_internals(head_dict)
+    url = html_parser.get_head_redir_url(body)
 
-        head_objects = html_parser.get_objects(body, 'head')
-        print( "HEAD objects: {}".format(head_objects) )
+    if url is not None:
+        try:
+            r = requests.get(url, timeout=timeout)
+            addr = r.url
+            status = r.status_code
+            recvd_headers = r.headers
+            body = r.text
+            r.close()
 
-        for head in head_objects:
-            if 'inside' in head:
-                for tag in head['inside']:
-                    if (tag["tag_type"] == "meta") and ('http-equiv' in tag) and (tag['http-equiv'] == 'refresh') and ('content' in tag):
-                            i = tag['content'].find('url=')
-                            if i > -1:
-                                url = tag['content'][i+4:]
-                                print("head object redirection to url={}".format(url))
-
-                                try:
-                                    r = requests.get(url, timeout=timeout)
-                                    addr = r.url
-                                    status = r.status_code
-                                    recvd_headers = r.headers
-                                    body = r.text
-                                    r.close()
-
-                                except ConnectionError as err:
-                                    print("ConnectionError in py_request: {}".format(err))
-                                    if attempts >= MAX_ATTEMPTS:
-                                        raise ConnectionError
-                                
-                                
+        except ConnectionError as err:
+            print("ConnectionError in py_request: {}".format(err))
+            if attempts >= MAX_ATTEMPTS:
+                raise ConnectionError                     
 
     return [addr, status, recvd_headers, body]
 
@@ -100,7 +82,15 @@ def request(method, url, data=None, json=None, headers={}, timeout=None, gdt=Non
         data = dumps(json) # set the data
         headers["Content-Type"] = "application/json" # add the header
 
-    return py_request(url, method, headers=headers, data=data, timeout=timeout, gdt=gdt)
+    try:
+        return py_request(url, method, headers=headers, data=data, timeout=timeout, gdt=gdt)
+    except requests.exceptions.ConnectionError as err:
+        print("Connection error in request: {}".format(err))
+        # some APs reject https connections. try http
+        if url[:5] == "https":
+            url = "http{}".format(url[5:])
+            print("trying http @ {}".format(url))
+            return py_request(url, method, headers=headers, data=data, timeout=timeout, gdt=gdt)
 
 
 
