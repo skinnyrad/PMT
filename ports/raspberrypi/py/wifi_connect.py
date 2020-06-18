@@ -14,7 +14,7 @@
 from gc import collect
 from gdt import GDT
 import request
-from html_parser import get_forms, get_tags, breakup_tag, tag_internals_to_dict
+from html_parser import get_objects, get_tags, breakup_tag, tag_internals_to_dict
 import urllib.parse
 
 def splash_breaking_a(b_html):
@@ -55,7 +55,8 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
     print("break_sp: Location:{}".format(location))
 
     # break with form resubmission
-    forms = get_forms(splashpage)
+    #forms = get_objects(splashpage, "form")
+    forms = []
     print("forms:{}".format(forms))
 
     # If there were forms in the page
