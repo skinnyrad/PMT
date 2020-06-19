@@ -17,6 +17,7 @@
 
 import requests
 import html_parser
+import lxml.html
 
 # The base request function
 def py_request(url, method, headers={}, data=None, timeout=10, gdt=None ):
@@ -25,6 +26,7 @@ def py_request(url, method, headers={}, data=None, timeout=10, gdt=None ):
     MAX_ATTEMPTS = 2
     while attempts <= MAX_ATTEMPTS:
         print("Connection attempt {0}/{1}".format(attempts,MAX_ATTEMPTS))
+        attempts += 1
         
         if gdt is not None:
             gdt.feed()
@@ -36,8 +38,8 @@ def py_request(url, method, headers={}, data=None, timeout=10, gdt=None ):
                 r = requests.post(url, headers=headers, data=data, timeout=timeout )
             break
 
-        except ConnectionError as err:
-            print("ConnectionError in py_request: {}".format(err))
+        except requests.exceptions.RequestException as err:
+            print("RequestException in py_request: {}".format(err))
             if attempts >= MAX_ATTEMPTS:
                 raise ConnectionError
 
@@ -51,22 +53,56 @@ def py_request(url, method, headers={}, data=None, timeout=10, gdt=None ):
     if gdt is not None:
         gdt.feed()
 
+
+    # Handle <head> redirects
     # <head> redirects not natively supported. Handled here
     url = html_parser.get_head_redir_url(body)
+    page = lxml.html.fromstring(body)
 
     if url is not None:
-        try:
-            r = requests.get(url, timeout=timeout)
-            addr = r.url
-            status = r.status_code
-            recvd_headers = r.headers
-            body = r.text
-            r.close()
+        
+        # Relative path version 1
+        if url[0] == '/':
+            if page.base is not None:
+                url = "{0}{1}".format( page.base, url )
+            else: # base is not present, must find it ourselves
+                base = ''
+                i = r.url.find('/', 8)
+                if i > -1:
+                    base = r.url[:i]
+                url = base.append(url)
+        
+        # Relative Path version 2
+        elif url[0:2] == './':
+            if page.base is not None:
+                url = "{0}{1}".format( page.base, url[1:] )
+            else: # base is not present, must find it ourselves
+                base = ''
+                i = r.url.find('/', 8)
+                if i > -1:
+                    base = r.url[:i]
+                url = base.append(url)
 
-        except ConnectionError as err:
-            print("ConnectionError in py_request: {}".format(err))
-            if attempts >= MAX_ATTEMPTS:
-                raise ConnectionError                     
+        print("head object redirection to url={}".format(url))
+
+        attempts = 1
+        while attempts <= MAX_ATTEMPTS:
+            try:
+                print("<head> redirect attempt {0}/{1}".format(attempts,MAX_ATTEMPTS))
+                attempts += 1
+
+                r = requests.get(url, timeout=timeout)
+                addr = r.url
+                status = r.status_code
+                recvd_headers = r.headers
+                body = r.text
+                r.close()
+                break
+
+            except requests.exceptions.RequestException as err:
+                print("RequestException in py_request: {}".format(err))
+                if attempts >= MAX_ATTEMPTS:
+                    raise ConnectionError
 
     return [addr, status, recvd_headers, body]
 
@@ -84,9 +120,9 @@ def request(method, url, data=None, json=None, headers={}, timeout=None, gdt=Non
 
     try:
         return py_request(url, method, headers=headers, data=data, timeout=timeout, gdt=gdt)
-    except requests.exceptions.ConnectionError as err:
+    except ConnectionError as err:
         print("Connection error in request: {}".format(err))
-        # some APs reject https connections. try http
+        # some APs reject https connections until splashpage broken. Try http
         if url[:5] == "https":
             url = "http{}".format(url[5:])
             print("trying http @ {}".format(url))

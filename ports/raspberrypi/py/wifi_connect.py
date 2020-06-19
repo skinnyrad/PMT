@@ -14,8 +14,10 @@
 from gc import collect
 from gdt import GDT
 import request
-from html_parser import get_objects, get_tags, breakup_tag, tag_internals_to_dict
+from html_parser import get_objects, get_tags, breakup_tag, tag_internals_to_dict, form_response
+import lxml.html
 import urllib.parse
+
 
 def splash_breaking_a(b_html):
     # read all bytes from socket
@@ -35,19 +37,6 @@ def splash_breaking_a(b_html):
     return a
 
 
-def form_response(form):
-    resp = ""
-    content = form["inside"]
-
-    if( len(content) > 0 ):
-        # key1=val1&key2=val2
-        for tag in content:
-            if "name" in tag and "value" in tag:
-                resp = "{0}{1}={2}&".format(resp, tag["name"], tag["value"])
-        
-        return urllib.parse.quote_plus(resp[:-1]) # remove final &, and url encode response
-
-
 
 def break_sp(gdt, host, location, recvd_headers, splashpage):
     gdt.feed()
@@ -56,78 +45,59 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
 
     # break with form resubmission
     #forms = get_objects(splashpage, "form")
-    forms = []
-    print("forms:{}".format(forms))
+    page = lxml.html.fromstring(splashpage)
+    forms = page.forms
+    print("forms:{}".format( lxml.html.tostring(forms) ))
 
     # If there were forms in the page
-    if(len(forms) > 0):
+    if len(forms) > 0:
 
         # generate response to form
-        resp = form_response(forms[0])
+        resp = urllib.parse.urlencode( forms[0].form_values() )
         print("reponse: {}".format(resp))
 
         # Add form resubmit specific headers
         recvd_headers["Content-Type"] = "application/x-www-form-urlencoded"
 
-        # convert from dns address to usable URL
-        if type(location) is tuple and len(location) == 2:
-            
-            #Another necessary header
-            recvd_headers["Host"] = "{}".format(location[0])
-            
-            # URL conversion
-            if location[1] == 80:
-                location = "http://{}".format(location[0])
-            elif location[1]==443:
-                location = "https://{}".format(location[0])
 
-        # new location to send from data to
-        if "action" in forms[0]:
+        # Determine location to send data to
+        if forms[0].action is not None: # If action is specified, definitely use it
             
-            if forms[0]["action"][0] == '/': # relative path
+            if (forms[0].action)[0] == '/': # relative path
                 print("REALATIVE PATH /")
-                
-                # relative links append to <base ...> tag
-                base_tag = tag_internals_to_dict( breakup_tag( get_tags(splashpage, "base")[0] ) ) #relative paths must have a base specified
-                base_url = base_tag["href"]
-                [proto, dummy, base, _, _] = request.breakdown_url(base_url)
-                
-                location = "{0}//{1}{2}".format(proto, base, forms[0]["action"]) #append to location
-
-                #update header
-                recvd_headers["Host"] = "{}".format(base)
+                if page.base is not None:
+                    location = "{0}{1}".format(page.base, forms[0].action)
             
-            elif forms[0]["action"][0:2] == './': # relative path
+            elif (forms[0].action)[0:2] == './': # relative path
                 print("REALATIVE PATH ./")
-
-                # relative links append to <base ...> tag
-                base_tag = tag_internals_to_dict( breakup_tag( get_tags(splashpage, "base")[0] ) ) #relative paths must have a base specified
-                base_url = base_tag["href"]
-                [proto, dummy, base, _, _] = request.breakdown_url(base_url)
-
-                location = "{0}//{1}{2}".format(proto, base, forms[0]["action"][1:]) #append to location
-
-                #update header
-                recvd_headers["Host"] = "{}".format(base)
-            
+                if page.base is not None:
+                    location = "{0}{1}".format(page.base, (forms[0].action)[1:] )
+ 
             else: #absolute path
                 print("ABSOLUTE PATH")
-                location = forms[0]["action"]
+                location = forms[0].action
+
+        elif page.base is not None: # If action is not specified, we have to use <base>
+            print("ACTION not specified, using BASE")
+            location = page.base
+
+        #update header
+        #recvd_headers["Host"] = "{}".format(page.base)
+
 
         del splashpage
         collect()
 
-        # response must be url encoded
-        #test
-        #resp = 'apname=%7B%7B%20apname%20%7D%7D&clmac=%7B%7B%20clmac%20%7D%7D'
-
         print("break_sp: Resubmitting form.\nLocation:{0}\n".format(location))
         
         gdt.feed()
-        if "METHOD" in forms[0] and forms[0]["METHOD"] == "POST":
+        if forms[0].method is not None and forms[0].method == "POST":
             [dns_addr, status, recvd_headers, recvd_page] = request.post(location, data=resp, headers=recvd_headers, timeout=10)
-        elif "METHOD" in forms[0] and forms[0]["METHOD"] == "GET":
-            [dns_addr, status, recvd_headers, recvd_page] = request.get(location, data=resp, headers=recvd_headers, timeout=10)
+        elif forms[0].method is not None and forms[0].method == "GET":
+            # Data must be appended to URL on GET resubmission
+            location = "{0}?{1}".format(location, resp) #TODO, resp might need to not be urlencoded to work correctly
+            [dns_addr, status, recvd_headers, recvd_page] = request.get(location, data=None, headers=recvd_headers, timeout=10)
+        
         gdt.feed()
 
         del resp
@@ -238,15 +208,14 @@ def station_connected(station, host, gdt, wifiLogger):
                     return None
 
 
+
         # Bypass Splashpage
         elif status == 200:
-
-            # dns_Addr is IP where the page came from, acquired from DNS lookup within previous activity
 
             gdt.feed()
             print("Fed GDT after splash page received")
 
-            print(body)
+            print("splashpage={}".format(body) )
 
             print("Splashpage [OK]")
             print("Splashpage Length [{}]".format(len(body)))
@@ -262,21 +231,16 @@ def station_connected(station, host, gdt, wifiLogger):
                     [dns_addr, status, recvd_headers, body] = ret_val
 
             except ConnectionError as err:
-                print("socket.gaierror in station_connected: {}".format(err))
+                print("ConnectionError in station_connected: {}".format(err))
+                print("Dropping IP and moving on")
                 station.end_ip_lease()
                 return False
             except Exception as err:
                 print("default Exception in station_connected: {}".format(err))
-                return None
+                print("Dropping IP and moving on")
+                station.end_ip_lease()
+                return False
 
-            print("Splashpage Not Broken Unless Implemented Above...")
-            print("Splashpage [Failed]")
-            del body
-            collect()
-
-            #TODO: When You know you broke the page and allow DATA SENDING
-            # return True
-            return False
 
     print("Splashpage [Failed]")
     return False

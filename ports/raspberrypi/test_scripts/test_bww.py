@@ -60,12 +60,29 @@ elif len(sys.argv) >= 1 and sys.argv[1] == '--html_parser':
             print("---PASS---\n")
         else:
             print("---FAIL--- html_parser.get_forms returned:")
-            #print(ret)
+            print(ret)
             print("given:")
             print(page)
             print("instead of:")
             print(correct_form)
             print("\n")
 
+    # Test response generation
     print("Testing response generation...")
     print("NOT IMPLIMENTED")
+    for combo in data_bww.responses:
+        form = combo[0]
+        correct_resp = combo[1]
+        ret = html_parser.form_response(form)
+
+        if correct_resp == ret:
+            print("---PASS---\n")
+        else:
+            print("---FAIL--- html_parser.get_response returned:")
+            print(ret)
+            print("given:")
+            print(form)
+            print("instead of:")
+            print(correct_resp)
+            print("\n")
+

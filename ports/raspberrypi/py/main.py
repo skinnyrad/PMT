@@ -38,7 +38,7 @@ with open("pmt.conf", 'rt') as fp:
     pmt_config = eval(fp.read())
 
 try:
-    host_url = pmt_config['post_url']
+    host_url = "{}/api/".format(pmt_config['post_url'])
     post_url = "{0}/api/post.php".format(pmt_config['post_url'] if pmt_config['post_url'][-1] != "/" else pmt_config['post_url'][:-1])
     gps_interval = pmt_config['gps_interval']
     enc_key = pmt_config['encryption_key']
