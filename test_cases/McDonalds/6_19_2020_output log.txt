@@ -1,0 +1,1139 @@
+pi@raspberrypi:~/PMT/ports/raspberrypi/py $ sudo rm ~/runtime/blacklist.log
+pi@raspberrypi:~/PMT/ports/raspberrypi/py $ sudo python3 main.py
+creating file: /home/pi/runtime/pmt.log
+creating file: /home/pi/runtime/wifi.log
+creating file: /home/pi/runtime/data.log
+creating file: /home/pi/runtime/buffer.log
+creating file: /home/pi/runtime/blacklist.log
+creating file: /home/pi/runtime/SSID.log
+creating file: /home/pi/runtime/buffer_pointer.log
+speed=0.0
+00:15:54,34.74413166666667,-86.67506333333333,2020-06-20,
+ssid not yet defined
+Connected to McDonalds Free WiFi
+Connected [Testing Access]
+Fed GDT before requesting Host: https://pmtlogger.000webhostapp.com/api/
+Connection attempt 1/2
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'pmtlogger.000webstapp.com'. Adding certificate verification is strongly advised. See: https://llib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login.attwifi.co. Adding certificate verification is strongly advised. See: https://urllib3.rethedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login-mcd-clusteprd.snantx.attwifi.com'. Adding certificate verification is strongly advised. e: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+found head
+found meta tags
+found http-equiv key
+found content key
+Is a refresh
+url_slice=/guest/mcd2019.php?venueConfigId=a030z00000lm1n2-a1m0z000001KbhO&cmdogin&mac=1a:c9:d2:de:fe:64&essid=McDonalds%20Free%20WiFi&ip=192.168.4.124&apna=a030z00000lm1n2-02i0z00000Wdbzl&apmac=38:17:c3:c7:62:c6&vcname=a030z00000lm1nswitchip=secure-login.attwifi.com&url=https%3A%2F%2Fwww.mcdonalds.com%2Fwifi&byJ2ZW51ZUNvbmZpZ0lkIjoiYTAzMHowMDAwMGxtMW4yLWExbTB6MDAwMDAx%0AS2JoTyIsInZlbnVloiYTAzMHowMDAwMGxtMW4yIiwibmFtZSI6Ik1jRG9u%0AYWxkJ3MgMTYwNTUiLCJ1c2VybmFtZSI6IwMzB6MDAwMDBsbTFuMl9ndWVz%0AdEBhdHQtd2lmaS5jb20iLCJwcm9tb2NvZGUiOiIwIiwidmVudWdHJlZXQi%0AOiI2MTAwIFVOSVZFUlNJVFkgRFIgTlciLCJ2ZW51ZVN0cmVldDIiOiIiLCJ2%0AZW51NpdHkiOiJIdW50c3ZpbGxlIiwidmVudWVTdGF0ZSI6IkFMIiwidmVu%0AdWVaaXBDb2RlIjoiMzU4MtMTc0OCIsInBob25lIjoiIiwic3R5bGUiOiJo%0AdHRwczovL2xvZ2luLmF0dHdpZmkuY29tL2NzcydHRzYm8uY3NzIiwicmVk%0AaXIiOiJodHRwczovL3d3dy5tY2RvbmFsZHMuY29tL3dpZmkiLCJwbGFjoi%0ARW50ZXJwcmlzZSBTdGFuZGFyZCIsImNvbXBhbnlXZWJzaXRlIjoiIiwibG9n%0AbyI6IiIsInIjoiaHR0cHM6Ly9sb2dpbi5hdHR3aWZpLmNvbS9pbWFnZXMv%0AQmFja0dyb3VuZF9JTUdfMTI4MFcm9wLmpwZyIsImN1c3RvbVRvcyI6IiIs%0AInByaXZhY3lQb2xpY3kiOiIiLCJ3aGl0ZUxhYmVsIjoCIsImZhY2Vib29r%0AIjoiMCIsImxpbmtlZEluIjoiMCIsInR3aXR0ZXIiOiIwIiwidXZlcnNlIjoiAMCIsImFkc3VwcG9ydGVkIjoiMCIsImNvbm5lY3QiOiIxIiwibWNkIjoiMCIs%0AInBhbmVsQWxpZ2OiJsZWZ0IiwiZXh0ZXJuYWxMb2NhdGlvbklkIjoiMTYw%0ANTUiLCJpZnJhbWVVcmwiOiIiLCJsb2dlRleHQiOiIiLCJwcmVmZXJyZWRM%0AYW5nIjoiIiwicGFnZWJnY29sb3IiOiIiLCJhZGRyZXNzIjoiEwMCBVTklW%0ARVJTSVRZIERSIE5XXG5IdW50c3ZpbGxlLCBBTCAzNTgwNi0xNzQ4In0%3D%0A&has4f4cf8a327639f6ef7076ae6d417665808dfb750&_browser=1
+Head URL=https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd2019.php?veeConfigId=a030z00000lm1n2-a1m0z000001KbhO&cmd=login&mac=1a:c9:d2:de:fe:64&essiMcDonalds%20Free%20WiFi&ip=192.168.4.124&apname=a030z00000lm1n2-02i0z00000Wdbzapmac=38:17:c3:c7:62:c6&vcname=a030z00000lm1n2&switchip=secure-login.attwifi.c&url=https%3A%2F%2Fwww.mcdonalds.com%2Fwifi&b=eyJ2ZW51ZUNvbmZpZ0lkIjoiYTAzMHowAwMGxtMW4yLWExbTB6MDAwMDAx%0AS2JoTyIsInZlbnVlIjoiYTAzMHowMDAwMGxtMW4yIiwibmFtZ6Ik1jRG9u%0AYWxkJ3MgMTYwNTUiLCJ1c2VybmFtZSI6ImEwMzB6MDAwMDBsbTFuMl9ndWVz%0AdEBHQtd2lmaS5jb20iLCJwcm9tb2NvZGUiOiIwIiwidmVudWVTdHJlZXQi%0AOiI2MTAwIFVOSVZFUlNJkgRFIgTlciLCJ2ZW51ZVN0cmVldDIiOiIiLCJ2%0AZW51ZUNpdHkiOiJIdW50c3ZpbGxlIiwidmVudTdGF0ZSI6IkFMIiwidmVu%0AdWVaaXBDb2RlIjoiMzU4MDYtMTc0OCIsInBob25lIjoiIiwic3R5bGOiJo%0AdHRwczovL2xvZ2luLmF0dHdpZmkuY29tL2Nzcy9hdHRzYm8uY3NzIiwicmVk%0AaXIiOiJoRwczovL3d3dy5tY2RvbmFsZHMuY29tL3dpZmkiLCJwbGFuIjoi%0ARW50ZXJwcmlzZSBTdGFuZGFyZsImNvbXBhbnlXZWJzaXRlIjoiIiwibG9n%0AbyI6IiIsImJnIjoiaHR0cHM6Ly9sb2dpbi5hdHR3aWLmNvbS9pbWFnZXMv%0AQmFja0dyb3VuZF9JTUdfMTI4MF9jcm9wLmpwZyIsImN1c3RvbVRvcyI6IiI0AInByaXZhY3lQb2xpY3kiOiIiLCJ3aGl0ZUxhYmVsIjoiMCIsImZhY2Vib29r%0AIjoiMCIsImxpblZEluIjoiMCIsInR3aXR0ZXIiOiIwIiwidXZlcnNlIjoi%0AMCIsImFkc3VwcG9ydGVkIjoiMCIsImbm5lY3QiOiIxIiwibWNkIjoiMCIs%0AInBhbmVsQWxpZ24iOiJsZWZ0IiwiZXh0ZXJuYWxMb2NhdGlklkIjoiMTYw%0ANTUiLCJpZnJhbWVVcmwiOiIiLCJsb2dpblRleHQiOiIiLCJwcmVmZXJyZWRM%0AYnIjoiIiwicGFnZWJnY29sb3IiOiIiLCJhZGRyZXNzIjoiNjEwMCBVTklW%0ARVJTSVRZIERSIE5XXGdW50c3ZpbGxlLCBBTCAzNTgwNi0xNzQ4In0%3D%0A&hash=4f4cf8a327639f6ef7076ae6d4176658dfb750&_browser=1
+head object redirection to url=https://login-mcd-cluster.prd.snantx.attwifi.coguest/mcd2019.php?venueConfigId=a030z00000lm1n2-a1m0z000001KbhO&cmd=login&mac=:c9:d2:de:fe:64&essid=McDonalds%20Free%20WiFi&ip=192.168.4.124&apname=a030z000lm1n2-02i0z00000Wdbzl&apmac=38:17:c3:c7:62:c6&vcname=a030z00000lm1n2&switchip=cure-login.attwifi.com&url=https%3A%2F%2Fwww.mcdonalds.com%2Fwifi&b=eyJ2ZW51ZUbmZpZ0lkIjoiYTAzMHowMDAwMGxtMW4yLWExbTB6MDAwMDAx%0AS2JoTyIsInZlbnVlIjoiYTAzMHoDAwMGxtMW4yIiwibmFtZSI6Ik1jRG9u%0AYWxkJ3MgMTYwNTUiLCJ1c2VybmFtZSI6ImEwMzB6MDAwBsbTFuMl9ndWVz%0AdEBhdHQtd2lmaS5jb20iLCJwcm9tb2NvZGUiOiIwIiwidmVudWVTdHJlZXQi%OiI2MTAwIFVOSVZFUlNJVFkgRFIgTlciLCJ2ZW51ZVN0cmVldDIiOiIiLCJ2%0AZW51ZUNpdHkiOiJW50c3ZpbGxlIiwidmVudWVTdGF0ZSI6IkFMIiwidmVu%0AdWVaaXBDb2RlIjoiMzU4MDYtMTc0OCIsBob25lIjoiIiwic3R5bGUiOiJo%0AdHRwczovL2xvZ2luLmF0dHdpZmkuY29tL2Nzcy9hdHRzYm8uYzIiwicmVk%0AaXIiOiJodHRwczovL3d3dy5tY2RvbmFsZHMuY29tL3dpZmkiLCJwbGFuIjoi%0ARW5XJwcmlzZSBTdGFuZGFyZCIsImNvbXBhbnlXZWJzaXRlIjoiIiwibG9n%0AbyI6IiIsImJnIjoiaHR0M6Ly9sb2dpbi5hdHR3aWZpLmNvbS9pbWFnZXMv%0AQmFja0dyb3VuZF9JTUdfMTI4MF9jcm9wLmpwZsImN1c3RvbVRvcyI6IiIs%0AInByaXZhY3lQb2xpY3kiOiIiLCJ3aGl0ZUxhYmVsIjoiMCIsImZhY2b29r%0AIjoiMCIsImxpbmtlZEluIjoiMCIsInR3aXR0ZXIiOiIwIiwidXZlcnNlIjoi%0AMCIsImFkVwcG9ydGVkIjoiMCIsImNvbm5lY3QiOiIxIiwibWNkIjoiMCIs%0AInBhbmVsQWxpZ24iOiJsZWZ0IiZXh0ZXJuYWxMb2NhdGlvbklkIjoiMTYw%0ANTUiLCJpZnJhbWVVcmwiOiIiLCJsb2dpblRleHQiOiLCJwcmVmZXJyZWRM%0AYW5nIjoiIiwicGFnZWJnY29sb3IiOiIiLCJhZGRyZXNzIjoiNjEwMCBVTkl0ARVJTSVRZIERSIE5XXG5IdW50c3ZpbGxlLCBBTCAzNTgwNi0xNzQ4In0%3D%0A&hash=4f4cf8a3239f6ef7076ae6d417665808dfb750&_browser=1
+<head> redirect attempt 1/2
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login-mcd-clusteprd.snantx.attwifi.com'. Adding certificate verification is strongly advised. e: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+status=
+200
+headers=
+{'Date': 'Sat, 20 Jun 2020 00:16:08 GMT', 'Server': 'Apache', 'Vary': 'X-Forwaed-For', 'X-Powered-By': 'PHP/7.1.25', 'P3P': 'CP="CAO DSP LAW CUR ADMa DEVa O IND PHY ONL UNI PUR COM NAV INT DEM CNT STA PRE OTC"', 'Expires': 'Thu, 19 No1981 08:52:00 GMT', 'Cache-Control': 'no-store, no-cache, must-revalidate', 'Pgma': 'no-cache', 'X-Frame-Options': 'SAMEORIGIN', 'X-XSS-Protection': '1;modelock', 'X-Content-Type-Options': 'nosniff', 'Content-Length': '2077', 'Keep-Ale': 'timeout=4, max=500', 'Connection': 'Keep-Alive', 'Content-Type': 'text/ht; charset=UTF-8'}
+body=
+
+
+
+
+<head><base href="https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd20.php">
+        <!DOCTYPE html>
+        <title>Wi-Fi access</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+        <meta content=
+              "width=device-width, initial-scale=1.0"
+              name="viewport">
+</head>
+<link rel="stylesheet" type="text/css" href="public/mcd/css/mcd2019/mcd2019.cs/>
+                <script language="javascript">
+
+</script>
+
+
+<div id="page_container">
+<div id="header_border">
+  <div id="header_space">
+
+     <div id="header_logo">
+     </div>
+     </div>
+</div>
+
+<div id="body_container" >
+     <div id="wifry_logo"></div>
+     <div id="section_title"><h1 id="section_title" >Now Serving Free Wi-Fi</h</div>
+
+     <div id="tos_container" class="form_container">
+          <div id="tos_title" class="form_title">Get connected to see what's hpening at McDonald's.</div>
+
+         <br clear="all"/></div>
+
+
+
+
+
+<div class="connect_options" >
+        <form method="Post" class="connect_options" >
+        <input tabindex="2" id="lang_connect_to_wifi" type='submit' onclick="dument.forms[0].submit(); return false;" value="Connect to Wi-Fi" alt="connect  Wi-Fi" class="login-bottom buttonConnect"/>
+        <input type="hidden" name="username" value="Anonymous_ent1" />
+        <input type="hidden" name="password" value="123123123" />
+        </form>
+</div>
+<div id="tos" tabindex="0">By connecting, you agree to the <a tabindex="1" hre"https://www.att.com/legal/terms.wiFiServices.html" target="_blank" style="texdecoration: none;">Terms of Service.</a> </div>
+</div>
+<div id="divider_bar"><hr id="language_divider" /></div>
+<div id="att_logo"></div><div id="att_legal"><a href="http://www.att.com/priva" target="_blank">Privacy Policy</a> &#169; 2010-<script>document.write(new Da().getFullYear())</script> AT&amp;T Intellectual Property. <br id="copyright">l Rights Reserved.</div>
+</div>
+<div style="display: none;">
+</div>
+
+
+<p>
+</p>
+Fed GDT after DNS testing
+Page breaking depth: 1
+Status=200
+Fed GDT after splash page received
+splashpage=
+
+
+
+
+<head><base href="https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd20.php">
+        <!DOCTYPE html>
+        <title>Wi-Fi access</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+        <meta content=
+              "width=device-width, initial-scale=1.0"
+              name="viewport">
+</head>
+<link rel="stylesheet" type="text/css" href="public/mcd/css/mcd2019/mcd2019.cs/>
+                <script language="javascript">
+
+</script>
+
+
+<div id="page_container">
+<div id="header_border">
+  <div id="header_space">
+
+     <div id="header_logo">
+     </div>
+     </div>
+</div>
+
+<div id="body_container" >
+     <div id="wifry_logo"></div>
+     <div id="section_title"><h1 id="section_title" >Now Serving Free Wi-Fi</h</div>
+
+     <div id="tos_container" class="form_container">
+          <div id="tos_title" class="form_title">Get connected to see what's hpening at McDonald's.</div>
+
+         <br clear="all"/></div>
+
+
+
+
+
+<div class="connect_options" >
+        <form method="Post" class="connect_options" >
+        <input tabindex="2" id="lang_connect_to_wifi" type='submit' onclick="dument.forms[0].submit(); return false;" value="Connect to Wi-Fi" alt="connect  Wi-Fi" class="login-bottom buttonConnect"/>
+        <input type="hidden" name="username" value="Anonymous_ent1" />
+        <input type="hidden" name="password" value="123123123" />
+        </form>
+</div>
+<div id="tos" tabindex="0">By connecting, you agree to the <a tabindex="1" hre"https://www.att.com/legal/terms.wiFiServices.html" target="_blank" style="texdecoration: none;">Terms of Service.</a> </div>
+</div>
+<div id="divider_bar"><hr id="language_divider" /></div>
+<div id="att_logo"></div><div id="att_legal"><a href="http://www.att.com/priva" target="_blank">Privacy Policy</a> &#169; 2010-<script>document.write(new Da().getFullYear())</script> AT&amp;T Intellectual Property. <br id="copyright">l Rights Reserved.</div>
+</div>
+<div style="display: none;">
+</div>
+
+
+<p>
+</p>
+Splashpage [OK]
+Splashpage Length [2077]
+Splashpage Breaking...
+break_sp: Location:https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd29.php?venueConfigId=a030z00000lm1n2-a1m0z000001KbhO&cmd=login&mac=1a:c9:d2:de::64&essid=McDonalds%20Free%20WiFi&ip=192.168.4.124&apname=a030z00000lm1n2-02i00000Wdbzl&apmac=38:17:c3:c7:62:c6&vcname=a030z00000lm1n2&switchip=secure-loginttwifi.com&url=https%3A%2F%2Fwww.mcdonalds.com%2Fwifi&b=eyJ2ZW51ZUNvbmZpZ0lkIjYTAzMHowMDAwMGxtMW4yLWExbTB6MDAwMDAx%0AS2JoTyIsInZlbnVlIjoiYTAzMHowMDAwMGxtMW4iwibmFtZSI6Ik1jRG9u%0AYWxkJ3MgMTYwNTUiLCJ1c2VybmFtZSI6ImEwMzB6MDAwMDBsbTFuMl9nVz%0AdEBhdHQtd2lmaS5jb20iLCJwcm9tb2NvZGUiOiIwIiwidmVudWVTdHJlZXQi%0AOiI2MTAwIFSVZFUlNJVFkgRFIgTlciLCJ2ZW51ZVN0cmVldDIiOiIiLCJ2%0AZW51ZUNpdHkiOiJIdW50c3ZpbGxiwidmVudWVTdGF0ZSI6IkFMIiwidmVu%0AdWVaaXBDb2RlIjoiMzU4MDYtMTc0OCIsInBob25lIjoiwic3R5bGUiOiJo%0AdHRwczovL2xvZ2luLmF0dHdpZmkuY29tL2Nzcy9hdHRzYm8uY3NzIiwicmVk%aXIiOiJodHRwczovL3d3dy5tY2RvbmFsZHMuY29tL3dpZmkiLCJwbGFuIjoi%0ARW50ZXJwcmlzZSBGFuZGFyZCIsImNvbXBhbnlXZWJzaXRlIjoiIiwibG9n%0AbyI6IiIsImJnIjoiaHR0cHM6Ly9sb2dp5hdHR3aWZpLmNvbS9pbWFnZXMv%0AQmFja0dyb3VuZF9JTUdfMTI4MF9jcm9wLmpwZyIsImN1c3RvbvcyI6IiIs%0AInByaXZhY3lQb2xpY3kiOiIiLCJ3aGl0ZUxhYmVsIjoiMCIsImZhY2Vib29r%0AIjoCIsImxpbmtlZEluIjoiMCIsInR3aXR0ZXIiOiIwIiwidXZlcnNlIjoi%0AMCIsImFkc3VwcG9ydGVkoiMCIsImNvbm5lY3QiOiIxIiwibWNkIjoiMCIs%0AInBhbmVsQWxpZ24iOiJsZWZ0IiwiZXh0ZXJuYMb2NhdGlvbklkIjoiMTYw%0ANTUiLCJpZnJhbWVVcmwiOiIiLCJsb2dpblRleHQiOiIiLCJwcmVmZXZWRM%0AYW5nIjoiIiwicGFnZWJnY29sb3IiOiIiLCJhZGRyZXNzIjoiNjEwMCBVTklW%0ARVJTSVRZRSIE5XXG5IdW50c3ZpbGxlLCBBTCAzNTgwNi0xNzQ4In0%3D%0A&hash=4f4cf8a327639f6ef70766d417665808dfb750&_browser=1
+form[0]=[('username', 'Anonymous_ent1'), ('password', '123123123')]
+reponse: username=Anonymous_ent1&password=123123123
+ACTION not specified, using BASE
+break_sp: Resubmitting form.
+Location:https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd2019.php
+
+Connection attempt 1/2
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login-mcd-clusteprd.snantx.attwifi.com'. Adding certificate verification is strongly advised. e: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+found head
+found meta tags
+found http-equiv key
+found content key
+Is a refresh
+url_slice=/guest/mcd2019.php?_browser=1
+Head URL=https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd2019.php?_bwser=1
+head object redirection to url=https://login-mcd-cluster.prd.snantx.attwifi.coguest/mcd2019.php?_browser=1
+<head> redirect attempt 1/2
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login-mcd-clusteprd.snantx.attwifi.com'. Adding certificate verification is strongly advised. e: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+New page after resubmitting forms:
+status:200
+headers:{'Date': 'Sat, 20 Jun 2020 00:16:09 GMT', 'Server': 'Apache', 'Vary': -Forwarded-For', 'X-Powered-By': 'PHP/7.1.25', 'P3P': 'CP="CAO DSP LAW CUR ADMDEVa OUR IND PHY ONL UNI PUR COM NAV INT DEM CNT STA PRE OTC"', 'Expires': 'Th 19 Nov 1981 08:52:00 GMT', 'Cache-Control': 'no-store, no-cache, must-revalide', 'Pragma': 'no-cache', 'X-Frame-Options': 'SAMEORIGIN', 'X-XSS-Protection':1;mode=block', 'X-Content-Type-Options': 'nosniff', 'Content-Length': '2077', eep-Alive': 'timeout=4, max=500', 'Connection': 'Keep-Alive', 'Content-Type': ext/html; charset=UTF-8'}
+page:
+
+
+
+<head><base href="https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd20.php">
+        <!DOCTYPE html>
+        <title>Wi-Fi access</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+        <meta content=
+              "width=device-width, initial-scale=1.0"
+              name="viewport">
+</head>
+<link rel="stylesheet" type="text/css" href="public/mcd/css/mcd2019/mcd2019.cs/>
+                <script language="javascript">
+
+</script>
+
+
+<div id="page_container">
+<div id="header_border">
+  <div id="header_space">
+
+     <div id="header_logo">
+     </div>
+     </div>
+</div>
+
+<div id="body_container" >
+     <div id="wifry_logo"></div>
+     <div id="section_title"><h1 id="section_title" >Now Serving Free Wi-Fi</h</div>
+
+     <div id="tos_container" class="form_container">
+          <div id="tos_title" class="form_title">Get connected to see what's hpening at McDonald's.</div>
+
+         <br clear="all"/></div>
+
+
+
+
+
+<div class="connect_options" >
+        <form method="Post" class="connect_options" >
+        <input tabindex="2" id="lang_connect_to_wifi" type='submit' onclick="dument.forms[0].submit(); return false;" value="Connect to Wi-Fi" alt="connect  Wi-Fi" class="login-bottom buttonConnect"/>
+        <input type="hidden" name="username" value="Anonymous_ent1" />
+        <input type="hidden" name="password" value="123123123" />
+        </form>
+</div>
+<div id="tos" tabindex="0">By connecting, you agree to the <a tabindex="1" hre"https://www.att.com/legal/terms.wiFiServices.html" target="_blank" style="texdecoration: none;">Terms of Service.</a> </div>
+</div>
+<div id="divider_bar"><hr id="language_divider" /></div>
+<div id="att_logo"></div><div id="att_legal"><a href="http://www.att.com/priva" target="_blank">Privacy Policy</a> &#169; 2010-<script>document.write(new Da().getFullYear())</script> AT&amp;T Intellectual Property. <br id="copyright">l Rights Reserved.</div>
+</div>
+<div style="display: none;">
+</div>
+
+
+<p>
+</p>
+
+Page breaking depth: 2
+Status=200
+Fed GDT after splash page received
+splashpage=
+
+
+
+
+<head><base href="https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd20.php">
+        <!DOCTYPE html>
+        <title>Wi-Fi access</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+        <meta content=
+              "width=device-width, initial-scale=1.0"
+              name="viewport">
+</head>
+<link rel="stylesheet" type="text/css" href="public/mcd/css/mcd2019/mcd2019.cs/>
+                <script language="javascript">
+
+</script>
+
+
+<div id="page_container">
+<div id="header_border">
+  <div id="header_space">
+
+     <div id="header_logo">
+     </div>
+     </div>
+</div>
+
+<div id="body_container" >
+     <div id="wifry_logo"></div>
+     <div id="section_title"><h1 id="section_title" >Now Serving Free Wi-Fi</h</div>
+
+     <div id="tos_container" class="form_container">
+          <div id="tos_title" class="form_title">Get connected to see what's hpening at McDonald's.</div>
+
+         <br clear="all"/></div>
+
+
+
+
+
+<div class="connect_options" >
+        <form method="Post" class="connect_options" >
+        <input tabindex="2" id="lang_connect_to_wifi" type='submit' onclick="dument.forms[0].submit(); return false;" value="Connect to Wi-Fi" alt="connect  Wi-Fi" class="login-bottom buttonConnect"/>
+        <input type="hidden" name="username" value="Anonymous_ent1" />
+        <input type="hidden" name="password" value="123123123" />
+        </form>
+</div>
+<div id="tos" tabindex="0">By connecting, you agree to the <a tabindex="1" hre"https://www.att.com/legal/terms.wiFiServices.html" target="_blank" style="texdecoration: none;">Terms of Service.</a> </div>
+</div>
+<div id="divider_bar"><hr id="language_divider" /></div>
+<div id="att_logo"></div><div id="att_legal"><a href="http://www.att.com/priva" target="_blank">Privacy Policy</a> &#169; 2010-<script>document.write(new Da().getFullYear())</script> AT&amp;T Intellectual Property. <br id="copyright">l Rights Reserved.</div>
+</div>
+<div style="display: none;">
+</div>
+
+
+<p>
+</p>
+Splashpage [OK]
+Splashpage Length [2077]
+Splashpage Breaking...
+break_sp: Location:https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd29.php?_browser=1
+form[0]=[('username', 'Anonymous_ent1'), ('password', '123123123')]
+reponse: username=Anonymous_ent1&password=123123123
+ACTION not specified, using BASE
+break_sp: Resubmitting form.
+Location:https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd2019.php
+
+Connection attempt 1/2
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login-mcd-clusteprd.snantx.attwifi.com'. Adding certificate verification is strongly advised. e: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+found head
+found meta tags
+found http-equiv key
+found content key
+Is a refresh
+url_slice=/guest/mcd2019.php?_browser=1
+Head URL=https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd2019.php?_bwser=1
+head object redirection to url=https://login-mcd-cluster.prd.snantx.attwifi.coguest/mcd2019.php?_browser=1
+<head> redirect attempt 1/2
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login-mcd-clusteprd.snantx.attwifi.com'. Adding certificate verification is strongly advised. e: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+New page after resubmitting forms:
+status:200
+headers:{'Date': 'Sat, 20 Jun 2020 00:16:11 GMT', 'Server': 'Apache', 'Vary': -Forwarded-For', 'X-Powered-By': 'PHP/7.1.25', 'P3P': 'CP="CAO DSP LAW CUR ADMDEVa OUR IND PHY ONL UNI PUR COM NAV INT DEM CNT STA PRE OTC"', 'Expires': 'Th 19 Nov 1981 08:52:00 GMT', 'Cache-Control': 'no-store, no-cache, must-revalide', 'Pragma': 'no-cache', 'X-Frame-Options': 'SAMEORIGIN', 'X-XSS-Protection':1;mode=block', 'X-Content-Type-Options': 'nosniff', 'Content-Length': '2077', eep-Alive': 'timeout=4, max=500', 'Connection': 'Keep-Alive', 'Content-Type': ext/html; charset=UTF-8'}
+page:
+
+
+
+<head><base href="https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd20.php">
+        <!DOCTYPE html>
+        <title>Wi-Fi access</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+        <meta content=
+              "width=device-width, initial-scale=1.0"
+              name="viewport">
+</head>
+<link rel="stylesheet" type="text/css" href="public/mcd/css/mcd2019/mcd2019.cs/>
+                <script language="javascript">
+
+</script>
+
+
+<div id="page_container">
+<div id="header_border">
+  <div id="header_space">
+
+     <div id="header_logo">
+     </div>
+     </div>
+</div>
+
+<div id="body_container" >
+     <div id="wifry_logo"></div>
+     <div id="section_title"><h1 id="section_title" >Now Serving Free Wi-Fi</h</div>
+
+     <div id="tos_container" class="form_container">
+          <div id="tos_title" class="form_title">Get connected to see what's hpening at McDonald's.</div>
+
+         <br clear="all"/></div>
+
+
+
+
+
+<div class="connect_options" >
+        <form method="Post" class="connect_options" >
+        <input tabindex="2" id="lang_connect_to_wifi" type='submit' onclick="dument.forms[0].submit(); return false;" value="Connect to Wi-Fi" alt="connect  Wi-Fi" class="login-bottom buttonConnect"/>
+        <input type="hidden" name="username" value="Anonymous_ent1" />
+        <input type="hidden" name="password" value="123123123" />
+        </form>
+</div>
+<div id="tos" tabindex="0">By connecting, you agree to the <a tabindex="1" hre"https://www.att.com/legal/terms.wiFiServices.html" target="_blank" style="texdecoration: none;">Terms of Service.</a> </div>
+</div>
+<div id="divider_bar"><hr id="language_divider" /></div>
+<div id="att_logo"></div><div id="att_legal"><a href="http://www.att.com/priva" target="_blank">Privacy Policy</a> &#169; 2010-<script>document.write(new Da().getFullYear())</script> AT&amp;T Intellectual Property. <br id="copyright">l Rights Reserved.</div>
+</div>
+<div style="display: none;">
+</div>
+
+
+<p>
+</p>
+
+Page breaking depth: 3
+Status=200
+Fed GDT after splash page received
+splashpage=
+
+
+
+
+<head><base href="https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd20.php">
+        <!DOCTYPE html>
+        <title>Wi-Fi access</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+        <meta content=
+              "width=device-width, initial-scale=1.0"
+              name="viewport">
+</head>
+<link rel="stylesheet" type="text/css" href="public/mcd/css/mcd2019/mcd2019.cs/>
+                <script language="javascript">
+
+</script>
+
+
+<div id="page_container">
+<div id="header_border">
+  <div id="header_space">
+
+     <div id="header_logo">
+     </div>
+     </div>
+</div>
+
+<div id="body_container" >
+     <div id="wifry_logo"></div>
+     <div id="section_title"><h1 id="section_title" >Now Serving Free Wi-Fi</h</div>
+
+     <div id="tos_container" class="form_container">
+          <div id="tos_title" class="form_title">Get connected to see what's hpening at McDonald's.</div>
+
+         <br clear="all"/></div>
+
+
+
+
+
+<div class="connect_options" >
+        <form method="Post" class="connect_options" >
+        <input tabindex="2" id="lang_connect_to_wifi" type='submit' onclick="dument.forms[0].submit(); return false;" value="Connect to Wi-Fi" alt="connect  Wi-Fi" class="login-bottom buttonConnect"/>
+        <input type="hidden" name="username" value="Anonymous_ent1" />
+        <input type="hidden" name="password" value="123123123" />
+        </form>
+</div>
+<div id="tos" tabindex="0">By connecting, you agree to the <a tabindex="1" hre"https://www.att.com/legal/terms.wiFiServices.html" target="_blank" style="texdecoration: none;">Terms of Service.</a> </div>
+</div>
+<div id="divider_bar"><hr id="language_divider" /></div>
+<div id="att_logo"></div><div id="att_legal"><a href="http://www.att.com/priva" target="_blank">Privacy Policy</a> &#169; 2010-<script>document.write(new Da().getFullYear())</script> AT&amp;T Intellectual Property. <br id="copyright">l Rights Reserved.</div>
+</div>
+<div style="display: none;">
+</div>
+
+
+<p>
+</p>
+Splashpage [OK]
+Splashpage Length [2077]
+Splashpage Breaking...
+break_sp: Location:https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd29.php?_browser=1
+form[0]=[('username', 'Anonymous_ent1'), ('password', '123123123')]
+reponse: username=Anonymous_ent1&password=123123123
+ACTION not specified, using BASE
+break_sp: Resubmitting form.
+Location:https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd2019.php
+
+Connection attempt 1/2
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login-mcd-clusteprd.snantx.attwifi.com'. Adding certificate verification is strongly advised. e: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+found head
+found meta tags
+found http-equiv key
+found content key
+Is a refresh
+url_slice=/guest/mcd2019.php?_browser=1
+Head URL=https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd2019.php?_bwser=1
+head object redirection to url=https://login-mcd-cluster.prd.snantx.attwifi.coguest/mcd2019.php?_browser=1
+<head> redirect attempt 1/2
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login-mcd-clusteprd.snantx.attwifi.com'. Adding certificate verification is strongly advised. e: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+New page after resubmitting forms:
+status:200
+headers:{'Date': 'Sat, 20 Jun 2020 00:16:12 GMT', 'Server': 'Apache', 'Vary': -Forwarded-For', 'X-Powered-By': 'PHP/7.1.25', 'P3P': 'CP="CAO DSP LAW CUR ADMDEVa OUR IND PHY ONL UNI PUR COM NAV INT DEM CNT STA PRE OTC"', 'Expires': 'Th 19 Nov 1981 08:52:00 GMT', 'Cache-Control': 'no-store, no-cache, must-revalide', 'Pragma': 'no-cache', 'X-Frame-Options': 'SAMEORIGIN', 'X-XSS-Protection':1;mode=block', 'X-Content-Type-Options': 'nosniff', 'Content-Length': '2077', eep-Alive': 'timeout=4, max=500', 'Connection': 'Keep-Alive', 'Content-Type': ext/html; charset=UTF-8'}
+page:
+
+
+
+<head><base href="https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd20.php">
+        <!DOCTYPE html>
+        <title>Wi-Fi access</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+        <meta content=
+              "width=device-width, initial-scale=1.0"
+              name="viewport">
+</head>
+<link rel="stylesheet" type="text/css" href="public/mcd/css/mcd2019/mcd2019.cs/>
+                <script language="javascript">
+
+</script>
+
+
+<div id="page_container">
+<div id="header_border">
+  <div id="header_space">
+
+     <div id="header_logo">
+     </div>
+     </div>
+</div>
+
+<div id="body_container" >
+     <div id="wifry_logo"></div>
+     <div id="section_title"><h1 id="section_title" >Now Serving Free Wi-Fi</h</div>
+
+     <div id="tos_container" class="form_container">
+          <div id="tos_title" class="form_title">Get connected to see what's hpening at McDonald's.</div>
+
+         <br clear="all"/></div>
+
+
+
+
+
+<div class="connect_options" >
+        <form method="Post" class="connect_options" >
+        <input tabindex="2" id="lang_connect_to_wifi" type='submit' onclick="dument.forms[0].submit(); return false;" value="Connect to Wi-Fi" alt="connect  Wi-Fi" class="login-bottom buttonConnect"/>
+        <input type="hidden" name="username" value="Anonymous_ent1" />
+        <input type="hidden" name="password" value="123123123" />
+        </form>
+</div>
+<div id="tos" tabindex="0">By connecting, you agree to the <a tabindex="1" hre"https://www.att.com/legal/terms.wiFiServices.html" target="_blank" style="texdecoration: none;">Terms of Service.</a> </div>
+</div>
+<div id="divider_bar"><hr id="language_divider" /></div>
+<div id="att_logo"></div><div id="att_legal"><a href="http://www.att.com/priva" target="_blank">Privacy Policy</a> &#169; 2010-<script>document.write(new Da().getFullYear())</script> AT&amp;T Intellectual Property. <br id="copyright">l Rights Reserved.</div>
+</div>
+<div style="display: none;">
+</div>
+
+
+<p>
+</p>
+
+Page breaking depth: 4
+Status=200
+Fed GDT after splash page received
+splashpage=
+
+
+
+
+<head><base href="https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd20.php">
+        <!DOCTYPE html>
+        <title>Wi-Fi access</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+        <meta content=
+              "width=device-width, initial-scale=1.0"
+              name="viewport">
+</head>
+<link rel="stylesheet" type="text/css" href="public/mcd/css/mcd2019/mcd2019.cs/>
+                <script language="javascript">
+
+</script>
+
+
+<div id="page_container">
+<div id="header_border">
+  <div id="header_space">
+
+     <div id="header_logo">
+     </div>
+     </div>
+</div>
+
+<div id="body_container" >
+     <div id="wifry_logo"></div>
+     <div id="section_title"><h1 id="section_title" >Now Serving Free Wi-Fi</h</div>
+
+     <div id="tos_container" class="form_container">
+          <div id="tos_title" class="form_title">Get connected to see what's hpening at McDonald's.</div>
+
+         <br clear="all"/></div>
+
+
+
+
+
+<div class="connect_options" >
+        <form method="Post" class="connect_options" >
+        <input tabindex="2" id="lang_connect_to_wifi" type='submit' onclick="dument.forms[0].submit(); return false;" value="Connect to Wi-Fi" alt="connect  Wi-Fi" class="login-bottom buttonConnect"/>
+        <input type="hidden" name="username" value="Anonymous_ent1" />
+        <input type="hidden" name="password" value="123123123" />
+        </form>
+</div>
+<div id="tos" tabindex="0">By connecting, you agree to the <a tabindex="1" hre"https://www.att.com/legal/terms.wiFiServices.html" target="_blank" style="texdecoration: none;">Terms of Service.</a> </div>
+</div>
+<div id="divider_bar"><hr id="language_divider" /></div>
+<div id="att_logo"></div><div id="att_legal"><a href="http://www.att.com/priva" target="_blank">Privacy Policy</a> &#169; 2010-<script>document.write(new Da().getFullYear())</script> AT&amp;T Intellectual Property. <br id="copyright">l Rights Reserved.</div>
+</div>
+<div style="display: none;">
+</div>
+
+
+<p>
+</p>
+Splashpage [OK]
+Splashpage Length [2077]
+Splashpage Breaking...
+break_sp: Location:https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd29.php?_browser=1
+form[0]=[('username', 'Anonymous_ent1'), ('password', '123123123')]
+reponse: username=Anonymous_ent1&password=123123123
+ACTION not specified, using BASE
+break_sp: Resubmitting form.
+Location:https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd2019.php
+
+Connection attempt 1/2
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login-mcd-clusteprd.snantx.attwifi.com'. Adding certificate verification is strongly advised. e: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+found head
+found meta tags
+found http-equiv key
+found content key
+Is a refresh
+url_slice=/guest/mcd2019.php?_browser=1
+Head URL=https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd2019.php?_bwser=1
+head object redirection to url=https://login-mcd-cluster.prd.snantx.attwifi.coguest/mcd2019.php?_browser=1
+<head> redirect attempt 1/2
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login-mcd-clusteprd.snantx.attwifi.com'. Adding certificate verification is strongly advised. e: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+New page after resubmitting forms:
+status:200
+headers:{'Date': 'Sat, 20 Jun 2020 00:16:13 GMT', 'Server': 'Apache', 'Vary': -Forwarded-For', 'X-Powered-By': 'PHP/7.1.25', 'P3P': 'CP="CAO DSP LAW CUR ADMDEVa OUR IND PHY ONL UNI PUR COM NAV INT DEM CNT STA PRE OTC"', 'Expires': 'Th 19 Nov 1981 08:52:00 GMT', 'Cache-Control': 'no-store, no-cache, must-revalide', 'Pragma': 'no-cache', 'X-Frame-Options': 'SAMEORIGIN', 'X-XSS-Protection':1;mode=block', 'X-Content-Type-Options': 'nosniff', 'Content-Length': '2077', eep-Alive': 'timeout=4, max=500', 'Connection': 'Keep-Alive', 'Content-Type': ext/html; charset=UTF-8'}
+page:
+
+
+
+<head><base href="https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd20.php">
+        <!DOCTYPE html>
+        <title>Wi-Fi access</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+        <meta content=
+              "width=device-width, initial-scale=1.0"
+              name="viewport">
+</head>
+<link rel="stylesheet" type="text/css" href="public/mcd/css/mcd2019/mcd2019.cs/>
+                <script language="javascript">
+
+</script>
+
+
+<div id="page_container">
+<div id="header_border">
+  <div id="header_space">
+
+     <div id="header_logo">
+     </div>
+     </div>
+</div>
+
+<div id="body_container" >
+     <div id="wifry_logo"></div>
+     <div id="section_title"><h1 id="section_title" >Now Serving Free Wi-Fi</h</div>
+
+     <div id="tos_container" class="form_container">
+          <div id="tos_title" class="form_title">Get connected to see what's hpening at McDonald's.</div>
+
+         <br clear="all"/></div>
+
+
+
+
+
+<div class="connect_options" >
+        <form method="Post" class="connect_options" >
+        <input tabindex="2" id="lang_connect_to_wifi" type='submit' onclick="dument.forms[0].submit(); return false;" value="Connect to Wi-Fi" alt="connect  Wi-Fi" class="login-bottom buttonConnect"/>
+        <input type="hidden" name="username" value="Anonymous_ent1" />
+        <input type="hidden" name="password" value="123123123" />
+        </form>
+</div>
+<div id="tos" tabindex="0">By connecting, you agree to the <a tabindex="1" hre"https://www.att.com/legal/terms.wiFiServices.html" target="_blank" style="texdecoration: none;">Terms of Service.</a> </div>
+</div>
+<div id="divider_bar"><hr id="language_divider" /></div>
+<div id="att_logo"></div><div id="att_legal"><a href="http://www.att.com/priva" target="_blank">Privacy Policy</a> &#169; 2010-<script>document.write(new Da().getFullYear())</script> AT&amp;T Intellectual Property. <br id="copyright">l Rights Reserved.</div>
+</div>
+<div style="display: none;">
+</div>
+
+
+<p>
+</p>
+
+Page breaking depth: 5
+Status=200
+Fed GDT after splash page received
+splashpage=
+
+
+
+
+<head><base href="https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd20.php">
+        <!DOCTYPE html>
+        <title>Wi-Fi access</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+        <meta content=
+              "width=device-width, initial-scale=1.0"
+              name="viewport">
+</head>
+<link rel="stylesheet" type="text/css" href="public/mcd/css/mcd2019/mcd2019.cs/>
+                <script language="javascript">
+
+</script>
+
+
+<div id="page_container">
+<div id="header_border">
+  <div id="header_space">
+
+     <div id="header_logo">
+     </div>
+     </div>
+</div>
+
+<div id="body_container" >
+     <div id="wifry_logo"></div>
+     <div id="section_title"><h1 id="section_title" >Now Serving Free Wi-Fi</h</div>
+
+     <div id="tos_container" class="form_container">
+          <div id="tos_title" class="form_title">Get connected to see what's hpening at McDonald's.</div>
+
+         <br clear="all"/></div>
+
+
+
+
+
+<div class="connect_options" >
+        <form method="Post" class="connect_options" >
+        <input tabindex="2" id="lang_connect_to_wifi" type='submit' onclick="dument.forms[0].submit(); return false;" value="Connect to Wi-Fi" alt="connect  Wi-Fi" class="login-bottom buttonConnect"/>
+        <input type="hidden" name="username" value="Anonymous_ent1" />
+        <input type="hidden" name="password" value="123123123" />
+        </form>
+</div>
+<div id="tos" tabindex="0">By connecting, you agree to the <a tabindex="1" hre"https://www.att.com/legal/terms.wiFiServices.html" target="_blank" style="texdecoration: none;">Terms of Service.</a> </div>
+</div>
+<div id="divider_bar"><hr id="language_divider" /></div>
+<div id="att_logo"></div><div id="att_legal"><a href="http://www.att.com/priva" target="_blank">Privacy Policy</a> &#169; 2010-<script>document.write(new Da().getFullYear())</script> AT&amp;T Intellectual Property. <br id="copyright">l Rights Reserved.</div>
+</div>
+<div style="display: none;">
+</div>
+
+
+<p>
+</p>
+Splashpage [OK]
+Splashpage Length [2077]
+Splashpage Breaking...
+break_sp: Location:https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd29.php?_browser=1
+form[0]=[('username', 'Anonymous_ent1'), ('password', '123123123')]
+reponse: username=Anonymous_ent1&password=123123123
+ACTION not specified, using BASE
+break_sp: Resubmitting form.
+Location:https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd2019.php
+
+Connection attempt 1/2
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login-mcd-clusteprd.snantx.attwifi.com'. Adding certificate verification is strongly advised. e: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+found head
+found meta tags
+found http-equiv key
+found content key
+Is a refresh
+url_slice=/guest/mcd2019.php?_browser=1
+Head URL=https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd2019.php?_bwser=1
+head object redirection to url=https://login-mcd-cluster.prd.snantx.attwifi.coguest/mcd2019.php?_browser=1
+<head> redirect attempt 1/2
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login-mcd-clusteprd.snantx.attwifi.com'. Adding certificate verification is strongly advised. e: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+New page after resubmitting forms:
+status:200
+headers:{'Date': 'Sat, 20 Jun 2020 00:16:14 GMT', 'Server': 'Apache', 'Vary': -Forwarded-For', 'X-Powered-By': 'PHP/7.1.25', 'P3P': 'CP="CAO DSP LAW CUR ADMDEVa OUR IND PHY ONL UNI PUR COM NAV INT DEM CNT STA PRE OTC"', 'Expires': 'Th 19 Nov 1981 08:52:00 GMT', 'Cache-Control': 'no-store, no-cache, must-revalide', 'Pragma': 'no-cache', 'X-Frame-Options': 'SAMEORIGIN', 'X-XSS-Protection':1;mode=block', 'X-Content-Type-Options': 'nosniff', 'Content-Length': '2077', eep-Alive': 'timeout=4, max=500', 'Connection': 'Keep-Alive', 'Content-Type': ext/html; charset=UTF-8'}
+page:
+
+
+
+<head><base href="https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd20.php">
+        <!DOCTYPE html>
+        <title>Wi-Fi access</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+        <meta content=
+              "width=device-width, initial-scale=1.0"
+              name="viewport">
+</head>
+<link rel="stylesheet" type="text/css" href="public/mcd/css/mcd2019/mcd2019.cs/>
+                <script language="javascript">
+
+</script>
+
+
+<div id="page_container">
+<div id="header_border">
+  <div id="header_space">
+
+     <div id="header_logo">
+     </div>
+     </div>
+</div>
+
+<div id="body_container" >
+     <div id="wifry_logo"></div>
+     <div id="section_title"><h1 id="section_title" >Now Serving Free Wi-Fi</h</div>
+
+     <div id="tos_container" class="form_container">
+          <div id="tos_title" class="form_title">Get connected to see what's hpening at McDonald's.</div>
+
+         <br clear="all"/></div>
+
+
+
+
+
+<div class="connect_options" >
+        <form method="Post" class="connect_options" >
+        <input tabindex="2" id="lang_connect_to_wifi" type='submit' onclick="dument.forms[0].submit(); return false;" value="Connect to Wi-Fi" alt="connect  Wi-Fi" class="login-bottom buttonConnect"/>
+        <input type="hidden" name="username" value="Anonymous_ent1" />
+        <input type="hidden" name="password" value="123123123" />
+        </form>
+</div>
+<div id="tos" tabindex="0">By connecting, you agree to the <a tabindex="1" hre"https://www.att.com/legal/terms.wiFiServices.html" target="_blank" style="texdecoration: none;">Terms of Service.</a> </div>
+</div>
+<div id="divider_bar"><hr id="language_divider" /></div>
+<div id="att_logo"></div><div id="att_legal"><a href="http://www.att.com/priva" target="_blank">Privacy Policy</a> &#169; 2010-<script>document.write(new Da().getFullYear())</script> AT&amp;T Intellectual Property. <br id="copyright">l Rights Reserved.</div>
+</div>
+<div style="display: none;">
+</div>
+
+
+<p>
+</p>
+
+Page breaking depth: 6
+Status=200
+Fed GDT after splash page received
+splashpage=
+
+
+
+
+<head><base href="https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd20.php">
+        <!DOCTYPE html>
+        <title>Wi-Fi access</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+        <meta content=
+              "width=device-width, initial-scale=1.0"
+              name="viewport">
+</head>
+<link rel="stylesheet" type="text/css" href="public/mcd/css/mcd2019/mcd2019.cs/>
+                <script language="javascript">
+
+</script>
+
+
+<div id="page_container">
+<div id="header_border">
+  <div id="header_space">
+
+     <div id="header_logo">
+     </div>
+     </div>
+</div>
+
+<div id="body_container" >
+     <div id="wifry_logo"></div>
+     <div id="section_title"><h1 id="section_title" >Now Serving Free Wi-Fi</h</div>
+
+     <div id="tos_container" class="form_container">
+          <div id="tos_title" class="form_title">Get connected to see what's hpening at McDonald's.</div>
+
+         <br clear="all"/></div>
+
+
+
+
+
+<div class="connect_options" >
+        <form method="Post" class="connect_options" >
+        <input tabindex="2" id="lang_connect_to_wifi" type='submit' onclick="dument.forms[0].submit(); return false;" value="Connect to Wi-Fi" alt="connect  Wi-Fi" class="login-bottom buttonConnect"/>
+        <input type="hidden" name="username" value="Anonymous_ent1" />
+        <input type="hidden" name="password" value="123123123" />
+        </form>
+</div>
+<div id="tos" tabindex="0">By connecting, you agree to the <a tabindex="1" hre"https://www.att.com/legal/terms.wiFiServices.html" target="_blank" style="texdecoration: none;">Terms of Service.</a> </div>
+</div>
+<div id="divider_bar"><hr id="language_divider" /></div>
+<div id="att_logo"></div><div id="att_legal"><a href="http://www.att.com/priva" target="_blank">Privacy Policy</a> &#169; 2010-<script>document.write(new Da().getFullYear())</script> AT&amp;T Intellectual Property. <br id="copyright">l Rights Reserved.</div>
+</div>
+<div style="display: none;">
+</div>
+
+
+<p>
+</p>
+Splashpage [OK]
+Splashpage Length [2077]
+Splashpage Breaking...
+break_sp: Location:https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd29.php?_browser=1
+form[0]=[('username', 'Anonymous_ent1'), ('password', '123123123')]
+reponse: username=Anonymous_ent1&password=123123123
+ACTION not specified, using BASE
+break_sp: Resubmitting form.
+Location:https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd2019.php
+
+Connection attempt 1/2
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login-mcd-clusteprd.snantx.attwifi.com'. Adding certificate verification is strongly advised. e: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+found head
+found meta tags
+found http-equiv key
+found content key
+Is a refresh
+url_slice=/guest/mcd2019.php?_browser=1
+Head URL=https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd2019.php?_bwser=1
+head object redirection to url=https://login-mcd-cluster.prd.snantx.attwifi.coguest/mcd2019.php?_browser=1
+<head> redirect attempt 1/2
+/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py:986: InsecurequestWarning: Unverified HTTPS request is being made to host 'login-mcd-clusteprd.snantx.attwifi.com'. Adding certificate verification is strongly advised. e: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,
+New page after resubmitting forms:
+status:200
+headers:{'Date': 'Sat, 20 Jun 2020 00:16:15 GMT', 'Server': 'Apache', 'Vary': -Forwarded-For', 'X-Powered-By': 'PHP/7.1.25', 'P3P': 'CP="CAO DSP LAW CUR ADMDEVa OUR IND PHY ONL UNI PUR COM NAV INT DEM CNT STA PRE OTC"', 'Expires': 'Th 19 Nov 1981 08:52:00 GMT', 'Cache-Control': 'no-store, no-cache, must-revalide', 'Pragma': 'no-cache', 'X-Frame-Options': 'SAMEORIGIN', 'X-XSS-Protection':1;mode=block', 'X-Content-Type-Options': 'nosniff', 'Content-Length': '2077', eep-Alive': 'timeout=4, max=500', 'Connection': 'Keep-Alive', 'Content-Type': ext/html; charset=UTF-8'}
+page:
+
+
+
+<head><base href="https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd20.php">
+        <!DOCTYPE html>
+        <title>Wi-Fi access</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+        <meta content=
+              "width=device-width, initial-scale=1.0"
+              name="viewport">
+</head>
+<link rel="stylesheet" type="text/css" href="public/mcd/css/mcd2019/mcd2019.cs/>
+                <script language="javascript">
+
+</script>
+
+
+<div id="page_container">
+<div id="header_border">
+  <div id="header_space">
+
+     <div id="header_logo">
+     </div>
+     </div>
+</div>
+
+<div id="body_container" >
+     <div id="wifry_logo"></div>
+     <div id="section_title"><h1 id="section_title" >Now Serving Free Wi-Fi</h</div>
+
+     <div id="tos_container" class="form_container">
+          <div id="tos_title" class="form_title">Get connected to see what's hpening at McDonald's.</div>
+
+         <br clear="all"/></div>
+
+
+
+
+
+<div class="connect_options" >
+        <form method="Post" class="connect_options" >
+        <input tabindex="2" id="lang_connect_to_wifi" type='submit' onclick="dument.forms[0].submit(); return false;" value="Connect to Wi-Fi" alt="connect  Wi-Fi" class="login-bottom buttonConnect"/>
+        <input type="hidden" name="username" value="Anonymous_ent1" />
+        <input type="hidden" name="password" value="123123123" />
+        </form>
+</div>
+<div id="tos" tabindex="0">By connecting, you agree to the <a tabindex="1" hre"https://www.att.com/legal/terms.wiFiServices.html" target="_blank" style="texdecoration: none;">Terms of Service.</a> </div>
+</div>
+<div id="divider_bar"><hr id="language_divider" /></div>
+<div id="att_logo"></div><div id="att_legal"><a href="http://www.att.com/priva" target="_blank">Privacy Policy</a> &#169; 2010-<script>document.write(new Da().getFullYear())</script> AT&amp;T Intellectual Property. <br id="copyright">l Rights Reserved.</div>
+</div>
+<div style="display: none;">
+</div>
+
+
+<p>
+</p>
+
+Page breaking depth: 7
+Status=200
+Fed GDT after splash page received
+splashpage=
+
+
+
+
+<head><base href="https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd20.php">
+        <!DOCTYPE html>
+        <title>Wi-Fi access</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+        <meta content=
+              "width=device-width, initial-scale=1.0"
+              name="viewport">
+</head>
+<link rel="stylesheet" type="text/css" href="public/mcd/css/mcd2019/mcd2019.cs/>
+                <script language="javascript">
+
+</script>
+
+
+<div id="page_container">
+<div id="header_border">
+  <div id="header_space">
+
+     <div id="header_logo">
+     </div>
+     </div>
+</div>
+
+<div id="body_container" >
+     <div id="wifry_logo"></div>
+     <div id="section_title"><h1 id="section_title" >Now Serving Free Wi-Fi</h</div>
+
+     <div id="tos_container" class="form_container">
+          <div id="tos_title" class="form_title">Get connected to see what's hpening at McDonald's.</div>
+
+         <br clear="all"/></div>
+
+
+
+
+
+<div class="connect_options" >
+        <form method="Post" class="connect_options" >
+        <input tabindex="2" id="lang_connect_to_wifi" type='submit' onclick="dument.forms[0].submit(); return false;" value="Connect to Wi-Fi" alt="connect  Wi-Fi" class="login-bottom buttonConnect"/>
+        <input type="hidden" name="username" value="Anonymous_ent1" />
+        <input type="hidden" name="password" value="123123123" />
+        </form>
+</div>
+<div id="tos" tabindex="0">By connecting, you agree to the <a tabindex="1" hre"https://www.att.com/legal/terms.wiFiServices.html" target="_blank" style="texdecoration: none;">Terms of Service.</a> </div>
+</div>
+<div id="divider_bar"><hr id="language_divider" /></div>
+<div id="att_logo"></div><div id="att_legal"><a href="http://www.att.com/priva" target="_blank">Privacy Policy</a> &#169; 2010-<script>document.write(new Da().getFullYear())</script> AT&amp;T Intellectual Property. <br id="copyright">l Rights Reserved.</div>
+</div>
+<div style="display: none;">
+</div>
+
+
+<p>
+</p>
+Splashpage [OK]
+Splashpage Length [2077]
+Splashpage Breaking...
+break_sp: Location:https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd29.php?_browser=1
+form[0]=[('username', 'Anonymous_ent1'), ('password', '123123123')]
+reponse: username=Anonymous_ent1&password=123123123
+ACTION not specified, using BASE
+break_sp: Resubmitting form.
+Location:https://login-mcd-cluster.prd.snantx.attwifi.com/guest/mcd2019.php
+
+Connection attempt 1/2
+^C^C^C^C^C^C
+
+Traceback (most recent call last):
+  File "main.py", line 228, in <module>
+    connected = station_connected(station, host_url, gdt, wifiLogger)
+  File "/home/pi/PMT/ports/raspberrypi/py/wifi_connect.py", line 239, in stati_connected
+    ret_val = break_sp(gdt, host, addr, recvd_headers, cookies, body)
+  File "/home/pi/PMT/ports/raspberrypi/py/wifi_connect.py", line 105, in breakp
+    [addr, status, recvd_headers, cookies, body] = request.post(location, dataesp, headers=recvd_headers, cookies=cookies, timeout=10)
+  File "/home/pi/PMT/ports/raspberrypi/py/request.py", line 125, in post
+    return request("POST", url, **kw)
+  File "/home/pi/PMT/ports/raspberrypi/py/request.py", line 108, in request
+    return py_request(url, method, headers=headers, cookies=cookies, data=datatimeout=timeout, verify=verify, gdt=gdt)
+  File "/home/pi/PMT/ports/raspberrypi/py/request.py", line 38, in py_request
+
+    r = requests.post(url, headers=headers, cookies=cookies, data=data, timeoutimeout, verify=verify )
+  File "/usr/local/lib/python3.7/dist-packages/requests/api.py", line 119, in st
+    return request('post', url, data=data, json=json, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/requests/api.py", line 61, in ruest
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/requests/sessions.py", line 530in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/requests/sessions.py", line 643in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/requests/adapters.py", line 449in send
+    timeout=timeout
+  File "/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py", lin677, in urlopen
+    chunked=chunked,
+  File "/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py", lin381, in _make_request
+    self._validate_conn(conn)
+  File "/usr/local/lib/python3.7/dist-packages/urllib3/connectionpool.py", lin976, in _validate_conn
+    conn.connect()
+  File "/usr/local/lib/python3.7/dist-packages/urllib3/connection.py", line 30 in connect
+    conn = self._new_conn()
+  File "/usr/local/lib/python3.7/dist-packages/urllib3/connection.py", line 16 in _new_conn
+    (self._dns_host, self.port), self.timeout, **extra_kw
+  File "/usr/local/lib/python3.7/dist-packages/urllib3/util/connection.py", li 61, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/usr/lib/python3.7/socket.py", line 748, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+KeyboardInterrupt
+^CException ignored in: <module 'threading' from '/usr/lib/python3.7/threadingy'>
+Traceback (most recent call last):
+  File "/usr/lib/python3.7/threading.py", line 1281, in _shutdown
+    t.join()
+  File "/usr/lib/python3.7/threading.py", line 1032, in join
+    self._wait_for_tstate_lock()
+  File "/usr/lib/python3.7/threading.py", line 1048, in _wait_for_tstate_lock
+    elif lock.acquire(block, timeout):
+KeyboardInterrupt
+^Cpi@raspberrypi:~/PMT/ports/raspberrypi/py $ ^C
+pi@raspberrypi:~/PMT/ports/raspberrypi/py $ sudo pkill py
+pi@raspberrypi:~/PMT/ports/raspberrypi/py $

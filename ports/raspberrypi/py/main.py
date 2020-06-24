@@ -38,7 +38,7 @@ with open("pmt.conf", 'rt') as fp:
     pmt_config = eval(fp.read())
 
 try:
-    host_url = pmt_config['post_url']
+    host_url = "{}/api/".format(pmt_config['post_url'])
     post_url = "{0}/api/post.php".format(pmt_config['post_url'] if pmt_config['post_url'][-1] != "/" else pmt_config['post_url'][:-1])
     gps_interval = pmt_config['gps_interval']
     enc_key = pmt_config['encryption_key']
@@ -176,6 +176,11 @@ while True:
 
             # try each SSID
             for ssid in openNets:
+                # Extra filtering:
+                # Remove HP ssids (printers)
+                if len(ssid) > 2 and str(ssid[0:2]).lower() == 'hp':
+                    continue
+
                 if ssid not in ap_blacklist:
                     # Try to connect to WiFi access point
                     apLogger.overwrite(ssid)
@@ -238,8 +243,8 @@ while True:
                 print("blacklisting {} and dropping IP".format(ssid))
                 wifiLogger.warning("Unable to Connect")
                 wifiLogger.warning("blacklisting {} and dropping IP".format(ssid))
-                blacklistLogger.write_line(ssid)
-                station.end_ip_lease()
+                blacklistLogger.write_line(ssid) # Blacklist the SSID until we get moving again
+                station.end_ip_lease() # Drop the IP given by the AP
                 break
 
             # So long as we have WAN access, post data

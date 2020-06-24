@@ -9,8 +9,13 @@
 #  Version 1.0
 #  Raspbian Lite version February 2020
 #  Python 3.7
-#  Filename : html.py
+#  Filename : html_parser.py
 # -------------------------------
+
+
+import urllib.parse
+import lxml.html
+
 
 # Helper function
 # Input:
@@ -35,23 +40,26 @@ def find_complete_string(html_as_string, beginning_string, end_string, start_ind
 
 
 # Returns a list of strings
-def get_tags(html_as_string, tag_type=None):
+# Takes in a list of strings, each string representing an entire object. And breaks them up
+# into one string for each tag
+def get_tags(list_of_html, tag_type=None):
+
     tag_list = []
-    i=0
-    j=0
+    i=0 # index where complete string begins
+    j=0 # index where complete string ends
     ret_val = ["_",i,j]
     
     # look for a specific tag
     if tag_type is not None:
         while ret_val[0] != "":
             # tags that make up objects. ex: <form ...> ... </form>
-            ret_val = find_complete_string(html_as_string, "<{0}".format(tag_type), "</{0}>".format(tag_type), ret_val[2] ) #start search at end of last string
+            ret_val = find_complete_string(list_of_html, "<{0}".format(tag_type), "</{0}>".format(tag_type), ret_val[2] ) #start search at end of last string
 
             # tags that don't make up objects. ex: <a ... > there is no </a>
             # start string found
             if(ret_val[1] != -1):
                 if(ret_val[2] == -1): # end string was not found
-                    ret_val = find_complete_string(html_as_string, "<{0}".format(tag_type), ">", ret_val[1] )
+                    ret_val = find_complete_string(list_of_html, "<{0}".format(tag_type), ">", ret_val[1] )
                     tag_list.append(ret_val[0])
                 else: # end string was found
                     tag_list.append(ret_val[0])
@@ -60,7 +68,7 @@ def get_tags(html_as_string, tag_type=None):
     else:
         while ret_val[0] != "":
             # tags that don't make up objects. ex: <form ...> ... </form>
-            ret_val = find_complete_string(html_as_string, "<", ">", ret_val[2] )
+            ret_val = find_complete_string(list_of_html, "<", ">", ret_val[2] )
             tag_list.append(ret_val[0])
     
     return tag_list
@@ -290,10 +298,11 @@ def get_objects(html, object_type):
     if(len(forms) == 0):
         return []
     if len(forms) > 0 and forms[0].find("</{}".format(object_type)) == -1:
-        ret_val = find_complete_string(html, "<{}".format(object_type), "</body")
-        forms = ret_val[0]
+        ret_val = find_complete_string(html, "<{}".format(object_type), "</body>")
+        forms = [ret_val[0]]
     
     print("{}\n".format(forms))
+    input("---------------------")
 
     #break forms as strings into a list of tags: [form] = ["<form ...>", "<...>", "</form>"]
     all_forms = []
@@ -301,7 +310,8 @@ def get_objects(html, object_type):
         ret = get_tags(string)
         all_forms.append(ret)
         
-    #print("{}\n".format(all_forms))
+    print("{}\n".format(all_forms))
+    input("---------------------")
 
     # split out each tag's internals
     i = 0
@@ -314,33 +324,121 @@ def get_objects(html, object_type):
             j+=1
         i+=1
     
-    #print("{}\n".format(all_forms))
+    print("{}\n".format(all_forms))
+    input("---------------------")
 
     parsed_forms = []
     for form in all_forms:
         parsed_forms.append(construct_object_from_tag_internals(form))
     
-    #print("{}\n".format(parsed_forms))
+    print("{}\n".format(parsed_forms))
+    input("---------------------")
 
     return parsed_forms
 
 
-
-def get_head_redir_url(body):
+# Takes a request object from requests module
+def get_head_redir_url(r):
     
-    if body.find('<head') > -1:
+    ## Using Curran's HTML parsing
+    #if r.text.find('<head') > -1:
+    #    head_objects = get_objects(r.text, 'head')
+    #    for head in head_objects:
+    #        if 'inside' in head:
+    #            for tag in head['inside']:
+    #                if (tag["tag_type"] == "meta") and ('http-equiv' in tag) and (tag['http-equiv'] == 'refresh') and ('content' in tag):
+    #                        i = tag['content'].find('url=')
+    #                        if i > -1:
+    #                            url = tag['content'][i+4:]
+    #                            return url
 
-        head_objects = get_objects(body, 'head')
-        #print( "HEAD objects: {}".format(head_objects) )
-
-        for head in head_objects:
-            if 'inside' in head:
-                for tag in head['inside']:
-                    if (tag["tag_type"] == "meta") and ('http-equiv' in tag) and (tag['http-equiv'] == 'refresh') and ('content' in tag):
-                            i = tag['content'].find('url=')
+    # Using lxml html parsing
+    page = lxml.html.fromstring(r.text)
+    if page.head is not None:
+        print("found head")
+        meta_tags = page.head.findall('meta')
+        if len( meta_tags ) > 0:
+            print("found meta tags")
+            for tag in meta_tags:
+                keys = tag.keys()
+                http_equiv_loc = -1
+                content_loc = -1
+                for i in range(0, len(keys)):
+                    if keys[i].lower() == 'http-equiv':
+                        print("found http-equiv key")
+                        http_equiv_loc = i
+                    elif keys[i].lower() == 'content':
+                        print("found content key")
+                        content_loc = i
+                    
+                if http_equiv_loc > -1 and content_loc > -1:
+                    if tag.get( keys[http_equiv_loc] ).lower() == 'refresh':
+                        print("Is a refresh")
+                        content = tag.get( keys[content_loc] )
+                        i = content.find('URL=')
+                        if i > -1:
+                            url = content[i+4:]
+                        else:
+                            i = content.find('url=')
                             if i > -1:
-                                url = tag['content'][i+4:]
-                                print("head object redirection to url={}".format(url))
+                                url = content[i+4:]
+                        print('url_slice={}'.format(url))
+                        # Relative path version 1
+                        if url[0] == '/':
+                            if page.base is not None:
+                                url = "{0}{1}".format( page.base, url )
                                 return url
-    
+                            else: # base is not present, must find it ourselves
+                                base = ''
+                                i = r.url.find('/', 8)
+                                if i > -1:
+                                    base = r.url[:i]
+                                else:
+                                    base = r.url
+                                url = "{0}{1}".format(base,url)
+                                return url
+                        
+                        # Relative Path version 2
+                        elif url[0:2] == './':
+                            if page.base is not None:
+                                url = "{0}{1}".format( page.base, url[1:] )
+                                return url
+                            else: # base is not present, must find it ourselves
+                                base = ''
+                                i = r.url.find('/', 8)
+                                if i > -1:
+                                    base = r.url[:i]
+                                else:
+                                    base = r.url
+                                url = "{0}{1}".format(base,url)
+                                return url
+                    
     return None
+
+
+
+def form_response(form):
+    resp = ""
+    content = form["inside"]
+
+    if( len(content) > 0 ):
+        # key1=val1&key2=val2
+        for tag in content:
+            if "name" in tag and "value" in tag:
+                resp = "{0}{1}={2}&".format(resp, urllib.parse.quote_plus(tag["name"]), urllib.parse.quote_plus(tag["value"]))
+        
+        return resp[:-1] # remove final &, and url encode response
+
+
+
+def form_response_from_html(html):
+    
+    assert type(html) is str
+
+    response = None
+    page = lxml.html.fromstring(html)
+
+    if len(page.forms) > 0:
+        response = urllib.parse.urlencode( page.forms[0].fom_values() )
+
+    return response

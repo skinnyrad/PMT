@@ -1,0 +1,433 @@
+-ms-viewport {
+	width: margin: auto;
+	min-zoom: 1 !important;
+	max-zoom: 1 !important;
+}
+html {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 100%;
+    box-sizing: none \9;
+}
+:link, :visited, :hover, :active {
+	color: #0073BB;
+	
+}
+*, *:before, *:after {
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+    box-sizing: inherit;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    box-sizing: none \9;
+}
+
+button, .buttonConnect, .back_button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+
+.nwaRequiredField, .nwaImportant .nwaRequiredField, .nwaTop {
+    display: none;
+}
+
+
+
+
+
+body {
+  font-family: Arial;
+  font-size: 15px;
+    margin: 19px 5px;
+    padding: 0px;
+    color: #191919;
+    overflow-x:hidden;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    height:100%;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    max-width: 1440px !important;
+}
+
+
+#page_container {
+    min-width: 320px;
+    width : 100%;
+    margin: auto;
+    margin-top: 0;
+    margin-bottom: 15px;
+    max-width: 1440px !important;
+}
+#header_space {
+    margin: auto;
+    width: auto;
+    max-width: 320px;
+    height: 15.625vw;
+    display: inline-block;
+    text-align: center;
+}
+#header_border {
+    width: 100%;
+    border-bottom: 1px solid white;
+    -moz-box-shadow: 0px 4px 10px 0px #ccc;
+    -webkit-box-shadow: 0px 5px 5px -5px #ccc;
+    box-shadow:  0 5px 5px -5px #ccc;
+}
+#header_logo {
+    height: 9.0vw;
+    width: 9.5vw;
+    display: inline-block;
+    margin: 3.6vw 6vw;
+    background-image: url(/guest/public/mcd/graphics/mcd2019/McDonalds-Arches.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+#header_title {
+    display: inline-block;
+    padding-left: 6px;
+    padding-top: 3px;
+}
+
+
+#wifry_logo {
+    height: 24.0vw;
+    width: 40.5vw;
+    max-width: 425px;
+    background-image: url(/guest/public/mcd/graphics/mcd2019/McDs_WiFry.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    margin:auto;
+}
+#section_title {
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 10.75vw;
+    color: #292929;
+    line-height: 12.0vw;
+    margin: auto;
+    padding-top: 2.65vw;
+    width: 70.0vw;
+}
+#description {
+    margin-top: 10px;
+    margin-bottom: 16px;
+    letter-spacing: .4px;
+}
+
+#body_container {
+    margin: auto;
+    text-align: center;
+    padding-top: 6.0vw;
+    min-height: 100vw;
+}
+#language_divider {
+	color: #dcdcdc;
+	margin: 8.5vw 8.0vw 4.0vw 8.0vw;
+}
+.legalease {
+     display: inline-block;
+}
+#tos_container {
+    margin: auto;
+    margin-top: 2.1vw;
+    padding: 0;
+    float: none;
+    clear: both;
+    display: table;
+    text-align: left;
+    width:90%;
+}
+#tos {
+    margin: auto;
+    margin-top: 0vw;
+    padding-top: .75vw;
+    font-size: 3vw;
+    width: 100%;
+    max-width: 764;
+    text-align: left;
+    text-align: center;
+    
+}
+
+#terms_divider {
+     width: 100%;
+     height: 2px;
+}
+.form_title {
+    font-size: 5.63vw;
+    color: #191919;
+    letter-spacing: -.11px;
+    line-height: 7.7vw;
+    margin-left: 0px;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    font-family: arial;
+}
+.connect_options {
+    clear: both;
+    background-color: rgba(255,255,255,.93);
+    margin-top: 4.0vw;
+    margin-bottom: 3.5vw;
+    width: 100%;
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ffffff', endColorstr='#ffffff');
+}
+#att_logo {
+    background: url(/guest/public/mcd/graphics/mcd2019/att_logo.png) no-repeat center top;
+    width: 6.7vw;
+    height: 6.7vw;
+    float: left;
+    background-size: contain;
+    margin-left: 8.0vw;
+    margin-top: 5px;
+}
+#att_legal {
+    font-size: 2.6vw;
+    line-height: 4.5vw;;
+    letter-spacing: -0.11px;
+    text-align: left;
+    margin-left: 20vw;
+    margin-top: -0.18vw;
+    width: 65%;
+}
+#copyright {
+	display:inline-block;
+}
+.login-bottom {
+    height: 15.0vw;
+    width: 52.0vw;
+    line-height: 1 !important;
+    display: block;
+    background-color: #FFBC0D;
+    color: #292929;
+    margin: 0 auto;
+    margin-bottom: 0px;
+    margin-top: 14px;
+    padding-left: 14px;
+    padding-right: 11px;
+    border: 1px;
+    border-radius: 1.5vw;
+    text-decoration: none;
+    text-align: center !important;
+    font-size: 4vw;
+}
+
+
+@media only screen and (min-width: 768px) {  
+
+    
+#page_container {
+    min-width: 320px;
+    width: 100%;
+    height: 355px;
+}
+#body_container {
+	  min-height: 28vw;
+	  margin-left: 4.75vw;
+	  padding-top: 0.75vw;
+}
+#header_space {
+    max-width: 898px;
+    margin: auto;
+    margin-top: 10px;
+    height: 6.25vw;
+}
+#header_title {
+    margin: auto;
+    display: inline-block;
+}
+#header_logo {
+    height: 4.2vw;
+    width: 4.4vw;
+    margin-left: 5.75vw;
+    margin-top: 0.8vw;
+}
+#wifry_logo {
+    float: right;
+    height: 18vw;
+    width: 28vw;
+    margin-right: 12.0vw;
+    margin-top: 5.25vw;
+}
+#section_title {
+    margin-top: 0;
+    margin-left: 0.4vw;
+    letter-spacing: -0.1;
+    line-height: 10vw;
+    float: left;
+    width: 50vw;
+    font-size: 3.75vw;
+    text-align: left;
+}
+.form_title {
+    text-align: left;
+    float: left;
+    width: 55vw;
+    margin-top: -11.75vw;
+    margin-left: 1.0vw;
+    font-size: 1.65vw;
+    line-height: 7vw;
+}
+#tos_container {
+    margin: auto;
+    text-align: left;
+    width: 100%;
+    padding-left: 0.0vw;
+    display: inline;
+}
+.login-bottom {
+    width: 14.5vw;
+    height: 3.5vw;
+    float: left;
+    margin-left: 1.0vw;
+    margin-top: -2.75vw;;
+    border-radius: 0.4vw;
+    font-size: 1.25vw;
+}
+.connect_options {
+    margin: auto;
+    padding-top: 0px;
+    margin-top: 0px;
+    margin-left: 0px;
+    float: left;
+    width: 50vw;
+}
+#tos {
+    text-align: left;
+    padding-left: 1.0vw;
+    padding-top: 1.5vw;
+    max-width: 100%;
+    font-size: 1.08vw;
+    float: left;
+}
+#language_divider {
+	  margin: 1.9vw 5.75vw 1.0vw 5.75vw;
+	
+}
+#att_logo {
+    margin-left: 5.85vw;
+    height: 2.75vw;
+    width: 2.75vw;
+}
+#att_legal {
+    text-align: right;
+    width: 100%;
+    margin-left: -5.7vw;
+    margin-top: -.5vw;
+    font-size: 1.07vw;
+}
+#copyright {
+	display:none;
+}
+}
+
+@media only screen and (min-width: 1441px)  { 
+#page_container {
+   height:355px;
+   width: 1440px;
+}
+#header_border {
+	height: 100px;
+	width: 1440px;
+	padding-bottom: 0px;
+}
+#header_space {
+	height: 90px;
+	margin-top: 10px;
+}
+#header_logo {
+	height:60.47px;
+	width: 63.36px;
+	padding: 0;
+	margin: 11.52px 86.4px 51.84px 82.8px ;
+	
+}
+#body_container {
+    height: 476.0px;
+    width: 1371.61px;
+    padding-top: 12px;
+    margin-left: 68.4px;
+    min-height: 476px;
+}
+#section_title {
+		height: 104px;
+		width: 777.6px;
+    font-size: 54px;
+    text-align: left;
+    line-height: 104px;
+    margin-left: 5.76px;
+    padding-top:45.5px;
+    
+    
+  }
+#tos_container {
+    margin: auto;
+    text-align: left;
+    width: 100%;
+    padding-left: 0.0vw;
+    display: inline;
+}
+.form_title {
+	height:86px;
+	width:864px;
+	padding: 0;
+	margin-top:-169.2px;
+	margin-left: 14.4px;
+	letter-spacing: -0.11px;
+	font-size: 23.76px;
+	line-height: 86.4px
+}
+#wifry_logo {
+    	margin-right:173px;
+    	width: 403.19px;
+    	height: 259.19px;
+    	margin-top:90px;
+	}
+
+.connect_options {
+	width: 857.778px;
+	height: 10.7969px;
+}
+.login-bottom {
+	font-size: 18px;
+	width:208.80px !important;
+	height: 50.3906px !important;
+	padding: 1px 11px 1px 14px;
+	margin-top:-39.60px;
+	margin-left:14.4px;
+	line-height: 18px;
+	border-radius: 5.76px;
+}
+#tos {
+	height 17.775px;
+	width 1357.20px;
+	padding-left: 14.4px;
+	padding-top: 21.6px;
+	font-size: 15.55px;
+}
+
+#language_divider {
+	margin:28px 82px 15px 82px;
+	width: 1274.41px;
+	
+}
+#att_legal {
+	margin-top: -7px;
+	margin-left: 0px;
+	width: 1358px;
+	font-size: 15.408px;
+	line-height: 68.4px;
+}
+#att_logo {
+	height: 39.625px;
+	width : 39.625px;
+	margin-left:84.2985px;
+	margin-top: 5px;
+}
+}
