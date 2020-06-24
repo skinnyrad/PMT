@@ -21,7 +21,7 @@ import urllib.parse
 
 def splash_breaking_a(b_html):
     # read all bytes from socket
-    print("<a> search...")
+    print("\n<a> search...")
     # parse socket bytes
     a = []
     while b_html.find('<a') != -1:
@@ -33,24 +33,26 @@ def splash_breaking_a(b_html):
             a.append(a_tag["href"])
         b_html = b_html[end+1:len(b_html)] #Regions Guest thinks its a string
     
-    print(a)
+    print( "\t{}\n".format(a) )
     return a
 
 
 
-def break_sp(gdt, host, location, recvd_headers, splashpage):
+def break_sp(gdt, host, location, recvd_headers, cookies, splashpage):
     gdt.feed()
 
-    print("break_sp: Location:{}".format(location))
+    print("\nbreak_sp: Location:{}".format(location))
 
     # break with form resubmission
     #forms = get_objects(splashpage, "form")
     page = lxml.html.fromstring(splashpage)
     forms = page.forms
-    print("forms:{}".format( lxml.html.tostring(forms) ))
 
     # If there were forms in the page
     if len(forms) > 0:
+        print("Using form resubmission")
+
+        print("\nform[0]={}".format( forms[0].form_values() ))
 
         # generate response to form
         resp = urllib.parse.urlencode( forms[0].form_values() )
@@ -61,54 +63,57 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
 
 
         # Determine location to send data to
+        print("\nChecking for ACTION field...")
         if forms[0].action is not None: # If action is specified, definitely use it
-            
+            print("Action field found")
             if (forms[0].action)[0] == '/': # relative path
-                print("REALATIVE PATH /")
+                print("\tREALATIVE PATH /")
                 if page.base is not None:
                     location = "{0}{1}".format(page.base, forms[0].action)
             
             elif (forms[0].action)[0:2] == './': # relative path
-                print("REALATIVE PATH ./")
+                print("\tREALATIVE PATH ./")
                 if page.base is not None:
                     location = "{0}{1}".format(page.base, (forms[0].action)[1:] )
  
             else: #absolute path
-                print("ABSOLUTE PATH")
+                print("\tABSOLUTE PATH")
                 location = forms[0].action
 
         elif page.base is not None: # If action is not specified, we have to use <base>
             print("ACTION not specified, using BASE")
             location = page.base
+        
+        elif page.base is None: # McDonalds specified base within a comment tag. How silly
+            #This is gonna be a nasty workaround and should not be considered final
+            print("ACTION & BASE not specified, attempting nasty search")
+            html = lxml.html.tostring(page).decode('utf-8')
+            i = html.find('base href="')
+            j = html.find('"', i+11)
+            location = html[i+11:j]
 
         #update header
         #recvd_headers["Host"] = "{}".format(page.base)
 
-
         del splashpage
         collect()
 
-        print("break_sp: Resubmitting form.\nLocation:{0}\n".format(location))
-        
+        print("\nbreak_sp: Resubmitting form...")        
         gdt.feed()
         if forms[0].method is not None and forms[0].method == "POST":
-            [dns_addr, status, recvd_headers, recvd_page] = request.post(location, data=resp, headers=recvd_headers, timeout=10)
+            [addr, status, recvd_headers, cookies, body] = request.post(location, data=resp, headers=recvd_headers, cookies=cookies, timeout=10)
         elif forms[0].method is not None and forms[0].method == "GET":
             # Data must be appended to URL on GET resubmission
             location = "{0}?{1}".format(location, resp) #TODO, resp might need to not be urlencoded to work correctly
-            [dns_addr, status, recvd_headers, recvd_page] = request.get(location, data=None, headers=recvd_headers, timeout=10)
+            [addr, status, recvd_headers, cookies, body] = request.get(location, data=None, headers=recvd_headers, cookies=cookies, timeout=10)
         
         gdt.feed()
 
         del resp
         del forms
         collect()
-        print("New page after resubmitting forms:")
-        print("status:{}".format(status))
-        print("headers:{}".format(recvd_headers))
-        print("page:{}\n".format(recvd_page))
 
-        return [dns_addr, status, recvd_headers, recvd_page]
+        return [addr, status, recvd_headers, cookies, body]
 
     
     # no forms, try following a-tags
@@ -117,40 +122,36 @@ def break_sp(gdt, host, location, recvd_headers, splashpage):
         #<a> TAG Splash Page Breaking
         a = splash_breaking_a(splashpage)
         for v in a:
-            print("going to: {}".format(v))
-            [addr, status, recvd_headers, page] = request.get(v)
-            if status == 200:
-                return True
+            print("\tgoing to: {}".format(v))
+            [addr, status, recvd_headers, cookies, body] = request.get(v, cookies=cookies, timeout=10, verify=False)
+            #if status == 200:
+            #    return True
         # -----------------------------
 
 
-    print("PAGE BREAKING COMPLETE!")
+    print("\nPAGE BREAKING COMPLETE!")
     print("Testing connection to {} ...".format(host))
     
     # Test for open connection. DO NOT SEND THIS DATA BACK, you will only be backtracking to the inital page.
     try:
-        [_, test_status, _, test_body] = request.get(host, gdt=gdt, timeout=10)
-    except ConnectionError as err:
-        print("Exception: ConnectionError in break_sp in wifi_connect: {}".format(err))
-        return False
+        [_, test_status, _, _, test_body] = request.get(host, gdt=gdt, timeout=10)
     except Exception as err:
         print("Exception: Exception in break_sp in wifi_connect: {}".format(err))
-        return None
+        return False
     
     gdt.feed()
-    print("Status: {0}\nBody: {1}".format(test_status, test_body))
 
     if test_status == 200 and test_body == "OK":
         print("Internet Access [OK]")
         return True
     
-    return [dns_addr, status, recvd_headers, recvd_page]
+    return [addr, status, recvd_headers, cookies, body]
 
 
 
 def station_connected(station, host, gdt, wifiLogger):
-    #TODO: remove print
-    print("Connected [Testing Access]")
+    # INITIAL CHECKS --------------------------------------------------------------------------------
+    print("\nStation Connected [Testing Access]")
     wifiLogger.info("Connected [Testing Access]")
 
     # Must make initial request to posting page to start the process
@@ -160,23 +161,18 @@ def station_connected(station, host, gdt, wifiLogger):
 
     # test DNS -> GET Request and Handles Redirection
     try:
-        [dns_addr, status, recvd_headers, body] = request.get(host)
-        print("status={0}\nheaders={1}\nbody={2}".format(status,recvd_headers,body))
-    except ConnectionError as err:
-        print("ConnectionError in station_connected: {}".format(err))
-        station.end_ip_lease()
+        [addr, status, recvd_headers, cookies, body] = request.get(host, cookies=None, timeout=10, verify=False, gdt=gdt)
+    except Exception as err:
+        print("default Exception 1 in station_connected: {}".format(err))
         return False
-#    except Exception as err:
-#        print("default Exception in station_connected: {}".format(err))
-#        return None
-
     if status is None: # something broke in the request
-        return None
+        return False
 
     gdt.feed()
     print("Fed GDT after DNS testing")
 
 
+    # LOOPING THROUGH PAGES -------------------------------------------------------------------------
     MAX_DEPTH = 10 # How many pages are we willing to bypass before giving up?
     depth = 0
     while depth <= MAX_DEPTH:
@@ -193,54 +189,39 @@ def station_connected(station, host, gdt, wifiLogger):
         #If we received the Location:http... header
         elif 'Location' in recvd_headers or 'redirURL' in recvd_headers:
             print("Location header found, redirecting...")
+            if 'Location' in recvd_headers:
+                redir_url = recvd_headers['Location']
+            elif 'redirURL' in recvd_headers:
+                redir_url = recvd_headers['redirURL']
 
             # Redirection Location but Status Code is 200
             if status == 200 :
                 try:
-                    [dns_addr, status, recvd_headers, body] = request.get(recvd_headers['Location'])
+                    [addr, status, recvd_headers, cookies, body] = request.get(redir_url, verify=False, timeout=10 )
                     continue
-                except ConnectionError as err:
-                    print("socket.gaierror in station_connected: {}".format(err))
-                    station.end_ip_lease()
-                    return False
                 except Exception as err:
-                    print("default Exception in station_connected: {}".format(err))
-                    return None
-
-
+                    print("\ndefault Exception 2 in station_connected: {}\n".format(err))
+                    return False
 
         # Bypass Splashpage
         elif status == 200:
 
             gdt.feed()
             print("Fed GDT after splash page received")
-
-            print("splashpage={}".format(body) )
-
-            print("Splashpage [OK]")
-            print("Splashpage Length [{}]".format(len(body)))
             print("Splashpage Breaking...")
 
             try:
-                ret_val = break_sp(gdt, host, dns_addr, recvd_headers, body)
+                ret_val = break_sp(gdt, host, addr, recvd_headers, cookies, body)
                 
                 if type(ret_val) is bool:
                     if ret_val == True:
                         return ret_val
                 else:
-                    [dns_addr, status, recvd_headers, body] = ret_val
+                    [addr, status, recvd_headers, cookies, body] = ret_val
 
-            except ConnectionError as err:
-                print("ConnectionError in station_connected: {}".format(err))
-                print("Dropping IP and moving on")
-                station.end_ip_lease()
-                return False
             except Exception as err:
-                print("default Exception in station_connected: {}".format(err))
-                print("Dropping IP and moving on")
-                station.end_ip_lease()
+                print("\ndefault Exception 3 in station_connected: {}\n".format(err))
                 return False
-
 
     print("Splashpage [Failed]")
     return False

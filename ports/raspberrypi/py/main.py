@@ -176,6 +176,11 @@ while True:
 
             # try each SSID
             for ssid in openNets:
+                # Extra filtering:
+                # Remove HP ssids (printers)
+                if len(ssid) > 2 and str(ssid[0:2]).lower() == 'hp':
+                    continue
+
                 if ssid not in ap_blacklist:
                     # Try to connect to WiFi access point
                     apLogger.overwrite(ssid)
@@ -238,8 +243,8 @@ while True:
                 print("blacklisting {} and dropping IP".format(ssid))
                 wifiLogger.warning("Unable to Connect")
                 wifiLogger.warning("blacklisting {} and dropping IP".format(ssid))
-                blacklistLogger.write_line(ssid)
-                station.end_ip_lease()
+                blacklistLogger.write_line(ssid) # Blacklist the SSID until we get moving again
+                station.end_ip_lease() # Drop the IP given by the AP
                 break
 
             # So long as we have WAN access, post data

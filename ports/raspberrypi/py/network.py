@@ -107,10 +107,16 @@ class Station():
             print("File not found! {}".format(err))
             exit(1)
 
-        # remove old wpa_supplicant process
+        # remove old wpa_supplicant file
         ret = popen("sudo rm /var/run/wpa_supplicant/wlan0").read()
         if ret != '':
-            print("removing old wpa_supplicant returning with:")
+            print("removing old wpa_supplicant file returning with:")
+            print(ret)
+        
+        # Remove old wp_supplicant process
+        ret = popen("sudo pkill wpa_supplicant").read()
+        if ret != '':
+            print("removing old wpa_supplicant file returning with:")
             print(ret)
 
         # bring connection down and back up

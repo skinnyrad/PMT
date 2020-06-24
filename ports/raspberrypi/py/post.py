@@ -28,7 +28,7 @@ def post_data(post_data, post_url, station, logger) -> bool:
         #TODO: Uncomment this for solution
         #timer.init(period=3000, mode=Timer.ONE_SHOT,callback=handlerTimer)
         try:
-            [_, status, _, _] = post(post_url, headers=headers, data=post_data, timeout=10)
+            [_, status, _, _, _] = post(post_url, headers=headers, data=post_data, timeout=10, verify=True)
         except ConnectionError as err:
             print("ConnectionError in post_data")
             print(err)
@@ -48,17 +48,6 @@ def post_data(post_data, post_url, station, logger) -> bool:
             return False
     except OSError as e:
         #TODO: remove print
-        print("Warning: {0}".format(str(e)))
+        print("Error: {0}".format(str(e)))
         logger.warning(str(e))
-        if str(e) == "[Errno 113] EHOSTUNREACH":
-            """
-                station.active(False) seems to flush wifi module
-
-                board output:
-                    I (35596) wifi: flush txq
-                    I (35596) wifi: stop sw txq
-                    I (35596) wifi: lmac stop hw txq
-            """
-            station.active(False)
-            station.active(True)
         return False

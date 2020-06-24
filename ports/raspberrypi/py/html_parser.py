@@ -337,23 +337,23 @@ def get_objects(html, object_type):
     return parsed_forms
 
 
-
-def get_head_redir_url(body):
+# Takes a request object from requests module
+def get_head_redir_url(r):
     
-    # Using Curran's HTML parsing
-    if body.find('<head') > -1:
-        head_objects = get_objects(body, 'head')
-        for head in head_objects:
-            if 'inside' in head:
-                for tag in head['inside']:
-                    if (tag["tag_type"] == "meta") and ('http-equiv' in tag) and (tag['http-equiv'] == 'refresh') and ('content' in tag):
-                            i = tag['content'].find('url=')
-                            if i > -1:
-                                url = tag['content'][i+4:]
-                                return url
+    ## Using Curran's HTML parsing
+    #if r.text.find('<head') > -1:
+    #    head_objects = get_objects(r.text, 'head')
+    #    for head in head_objects:
+    #        if 'inside' in head:
+    #            for tag in head['inside']:
+    #                if (tag["tag_type"] == "meta") and ('http-equiv' in tag) and (tag['http-equiv'] == 'refresh') and ('content' in tag):
+    #                        i = tag['content'].find('url=')
+    #                        if i > -1:
+    #                            url = tag['content'][i+4:]
+    #                            return url
 
     # Using lxml html parsing
-    page = lxml.html.fromstring(body)
+    page = lxml.html.fromstring(r.text)
     if page.head is not None:
         print("found head")
         meta_tags = page.head.findall('meta')
@@ -377,10 +377,41 @@ def get_head_redir_url(body):
                         content = tag.get( keys[content_loc] )
                         i = content.find('URL=')
                         if i > -1:
-                            return content[i+4:]
-                        i = content.find('url=')
-                        if i > -1:
-                            return content[i+4:]
+                            url = content[i+4:]
+                        else:
+                            i = content.find('url=')
+                            if i > -1:
+                                url = content[i+4:]
+                        print('url_slice={}'.format(url))
+                        # Relative path version 1
+                        if url[0] == '/':
+                            if page.base is not None:
+                                url = "{0}{1}".format( page.base, url )
+                                return url
+                            else: # base is not present, must find it ourselves
+                                base = ''
+                                i = r.url.find('/', 8)
+                                if i > -1:
+                                    base = r.url[:i]
+                                else:
+                                    base = r.url
+                                url = "{0}{1}".format(base,url)
+                                return url
+                        
+                        # Relative Path version 2
+                        elif url[0:2] == './':
+                            if page.base is not None:
+                                url = "{0}{1}".format( page.base, url[1:] )
+                                return url
+                            else: # base is not present, must find it ourselves
+                                base = ''
+                                i = r.url.find('/', 8)
+                                if i > -1:
+                                    base = r.url[:i]
+                                else:
+                                    base = r.url
+                                url = "{0}{1}".format(base,url)
+                                return url
                     
     return None
 

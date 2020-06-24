@@ -20,12 +20,12 @@ import html_parser
 import lxml.html
 
 # The base request function
-def py_request(url, method, headers={}, data=None, timeout=10, gdt=None ):
+def py_request(url, method, headers={}, cookies=None, data=None, timeout=10, verify=False, gdt=None ):
 
     attempts = 1
     MAX_ATTEMPTS = 2
     while attempts <= MAX_ATTEMPTS:
-        print("Connection attempt {0}/{1}".format(attempts,MAX_ATTEMPTS))
+        print("\nConnection attempt {0}/{1}".format(attempts,MAX_ATTEMPTS))
         attempts += 1
         
         if gdt is not None:
@@ -33,9 +33,9 @@ def py_request(url, method, headers={}, data=None, timeout=10, gdt=None ):
 
         try:
             if method == 'GET':
-                r = requests.get(url, headers=headers, data=data, timeout=timeout)
+                r = requests.get(url, headers=headers, cookies=cookies, data=data, timeout=timeout, verify=verify)
             elif method == 'POST':
-                r = requests.post(url, headers=headers, data=data, timeout=timeout )
+                r = requests.post(url, headers=headers, cookies=cookies, data=data, timeout=timeout, verify=verify )
             break
 
         except requests.exceptions.RequestException as err:
@@ -46,8 +46,12 @@ def py_request(url, method, headers={}, data=None, timeout=10, gdt=None ):
 
     addr = r.url
     status = r.status_code
+    cookies = r.cookies
     recvd_headers = r.headers
     body = r.text
+    if 'Set-Cookie' in recvd_headers:
+        del recvd_headers['Set-Cookie']
+    
     r.close()
 
     if gdt is not None:
@@ -56,33 +60,10 @@ def py_request(url, method, headers={}, data=None, timeout=10, gdt=None ):
 
     # Handle <head> redirects
     # <head> redirects not natively supported. Handled here
-    url = html_parser.get_head_redir_url(body)
-    page = lxml.html.fromstring(body)
+    url = html_parser.get_head_redir_url(r)
+    print('Head URL={}'.format(url))
 
     if url is not None:
-        
-        # Relative path version 1
-        if url[0] == '/':
-            if page.base is not None:
-                url = "{0}{1}".format( page.base, url )
-            else: # base is not present, must find it ourselves
-                base = ''
-                i = r.url.find('/', 8)
-                if i > -1:
-                    base = r.url[:i]
-                url = base.append(url)
-        
-        # Relative Path version 2
-        elif url[0:2] == './':
-            if page.base is not None:
-                url = "{0}{1}".format( page.base, url[1:] )
-            else: # base is not present, must find it ourselves
-                base = ''
-                i = r.url.find('/', 8)
-                if i > -1:
-                    base = r.url[:i]
-                url = base.append(url)
-
         print("head object redirection to url={}".format(url))
 
         attempts = 1
@@ -91,12 +72,14 @@ def py_request(url, method, headers={}, data=None, timeout=10, gdt=None ):
                 print("<head> redirect attempt {0}/{1}".format(attempts,MAX_ATTEMPTS))
                 attempts += 1
 
-                r = requests.get(url, timeout=timeout)
+                r = requests.get(url, timeout=timeout, cookies=cookies, verify=verify)
                 addr = r.url
                 status = r.status_code
+                cookies = r.cookies
                 recvd_headers = r.headers
                 body = r.text
-                r.close()
+                if 'Set-Cookie' in recvd_headers:
+                    del recvd_headers['Set-Cookie']
                 break
 
             except requests.exceptions.RequestException as err:
@@ -104,13 +87,32 @@ def py_request(url, method, headers={}, data=None, timeout=10, gdt=None ):
                 if attempts >= MAX_ATTEMPTS:
                     raise ConnectionError
 
-    return [addr, status, recvd_headers, body]
+    if gdt is not None:
+        gdt.feed()
+    
+
+    # Debugging
+    print("\nRequest--------------------------------")
+    print("Sent to:{}".format(r.request.url))
+    print("{0} {1}".format(r.request.method, r.request.path_url) )
+    print(r.request.headers)
+    print(r.request.body)
+    
+    print("\nSent from:{}".format(r.url))
+    print("{0} {1}".format(r.status_code, r.reason) )
+    print(r.headers)
+    print(r.text)
+    print("\n---------------------------------------")
+    
+    r.close()
+
+    return [addr, status, recvd_headers, cookies, body]
 
 
 # replacing the original request function, must keep same parameters
 # It'd be more efficient in all respects to only have one base requests function,
 # but changing the parameters would cause too many issues, and would take to long to debug
-def request(method, url, data=None, json=None, headers={}, timeout=None, gdt=None):
+def request(method, url, data=None, json=None, headers={}, cookies=None, verify=False, timeout=10, gdt=None):
 
     if json is not None:
         assert data is None
@@ -119,14 +121,14 @@ def request(method, url, data=None, json=None, headers={}, timeout=None, gdt=Non
         headers["Content-Type"] = "application/json" # add the header
 
     try:
-        return py_request(url, method, headers=headers, data=data, timeout=timeout, gdt=gdt)
+        return py_request(url, method, headers=headers, cookies=cookies, data=data, timeout=timeout, verify=verify, gdt=gdt)
     except ConnectionError as err:
-        print("Connection error in request: {}".format(err))
+        print("\nConnection error in request: {}".format(err))
         # some APs reject https connections until splashpage broken. Try http
         if url[:5] == "https":
             url = "http{}".format(url[5:])
             print("trying http @ {}".format(url))
-            return py_request(url, method, headers=headers, data=data, timeout=timeout, gdt=gdt)
+            return py_request(url, method, headers=headers, cookies=cookies, data=data, timeout=timeout, verify=verify, gdt=gdt)
 
 
 
