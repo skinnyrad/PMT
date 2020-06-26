@@ -159,11 +159,11 @@ def station_connected(station, host, gdt, wifiLogger):
     print("Fed GDT before requesting Host: {}".format(host))
 
     # test DNS -> GET Request and Handles Redirection
-    #try:
-    [addr, status, recvd_headers, cookies, body] = request.get(host, cookies=None, timeout=10, verify=False, gdt=gdt)
-    #except Exception as err:
-    #    print("default Exception 1 in station_connected: {}".format(err))
-    #    return False
+    try:
+        [addr, status, recvd_headers, cookies, body] = request.get(host, cookies=None, timeout=10, verify=False, gdt=gdt)
+    except Exception as err:
+        print("default Exception 1 in station_connected: {}".format(err))
+        return False
     if status is None: # something broke in the request
         return False
 
