@@ -58,9 +58,6 @@ def break_sp(gdt, host, location, recvd_headers, cookies, splashpage):
         resp = urllib.parse.urlencode( forms[0].form_values() )
         print("reponse: {}".format(resp))
 
-        # Add form resubmit specific headers
-        recvd_headers["Content-Type"] = "application/x-www-form-urlencoded"
-
 
         # Determine location to send data to
         print("\nChecking for ACTION field...")
@@ -80,32 +77,34 @@ def break_sp(gdt, host, location, recvd_headers, cookies, splashpage):
                 print("\tABSOLUTE PATH")
                 location = forms[0].action
 
-        elif page.base is not None: # If action is not specified, we have to use <base>
-            print("ACTION not specified, using BASE")
-            location = page.base
-        
-        elif page.base is None: # McDonalds specified base within a comment tag. How silly
-            #This is gonna be a nasty workaround and should not be considered final
-            print("ACTION & BASE not specified, attempting nasty search")
-            html = lxml.html.tostring(page).decode('utf-8')
-            i = html.find('base href="')
-            j = html.find('"', i+11)
-            location = html[i+11:j]
-
-        #update header
-        #recvd_headers["Host"] = "{}".format(page.base)
+        #elif page.base is not None: # If action is not specified, we have to use <base>
+        #    print("ACTION not specified, using BASE")
+        #    location = page.base
+        #
+        #elif page.base is None: # McDonalds specified base within a comment tag. How silly
+        #    #This is gonna be a nasty workaround and should not be considered final
+        #    print("ACTION & BASE not specified, attempting nasty search")
+        #    html = lxml.html.tostring(page).decode('utf-8')
+        #    i = html.find('base href="')
+        #    j = html.find('"', i+11)
+        #    location = html[i+11:j]
 
         del splashpage
         collect()
 
+
+        # Add form resubmit specific headers
+        new_headers = {}
+        new_headers["Content-Type"] = "application/x-www-form-urlencoded"
+
         print("\nbreak_sp: Resubmitting form...")        
         gdt.feed()
         if forms[0].method is not None and forms[0].method == "POST":
-            [addr, status, recvd_headers, cookies, body] = request.post(location, data=resp, headers=recvd_headers, cookies=cookies, timeout=10)
+            [addr, status, recvd_headers, cookies, body] = request.post(location, data=resp, headers=new_headers, cookies=cookies, timeout=10)
         elif forms[0].method is not None and forms[0].method == "GET":
             # Data must be appended to URL on GET resubmission
             location = "{0}?{1}".format(location, resp) #TODO, resp might need to not be urlencoded to work correctly
-            [addr, status, recvd_headers, cookies, body] = request.get(location, data=None, headers=recvd_headers, cookies=cookies, timeout=10)
+            [addr, status, recvd_headers, cookies, body] = request.get(location, data=None, headers=new_headers, cookies=cookies, timeout=10)
         
         gdt.feed()
 
@@ -160,11 +159,11 @@ def station_connected(station, host, gdt, wifiLogger):
     print("Fed GDT before requesting Host: {}".format(host))
 
     # test DNS -> GET Request and Handles Redirection
-    try:
-        [addr, status, recvd_headers, cookies, body] = request.get(host, cookies=None, timeout=10, verify=False, gdt=gdt)
-    except Exception as err:
-        print("default Exception 1 in station_connected: {}".format(err))
-        return False
+    #try:
+    [addr, status, recvd_headers, cookies, body] = request.get(host, cookies=None, timeout=10, verify=False, gdt=gdt)
+    #except Exception as err:
+    #    print("default Exception 1 in station_connected: {}".format(err))
+    #    return False
     if status is None: # something broke in the request
         return False
 

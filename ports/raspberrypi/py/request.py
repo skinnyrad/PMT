@@ -22,6 +22,22 @@ import lxml.html
 # The base request function
 def py_request(url, method, headers={}, cookies=None, data=None, timeout=10, verify=False, gdt=None ):
 
+    # Requests left out HOST header, add it in
+    # Cut out protocol
+    host=url
+    i = host.find('://')+3
+    host = host[i:]
+    # Cut out path
+    j = host.find('/', i)
+    if j > -1:
+        host = host[:j]
+    # Cut out port
+    j = host.find(':', i)
+    if j > -1:
+        host = host[:j]
+    headers['HOST'] = host
+
+
     attempts = 1
     MAX_ATTEMPTS = 2
     while attempts <= MAX_ATTEMPTS:
@@ -57,6 +73,20 @@ def py_request(url, method, headers={}, cookies=None, data=None, timeout=10, ver
     if gdt is not None:
         gdt.feed()
 
+    
+    # Debugging
+    print("\nRequest--------------------------------")
+    print("Sent to:{}".format(r.request.url))
+    print("{0} {1}".format(r.request.method, r.request.path_url) )
+    print(r.request.headers)
+    print(r.request.body)
+    
+    print("\nSent from:{}".format(r.url))
+    print("{0} {1}".format(r.status_code, r.reason) )
+    print(r.headers)
+    print(r.text)
+    print("\n --- END OF TRANSACTION --- \n")
+
 
     # Handle <head> redirects
     # <head> redirects not natively supported. Handled here
@@ -80,6 +110,13 @@ def py_request(url, method, headers={}, cookies=None, data=None, timeout=10, ver
                 body = r.text
                 if 'Set-Cookie' in recvd_headers:
                     del recvd_headers['Set-Cookie']
+                
+                #Debugging
+                print("\nSent from:{}".format(r.url))
+                print("{0} {1}".format(r.status_code, r.reason) )
+                print(r.headers)
+                print(r.text)
+
                 break
 
             except requests.exceptions.RequestException as err:
@@ -90,21 +127,10 @@ def py_request(url, method, headers={}, cookies=None, data=None, timeout=10, ver
     if gdt is not None:
         gdt.feed()
     
+    r.close()
 
     # Debugging
-    print("\nRequest--------------------------------")
-    print("Sent to:{}".format(r.request.url))
-    print("{0} {1}".format(r.request.method, r.request.path_url) )
-    print(r.request.headers)
-    print(r.request.body)
-    
-    print("\nSent from:{}".format(r.url))
-    print("{0} {1}".format(r.status_code, r.reason) )
-    print(r.headers)
-    print(r.text)
     print("\n---------------------------------------")
-    
-    r.close()
 
     return [addr, status, recvd_headers, cookies, body]
 
@@ -125,7 +151,7 @@ def request(method, url, data=None, json=None, headers={}, cookies=None, verify=
     except ConnectionError as err:
         print("\nConnection error in request: {}".format(err))
         # some APs reject https connections until splashpage broken. Try http
-        if url[:5] == "https":
+        if len(url) > 5 and url[:5] == "https":
             url = "http{}".format(url[5:])
             print("trying http @ {}".format(url))
             return py_request(url, method, headers=headers, cookies=cookies, data=data, timeout=timeout, verify=verify, gdt=gdt)
