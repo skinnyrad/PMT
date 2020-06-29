@@ -184,8 +184,9 @@ while True:
                     # Try to connect to WiFi access point
                     apLogger.overwrite(ssid)
 
-                    print( "Connecting to {0} ...\n".format(ssid) )
-                    wifiLogger.info( "Connecting to {0} ...\n".format(ssid[0]) )
+                    print ( "Connecting to {0} ...\n".format(ssid) )
+                    wifiLogger.info( "Connecting to {0} ...\n".format(ssid) )
+                    
                     gdt.feed()
                     station.connect_to_ssid(ssid)
                     gdt.feed()
@@ -229,6 +230,7 @@ while True:
 
             gdt.feed()
             print("Connected to {}".format(ssid))
+            wifiLogger.info("Connected to {}".format(ssid))
             connected = station_connected(station, host_url, gdt, wifiLogger)
             
             # Caught default Exception, normally from leaving AP range
