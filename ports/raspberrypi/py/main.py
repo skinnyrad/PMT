@@ -41,7 +41,7 @@ try:
     host_url = "{}/api/".format(pmt_config['post_url'])
     post_url = "{0}/api/post.php".format(pmt_config['post_url'] if pmt_config['post_url'][-1] != "/" else pmt_config['post_url'][:-1])
     gps_interval = pmt_config['gps_interval']
-    enc_key = pmt_config['encryption_key']
+    # enc_key = pmt_config['encryption_key']
 except KeyError as e:
     print(e)
     raise
@@ -162,7 +162,6 @@ while True:
             try:
                 openNets = station.scan_open_ssids() # gets list of open SSIDS
             except Exception as e:
-                #TODO: remove print
                 print("Warning: {0}".format(str(e)))
                 defaultLogger.warning(str(e))
 
@@ -184,9 +183,10 @@ while True:
                 if ssid not in ap_blacklist:
                     # Try to connect to WiFi access point
                     apLogger.overwrite(ssid)
-                    #TODO: remove print
+
                     print ( "Connecting to {0} ...\n".format(ssid) )
                     wifiLogger.info( "Connecting to {0} ...\n".format(ssid) )
+                    
                     gdt.feed()
                     station.connect_to_ssid(ssid)
                     gdt.feed()
@@ -246,7 +246,7 @@ while True:
                 wifiLogger.warning("blacklisting {} and dropping IP".format(ssid))
                 blacklistLogger.write_line(ssid) # Blacklist the SSID until we get moving again
                 station.end_ip_lease() # Drop the IP given by the AP
-                break
+                continue
 
             # So long as we have WAN access, post data
             print("Checking WAN access")

@@ -16,7 +16,6 @@
 # have a nework module
 
 from time import sleep
-#from reqst import test_dns_internet
 from request import get
 
 try:
@@ -42,6 +41,8 @@ class Station():
 
     def __init__(self):
         self.interface_on()
+        # kill off secondary DHCP daemon, we use dhclient
+        popen("sudo pkill dhcpcd")
 
 
 
@@ -221,7 +222,9 @@ class Station():
     def end_ip_lease(self):
 
         # drop the currently held IPs
-        popen("sudo dhclient -r wlan0")
+        ret = popen("sudo dhclient -r wlan0").read()
+        if ret != '':
+            print("dhclient -r wlan0")
 
         # return true if no more valid IPs
         return ( not self.is_connected() )
