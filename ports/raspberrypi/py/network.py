@@ -41,10 +41,6 @@ class Station():
 
     def __init__(self):
         self.interface_on()
-        # kill off secondary DHCP daemon, we use dhclient
-        popen("sudo pkill dhcpcd")
-
-
 
     def interface_on(self):
         # ensure station is up
