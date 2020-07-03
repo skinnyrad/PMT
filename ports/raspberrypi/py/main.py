@@ -207,6 +207,9 @@ while True:
                     # If we are connected break from checking each SSID
                     # and move onto splashpage/posting
                     if station.is_connected():
+                        ip_and_sub=os.popen("ip a | grep dynamic | grep -E -o \"([0-9]{1,3}[\.]){3}[0-9]{1,3}\"").read()
+                        print("IP Address & Subnet:\n{0}\n".format(ip_and_sub))
+                        wifiLogger.info("IP address & Subnet:\n{0}".format(ip_and_sub))
                         break
 
                     
