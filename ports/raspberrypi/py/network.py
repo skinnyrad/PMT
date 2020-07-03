@@ -120,8 +120,8 @@ class Station():
         self.interface_off()
         self.interface_on()
 
-        # start the new wpa_supplicant process
-        ret = popen( "wpa_supplicant -B -i wlan0 -c '/etc/wpa_supplicant/wpa_supplicant.conf' && dhclient wlan0 " ).read()
+        # start the new wpa_supplicant process. Also obtains IP address automatically
+        ret = popen( "sudo wpa_supplicant -B -i wlan0 -c '/etc/wpa_supplicant/wpa_supplicant.conf'").read()
         print("wpa_supplicant launch returned with:")
         print(ret)
 
@@ -218,9 +218,9 @@ class Station():
     def end_ip_lease(self):
 
         # drop the currently held IPs
-        ret = popen("sudo dhclient -r wlan0").read()
+        ret = popen("sudo killall wpa_supplicant").read()
         if ret != '':
-            print("dhclient -r wlan0")
+            print("sudo killall wpa_supplicant")
 
         # return true if no more valid IPs
         return ( not self.is_connected() )

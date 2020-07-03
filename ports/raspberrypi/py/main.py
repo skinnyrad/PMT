@@ -102,6 +102,8 @@ data = ''
 # Set up wireless station
 station = Station()
 
+#Set speed for wifi acquisition
+threshold_speed = 5.00
 
 collect()
 gdt = GDT(30+gps_interval, pid=os.getpid(), logger=blacklistLogger)
@@ -114,8 +116,9 @@ while True:
 
     # Store the data
     if not (GPSdata == {}):
-
-        speed = GPSdata['speed']
+        
+        #converts speed to mph from knots
+        speed = GPSdata['speed']*1.15078
         print("speed={}".format(speed))
 
         # Use when we support sending speed to host
@@ -136,13 +139,10 @@ while True:
         defaultLogger.info("No GPS data.")
         data = ""
 	
-    # If we are not parked, then remove the list of SSIDs that didn't work
-    if (speed is not None) and (speed > 10.00):
+    # If we are moving, then remove the list of SSIDs that didn't work
+    if (speed is not None) and (speed > threshold_speed):
         os.remove(blacklist)
         os.remove(current_ap)
-
-        # drop any leased IPs if we have any
-        station.end_ip_lease()
 
         # re-create file for initial read
         with open(blacklist, "a+"):
@@ -150,9 +150,8 @@ while True:
         with open(current_ap, "a+"):
             pass
 
-
     # If our speed is slow enough we should try connecting to an Access Point
-    elif (speed is not None) and (speed <= 5.00):
+    elif (speed is not None) and (speed <= threshold_speed):
         gdt.feed()
 
         # If not connected we need to connect
@@ -201,6 +200,8 @@ while True:
                         count+=1
                         #If we've waited long enough but no IP
                         if count >= MAX_IP_WAIT:
+                            blacklistLogger.write_line(ssid)
+                            os.system("sudo pkill wpa_supplicant")
                             break
                    
                     # If we are connected break from checking each SSID
