@@ -13,7 +13,7 @@
 
 import os
 # Check if in correct directory
-code_dir = '/home/{}/PMT/ports/raspberrypi/py'.format(os.getlogin())
+code_dir = '/home/pi/PMT/ports/raspberrypi/py'
 if os.getcwd() != code_dir:
     print("This program must be run from: {}\nExiting...".format(code_dir))
     exit(1)
@@ -51,7 +51,7 @@ os.chdir('ports/raspberrypi/py')
 
 
 # These files should be placed in runtime directory
-runtime_dir = '/home/{}/runtime/'.format(os.getlogin())
+runtime_dir = '/home/pi/runtime/'
 
 if not os.access(runtime_dir, os.F_OK): # if does not exist
     os.mkdir(runtime_dir) #make it
