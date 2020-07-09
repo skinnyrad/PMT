@@ -13,7 +13,7 @@
 
 from os import getlogin
 
-runtime_dir = "/home/{}/runtime".format(getlogin())
+runtime_dir = "/home/pi/runtime"
 
 CRITICAL = 50
 ERROR    = 40
@@ -128,7 +128,7 @@ def openRuntimeDir(logger=None):
 # put python into /boot/PMT/ directory
 def openPMTDir(logger=None):
     from os import chdir, access, F_OK, getlogin
-    PMT_dir = '/home/{}/PMT'.format(getlogin())
+    PMT_dir = '/home/pi/PMT'
 
     if not access(PMT_dir, F_OK): # if does not exist
         print("Error: PMT git repo not found in expected location!\n")

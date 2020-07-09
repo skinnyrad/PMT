@@ -14,9 +14,9 @@
 import os
 # Check if in correct directory
 code_dir = '/home/pi/PMT/ports/raspberrypi/py'
-if os.getcwd() != code_dir:
-    print("This program must be run from: {}\nExiting...".format(code_dir))
-    exit(1)
+#if os.getcwd() != code_dir:
+#    print("This program must be run from: {}\nExiting...".format(code_dir))
+#    exit(1)
 
 import pmt_logging as logging
 from gps import GPS
