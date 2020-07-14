@@ -78,7 +78,11 @@ class Station():
                 break
             except exceptions.InterfaceError:
                 sleep(.1)
-
+            
+        #sorts nets by signal strength and then reserves the order to put strongest first
+        nets=sorted(nets, key=lambda signals: signals.signal)
+        nets.reverse()
+        
         # pull out open ssids
         free_ssids = []
         for cell in nets:
