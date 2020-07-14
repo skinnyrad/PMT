@@ -97,7 +97,7 @@ collect()
 gdt = GDT(30, pid=os.getpid(), logger=blacklistLogger)
 
 #reset time in seconds, 1200
-blacklist_reset_time=30
+blacklist_reset_time=720
 
 # instantiate GPS class
 data = ''
