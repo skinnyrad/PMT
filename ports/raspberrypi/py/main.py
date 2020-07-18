@@ -238,7 +238,7 @@ def wifi_main():
                             print("IP Address & Subnet:\n{0}\n".format(ip_and_sub))
                             wifiLogger.info("IP address & Subnet:\n{0}".format(ip_and_sub))
                             break
-
+                        break
                         
             # If we now have a valid IP
             if station.is_connected():
@@ -310,7 +310,7 @@ def wifi_main():
                         total_bytes_read = fp.read()
                         total_bytes_read = int(total_bytes_read) if total_bytes_read != '' else 0
                     with open(unsent, 'r') as fp:
-                        for i in range(15):
+                        for i in range(50):
                             # seek to unsent data
                             fp.seek(total_bytes_read)
                             # read size of data point
@@ -357,7 +357,7 @@ def wifi_main():
                 lck.release() #release the lock
                 
                 #Provides an amount of time for some GPS points to be acquired before attempting to re-upload
-                time.sleep(15)
+                #time.sleep(15)
         #reset WDT to avoid Software Reset 0xc
         gdt.feed()
         print("Fed GDT in FSM")
